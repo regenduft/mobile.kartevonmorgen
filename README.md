@@ -31,5 +31,4 @@ Possibility 3:
 * I will pull your changes and you can see the changes immediately at http://wap.kartevonmorgen.org
 * Next time you edit something, your changes will be visible IMMEDIATELY, without need to wait for my confirmation!
 
-Have fun,
-Florian
+Have fun!
