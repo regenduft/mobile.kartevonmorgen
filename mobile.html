@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Karte von morgen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <style>
+
+        /* search fields */
+        body {
+            max-width:1024px;
+            margin-left:auto;
+            margin-right:auto;
+            font-size:16px;
+            margin-top: 0;
+        }
+
+        form.searchForm {
+            text-align: left;
+            margin: 0.5em 3px;
+        }
+
+        form.searchForm  span {
+            width: 15%;
+            display:inline-block;
+        }
+
+        form.searchForm  input {
+            height: 2.2em;
+            box-sizing: border-box;
+            width: 45%;
+        }
+
+        form.searchForm  button {
+            width: 13%;
+            height: 2.2em;
+            box-sizing: border-box;
+            font-weight: bold;
+        }
+
+        form.searchForm  .right {
+            float: right;
+        }
+
+        #findBtn, #mapBtn {
+            width: 17% !important;
+        }
+
+        #city {
+            width: 45%;
+        }
+
+        .back {
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        a.blank:after {
+            content:'(neues Fenster)';
+            padding: 0 3px;
+            display: inline-block;
+            color: black;
+            text-decoration: none;
+        }
+
+        /* waiting message */
+
+        #ovl_wait {
+            display:none;
+            position:fixed;
+            background-color:rgba(0,0,0,0.2);
+            top:0;
+            left:0;
+            bottom:0;
+            right:0;
+            z-index:222;
+            text-align: center;
+        }
+
+        #ovl_wait > span {
+            display: inline-block;
+            padding: 1em 2em;
+            background-color: #EEE;
+            margin-top: 150px;
+            border: 1px solid black;
+            width: 180px;
+        }
+
+        #ovl_wait_btn {
+            margin-top: 50px;
+        }
+
+        #ovl_wait_btn button {
+            padding: 1em 2em;
+        }
+
+        #ovl_wheel {
+            position:fixed;
+            display:none;
+            right:1px;
+            top:1px;
+            z-index:233;
+            background-color:rgba(255,255,255,0.8);
+            padding:5px;
+        }
+
+
+        /* search result list */
+
+        .result_ctnr .separator {
+            padding: 8px 2px;
+            margin: 8px 2px;
+            font-weight: bold;
+        }
+
+        .result_ctnr .entry a {
+            display: inline-block;
+        }
+
+        .result_ctnr .entry .dots {
+            position: absolute;
+            bottom: 8px;
+            right: 3px;
+            background: transparent linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white) repeat scroll 0% 0%;
+            text-align: right;
+            width: 30px;
+        }
+
+        .result_ctnr .entry div {
+            max-height: 3.5em;
+            overflow: hidden;
+        }
+
+        .result_ctnr .entry  {
+            padding: 8px 3px;
+            margin: 8px 3px;
+            border-bottom: 1px solid black;
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* view single search result details */
+
+        #details div {
+            padding: 3px;
+        }
+
+        #details div.title {
+            margin-top: 10px;
+        }
+
+        #details div.content {
+            margin-bottom: 10px;
+        }
+
+        #details .mapLink a {
+            padding: 10px 0;
+            margin: 5px 0;
+            display: inline-block;
+        }
+
+        #details button {
+            margin: 10px;
+            height: 2.2em;
+            font-weight: bold;
+        }
+
+        /* city search result list */
+
+        #cities .title {
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        #cities a {
+            margin: 5px;
+            padding: 5px;
+            border-bottom: 1px solid black;
+            display: block;
+        }
+
+        /* the map */
+
+        #resultMapCtnr {
+            position:fixed;
+            bottom:0;
+            right: 0;
+            left: 0;
+            top: 100px;
+        }
+
+        #resultMap {
+            height: 100%;
+            max-width: 1024px;
+            margin:0 auto;
+        }
+
+        #overMap {
+            position: relative;
+            background-color: rgba(255,255,255,0.8);
+        }
+
+        #btnInitiative, #btnEvent, #btnUnternehmen, #btnOpenStreetMap {
+            height: 2.2em;
+            box-sizing: border-box;
+        }
+
+        #btnOpenStreetMap {
+            background-color: #545454;
+            color:#DDDDDD;
+        }
+        #btnUnternehmen {
+            background-color: #006e5f;
+            color:#DDDDDD;
+        }
+        #btnEvent {
+            background-color: #c11f5a;
+            color:#DDDDDD;
+        }
+        #btnInitiative {
+            background-color: #658208;
+            color:#DDDDDD;
+        }
+
+        #btnOpenStreetMap.active {
+            background-color: #c9c9c9 !important;
+            color:#000000 !important;
+        }
+        #btnUnternehmen.active {
+            background-color: #00ccbd !important;
+            color:#000000 !important;
+        }
+        #btnEvent.active {
+            background-color: #ea84aa !important;
+            color:#000000 !important;
+        }
+        #btnInitiative.active {
+            background-color: #bef019 !important;
+            color:#000000 !important;
+        }
+
+        .mapMarker {
+            /*color: #c9c9c9;*/
+            /*color: #545454;*/
+            color: #888888;
+            font-size: 47px;
+            line-height: 47px;
+        }
+        body.highres .mapMarker {
+            color: transparent !important;
+            background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAoCAYAAADt5povAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAG7AAABuwBHnU4NQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAAWdEVYdEF1dGhvcgBNYXJrdXMgS29obGhhc2W9p8FDAAAAUnRFWHRDb3B5cmlnaHQAQ0MgQXR0cmlidXRpb24tU2hhcmVBbGlrZSBodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9saWNlbnNlcy9ieS1zYS8zLjAvXoNavAAABEZJREFUWIWdl01oZEUQx6u6emIkQkjwFDcrqydB2dXVsAbcwZiAp4VFNiDGMYe5xOBCBsxhyCGfG/YQiYxDCMGNGRDFj4OLgiGBDQSJuKvCHjwIIiG6GgRzCIaMvury8jp2Ov3ezFhQzMx73fXrf3VXvTcIdVilUjlDRC8BQB8ingKAzvjWjoj8YoxZE5FPc7ncz7ViYdrN5eXlZ4joOhE9r5QCRDxyAAARAREBYwyICDDzLWPMm4ODg982BCyXyw+0tLSUiehVIkKlFFi3MBcYw8AYA8xsjDErSqk3crncXzWBKysrDxljPtNanyciUEqB/XRViggAgKvOAq3fZeZL+Xx+OxG4uLh4OpPJbBFRh9YaiOjIfaCrMACDKIqAme8dHh5eGB4e3rEM5aaRiG4iYoebQusW7C/EX5CX/o6mpqablUql5QQwk8mUEfGsqyINat297mbB+X7u4ODgnWPAhYWFJwFgwAX50JCqkDp/fuyvlUqlp12FbyGi8gYFlboKfZC7v14MJKLrAABYKpXOaK1/0lqjm6okt6oA4Ohw1OvVavVRBQBXQuWRZG7KGjUiuqwB4IVGJxpjGobF9qKG//riCXM7iW1hzHys6G3h+x4yRHxMi8ip0IQQzC94e92HhhYbj31QpwGUUkcBXZhNqQt0wUmqRaSqRWRbRB73V2xhiAjMfGzVPty2tjqg21pENi0wpCrUO/09DkH9BcS+qYwxn7srCk0INOWgJ6l0oF/o/f39L1tbW7cR8WFXlU2jfwD8+nODJqmM7+90dnauqvHxcSMiN+pV5ypMUxuAL/X397OK62PJGPNPEsj3JHCKyggRbwDEzXtkZOQ3Zv7YX10SLAmcovCjQqHwKwCAtnvBzOOIeAURM6G9c/c31I1CexmDOYqiSTue7Je1tbU/+/r6TgPAU6HGnNQcQnvvpffd0dHR92wc7QZVSo0z8ysAcH+o69RaSEDlYbVanXLHk/tjdXV1v7e3tw0Aumup8ztTSJ2IvF0sFj9xYx1TGNsEM78sIh2+uiSFAMfrMX6T20XEKX88+RfW19f/7unp+UNELtdSl1a7IjJULBZv+/GDj20Rwenp6VtKqWzS+0qopzoL+GpsbOw5RDzxYFT+hTigMPNVZo5CNRiqRacmI2Z+PQQLptTaxsbGbjabvc8YczF0ElPK4trExMSHSXFDh8a1SWa+hIhPuOl0zXvC/0BEM2kBa756FYvFc4j4DQBkfKgHixDx2ZmZmTtp8RJTam1zc/P37u7uJhG56J9ML8Uzs7Oz79eKFzw0vu3t7U0y83d+o3YO0d3m5ubpemLV/TZbKBTOAsBtAMh4tyJEvDA3N5f4r9e1mim1trW1tdvV1aVFJOuldmp+fv6DeuPUlVJrbW1tU8z8tVNzd9rb2681EqPhPwhDQ0OPiMj3AKCY+fzS0tKPjcZo2PL5/EA+nx/4P3P/BZjms2q4gXrIAAAAAElFTkSuQmCC');
+            /*
+            background:url('data:image/svg+xml;utf8,<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28" height="40" viewBox="17 17 58 82" id="svg4168" version="1.1"><defs id="defs4170"><linearGradient id="linearGradient4865"><stop id="stop4867" offset="0" style="stop-color:#c9c9c9;stop-opacity:1"/><stop id="stop4869" offset="1" style="stop-color:#545454;stop-opacity:1"/></linearGradient><radialGradient xlink:href="#linearGradient4865" id="radialGradient4857" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-2.0733135,-0.00485178,0.00562694,-2.4045773,857.57643,495.26569)" cx="392.2" cy="189.1" fx="392.2" fy="189.1" r="28"/></defs><path id="path4855" d="m45.7 97.7c0 0-28-37.2-28-52 0-14.8 13.2-28 28-28 14.8 0 28 13.2 28 28 0 14.8-28 52-28 52z" fill="url(#radialGradient4857)"/></svg>')
+            */
+        }
+
+        .mapMarker.event, .mapMarker.Event {
+            /*color: #ea84aa !important;*/
+            color: rgb(229,  98,   146) !important;
+            /*color: #c11f5a !important;*/
+        }
+        body.highres .mapMarker.event, body.highres .mapMarker.Event {
+            background:url('data:image/svg+xml;utf8,<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28" height="40" viewBox="17 17 58 82" id="svg4168" version="1.1"><defs id="defs4170"><linearGradient id="linearGradient4865"><stop id="stop4867" offset="0" style="stop-color:#ea84aa;stop-opacity:1"/><stop id="stop4869" offset="1" style="stop-color:#c11f5a;stop-opacity:1"/></linearGradient><radialGradient xlink:href="#linearGradient4865" id="radialGradient4857" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-2.0733135,-0.00485178,0.00562694,-2.4045773,857.57643,495.26569)" cx="392.2" cy="189.1" fx="392.2" fy="189.1" r="28"/></defs><path id="path4855" d="m45.7 97.7c0 0-28-37.2-28-52 0-14.8 13.2-28 28-28 14.8 0 28 13.2 28 28 0 14.8-28 52-28 52z" fill="url(#radialGradient4857)"/></svg>') !important;
+        }
+
+        .mapMarker.initiative, .mapMarker.Initiative {
+            /*color: #bef019 !important;*/
+            /*color: #658208 !important;*/
+            color: rgb(151,  191,  13 ) !important;
+        }
+        body.highres .mapMarker.initiative, body.highres .mapMarker.Initiative {
+            background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAoCAYAAADt5povAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAG7AAABuwBHnU4NQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAAWdEVYdEF1dGhvcgBNYXJrdXMgS29obGhhc2W9p8FDAAAAY3RFWHRDb3B5cmlnaHQAQ0MgQXR0cmlidXRpb24tTm9uQ29tbWVyY2lhbC1TaGFyZUFsaWtlIGh0dHA6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzMuMC/eBBrlAAAFJUlEQVRYhZ1XbYhWRRR+zsxdV9mFLUwis8D61S8NqQypRSIwwkyyhcgklqKIvty+BP+8rRnZDxFqjRIMBQmKopaCln5sZVbKVrBBUBGxmFuCtu6uq7XvnHP6ce/Mnbnvu18NDHM/5pznPOfrziXMYxw+3rGSbMs9ILodRlcAuKp4dRJCf7DqZ4br72+7afz3uXTRbC/fPrH0BmOwxxhaTwYgymc8VAEVQBRQ0UF19NyDa898tyDAvsFl7Uvapc8SHjCWyBiADGCIgAhU1QMqRApgUWHBoaw1e2LbqtNTcwIe+nrplWzxkbVYYyzBGMCvgaGXKgAjMDADwgpmGlZ2dz207tzIjIBvfnXp1Zk139gMy40lWFuCGQsQ5deJOyOGwgCzhpUZo2Za13Z3/n3SywTxvsFl7ZaonwyWEwHBjQWYMd4AwGaAtQj3wQOmlCMCDGE5Z+g/PHB5WwNgS+b6YGgVEUCGCgEqlFBQbC3lABkheMHkMn6NdRBh9YUl9dcTl77xxSXXW2uGrCVjM8BmuaJ8JZgMBRBCLAEft8iNLo9hk1XV8Y2Prh8fMgBARHvJJ2GY3lLAUOzeiKUtPVBhVc6cFSnZPQBArw10rGxZbH+zGShhllERq2It2NoMIXGYAYnZuJytc/4+faeOrzXGmnvTbE0rJbIyWJ0zo7REItHwuNokYDdnINxWfRzvVM2faFQGIhpqsEEU5X5U30M2ZPB9USsb4ntfb6oQofweZdKEeiyMSiyJ9CjoukwVK5qxUFWoUq7UACSAUC6mUZb6DlPKVPQEvQpVXJaVfqOISeQ+VZAQhApXRx73XSYw9WwFFQaB5b9GFSNxi4rXuEdK6JEKSabfp2H1ca4ar4oRo4KjyUOJG3LZIyXul66YjNCsS+Miplq5VjlqVPBxaMAhMWKwtDF7hswKcf66NCrENI5tsULMJ2bs+NinKhgRTS0smaF0ncunBwgMRUu3V2IaZfHJKybHBkytBlHRg1XLJMROE3bxjOMYgL2RotXYHujqAhsAYGQHRFAPzGJWUXMOiiOmcRw58ogmoHBctweB4vO0fcOZP1XkvZJVZGUEGsevabZGCVSCAsLybs/Gs6cCIACgrjURrUvsmvAFTxmGmbCME6hMNBVlkPR6mAD41MaJX0VwKK65OD4hdq5kFTLVpV7hqJRY6ODTd0z+3AAIAOpsTRgXk0TgUiG7tA5TxprEOk9A/UenaVeMkQD2bDx7igX7RQAWTRW6NH7NMlUqrnVMfc/cXR6gGgABgDl7URijwh60kqHRrMaQ0+Q57S6m7JoCvrDpzKRzsqNZ/IT9V1wTxmmW5vuV9dkdXWPjVf1NT96qoFc/7Bg0Bp3+fBOfuNPN8ecoLwUFHXt+07lbiBo/wQ0MAYAI6tg8yQ4uSXkXx6yxp0qeSM45eqwZ2IyAALBzy9gws+5JM7axDiW6zg9Q+srOLWPDM+mdERAA6pjoZaYfPYsQOxfdp3H8yV2Y2D2bzll/1wCgdqRttSF7gggtoEYBf1hShROim2v3jQ/Nps/OBfj5B/W/Oje3LlLVW5F8TKv/hrS7dv/Ekbn0zepSP0anJnrF6fdcqUVfh+IwjNaJl+aja16Abz2CurJ2C2td/Im6rEOnde6udWF6PrrmdKkfX/bXT6+7c1Gmis7YpVDs2v3w1Dvz1TMvhn60jp7fJYxvozocWtRx/uWF6JgzS6tj+/7F11i1PwBqRO2avY9P/rJQHQsePfvatvbsa9v6f2T/A3sKgoTavqdJAAAAAElFTkSuQmCC');
+            /*
+            background:url('data:image/svg+xml;utf8,<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28" height="40" viewBox="17 17 58 82" id="svg4168" version="1.1"><defs id="defs4170"><linearGradient id="linearGradient4865"><stop id="stop4867" offset="0" style="stop-color:#bef019;stop-opacity:1"/><stop id="stop4869" offset="1" style="stop-color:#658208;stop-opacity:1"/></linearGradient><radialGradient xlink:href="#linearGradient4865" id="radialGradient4857" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-2.0733135,-0.00485178,0.00562694,-2.4045773,857.57643,495.26569)" cx="392.2" cy="189.1" fx="392.2" fy="189.1" r="28"/></defs><path id="path4855" d="m45.7 97.7c0 0-28-37.2-28-52 0-14.8 13.2-28 28-28 14.8 0 28 13.2 28 28 0 14.8-28 52-28 52z" fill="url(#radialGradient4857)"/></svg>') !important;
+            */
+        }
+
+        .mapMarker.business, .mapMarker.Business, .mapMarker.unternehmen, .mapMarker.Unternehmen {
+            /*color: #00ccbd !important;*/
+            /*color: #006e5f !important;*/
+            color: rgb(0,    152,  137) !important;
+        }
+        body.highres .mapMarker.business, body.highres .mapMarker.Business, body.highres .mapMarker.unternehmen, body.highres .mapMarker.Unternehmen {
+            background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAoCAYAAADt5povAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAG7AAABuwBHnU4NQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAAWdEVYdEF1dGhvcgBNYXJrdXMgS29obGhhc2W9p8FDAAAAUnRFWHRDb3B5cmlnaHQAQ0MgQXR0cmlidXRpb24tU2hhcmVBbGlrZSBodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9saWNlbnNlcy9ieS1zYS8zLjAvXoNavAAAA99JREFUWIWdl09oHUUcxz8zsy8eGujFU2yE6slTK0Wpog2iQk+CiAGx5lJKrUnFRmtqBHkmJrQVetA+RQOBFER50oNFoVKxQimKRoUKgorII7YaPKgUieXtzHhY5739M7O7rz/48XbfzPw++/3N/GZ2BXWsvbSVSD2CkA8i2AJiNGmwa1h+xZpzxPo04/t+qQolSltPv30HRMeQ8j6kBPF/d/drbdaNOY/Whxnf9/VgwHZrGDHUQkVPIKVACHpA59ZmocY4Nxi7wkbjIBMT/1QD22/ehGh8gJQ7UCoBOXewtGVhiWsNxlyie+0hHp/qhIHtt27Gis9RaqQHS0Od0jQsBEygVzDdnTw2ueaG9Ee3W8MYziDlSE9JWl0arlTR8w+VXI8g1BlOvbqpCOyKFkJsyw0ogkMgX+qFAMR21PDJbEpXXrudRmMVpSRKQRT5AyuVncd0Ol0afR7HFq3vZOLgaqJQRScQQhYWRfpJ3ZOH0pj3zEoRAiGOJQpPvb4VKX9GKRFUl/9Pyr66oprwfbd7awQ86i2PtMr8vQO6Wqzq31sx4uEIa+8Pwtw85e+N8beF+vfpuyOsHS108A1K15xrd9dpL4PDbRGwxTuguE9m99L8A/i8GOvG6LpAvrKoB74mEXSCIBekrNZ8/cLgjsTYC5Wg8F6ZhVaDL0iE+dCbFh80pNCn1gc29iNJ5+pZrO0Ed34fzKfU59mYa2we/VjSbBqwy6WpzAf1KQxBezHtEuPjOtlLu2IJa7uVcxVKZ9lcJr8xsVgGdzztP/QbxrwfTGnZSVBLqW1zYPpyHwgQ6ybG+FWG7n3XxbnWyHjOYfrAJ5//CWNWvMFDq7KewmX2zvxQBALEsokxG965qSoJP/RfunI+jcgCD0xfJtZvBBdE2fx5+5sWk8+uhYEAQ7yMNVdqpzO082i9jrTz+fBF4N6Zq3T1Ee+iCBW+d2/Vz7H/yN/58P6T3lrBycXzKDlWeE/xvQin38KT2rvI5Oy9CFE4EIsKk6AWzdNoHQ9Ug8l1TMxTPhiA8gIBzn66zu6xG4BdBRWho8wYMHqRZ156LxTWr9DZn3YOrb+rtdskq/J7/mKhLGT55xrA8eZ2lPkSIRr9UakT35m1MULfxfTCalm4cEqdnfvsdx64Zwhrd3nT6jZobRc4vPBOVbjylDrb/MccWn8TrMNYX2IjeqVOqOqUOjs6sw3DV0Aj1xIjxE5eOBr86k1bdUqdfXJxnbG7I6wZy63SeV48/m7dMPVS6sxsmseYL1I7zSp6eHGQEPVT6qx56BaM+RaQSLWD5okfB44xsM1O7WF2as/1DP0Pa/h44KB7qbgAAAAASUVORK5CYII=');
+            /*
+            background:url('data:image/svg+xml;utf8,<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28" height="40" viewBox="17 17 58 82" id="svg4168" version="1.1"><defs id="defs4170"><linearGradient id="linearGradient4865"><stop id="stop4867" offset="0" style="stop-color:#00ccbd;stop-opacity:1"/><stop id="stop4869" offset="1" style="stop-color:#006e5f;stop-opacity:1"/></linearGradient><radialGradient xlink:href="#linearGradient4865" id="radialGradient4857" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-2.0733135,-0.00485178,0.00562694,-2.4045773,857.57643,495.26569)" cx="392.2" cy="189.1" fx="392.2" fy="189.1" r="28"/></defs><path id="path4855" d="m45.7 97.7c0 0-28-37.2-28-52 0-14.8 13.2-28 28-28 14.8 0 28 13.2 28 28 0 14.8-28 52-28 52z" fill="url(#radialGradient4857)"/></svg>') !important;
+            */
+        }
+
+        .leaflet-popup {
+            padding-bottom: 25px;
+        }
+
+        /* footer */
+
+        .footerBtnCtnr {
+            margin-top:50px;
+            text-align:center;
+        }
+
+        .footerBtnCtnr button {
+            height: 2.2em;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+<body onload="initCity();" class="lowres">
+
+<div id="resultMapCtnr">
+    <div id="resultMap"></div>
+</div>
+
+<div id="overMap">
+
+    <form class="searchForm">
+        <span>WO:</span>
+        <input id="city" type="text" name="city"
+               placeholder="Ort / Stadt / PLZ" onchange="gotoCity();"/>
+        <button onclick="gotoCity(); event.preventDefault; return false;">Go</button>
+        <button onclick="geolocate(); event.preventDefault; return false;" class="right">GPS</button>
+    </form>
+
+    <div id="cities">
+
+    </div>
+
+    <form class="searchForm">
+        <span>WAS:</span>
+        <input id="text" type="text" name="text"
+               placeholder="Suchbegriff, leer = Alle" onchange="find();"/>
+        <button id="findBtn" onclick="find(); event.preventDefault; return false;" >Finde</button>
+        <button id="mapBtn" onclick="toggleMap();event.preventDefault; return false;" class="right">Karte</button>
+    </form>
+
+    <div style="text-align:center;">
+        <button id="btnInitiative" class="active"onclick="toggleCat('Initiative')">Initiativen</button>
+        <button id="btnEvent" class="active" onclick="toggleCat('Event')">Events</button>
+        <button id="btnUnternehmen" class="active" onclick="toggleCat('Unternehmen')">Unternehmen</button>
+        <button id="btnOpenStreetMap" class="active" onclick="toggleCat('OpenStreetMap')">OpenStreetMap</button>
+    </div>
+
+    <div id="details" style="display:none;">
+        <div class="back">
+            <a href="#"
+               onclick="document.getElementById('details').style.display = 'none';scrollBack();event.preventDefault();location.hash='';return false;">[ <<< ] ZURÜCK</a>
+        </div>
+        <div class="back">
+            <a href="#" onclick="document.getElementById('details').style.display = 'none';scrollBack();event.preventDefault();location.hash='';return false;">[ <<< ] ZURÜCK</a>
+        </div>
+    </div>
+
+    <div id="result" class="result_ctnr">
+
+    </div>
+
+    <div id="openstreetmap" class="result_ctnr">
+
+    </div>
+
+    <div id="ovl_wheel">lade...</div>
+
+    <div id="ovl_wait">
+      <span>
+        <div id="ovl_wait_msg">lade Daten...</div>
+        <div id="ovl_wait_btn">
+            <button onclick="cancel();">Abbrechen</button>
+        </div>
+      </span>
+    </div>
+
+    <div class="footerBtnCtnr">
+        <button onclick="location.href='edit.html';">Neuen Eintrag hinzufügen...</button>
+    </div>
+    <div class="footerBtnCtnr">
+        <button id="btnInitMap" onclick="initMap();">Karte aktivieren...</button>
+    </div>
+</div>
+
+<!-- CORE SEARCH FUNCTION -->
+<script type="text/javascript">
+
+    /* CORE SEARCH FUNCTION */
+
+    var srv = "https://api.ofdb.io/v0/";
+
+    var city = "Stuttgart";
+    var lat = 48.75;
+    var lon = 9.2;
+    var bbox = [lat - 0.1, lon - 0.12, lat + 0.1, lon + 0.12];
+
+    var backScrollY = 0;
+
+    var categories = {};
+
+    var searchResult = [];
+
+    var cache = {};
+
+    function find() {
+        if (showWait()) {
+            if ((!categories) || (!categories.length) || categories.length == 0) {
+                getCategories(doFind);
+            } else {
+                doFind();
+            }
+        }
+        findOsm();
+    }
+
+    function doFind() {
+        var xhttp = new XMLHttpRequest();
+        showWait(null, xhttp);
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4) {
+                if (xhttp.status == 200) {
+                    searchResult = JSON.parse(xhttp.responseText);
+                    var uncached = extract_uncached(searchResult['visible']);
+                    var uncached2 = extract_uncached(searchResult['invisible']);
+                    if (uncached2 && uncached2.length > 0) {
+                        uncached.push(uncached2);
+                    }
+                    if (uncached && uncached.length > 0) {
+                        getResults(uncached, displaySearchResult);
+                    } else {
+                        displaySearchResult();
+                        hideWait();
+                    }
+                } else {
+                    hideWait('Internet Verbindung.');
+                }
+            }
+        };
+        xhttp.open("GET", srv
+                + "search?text="
+                + encodeURIComponent(document.getElementById('text').value)
+                + "&categories="
+                + extract_keys_not_disabled(categories).join(',')
+                + "&bbox="
+                + bbox.join(',')
+                , true);
+        xhttp.send();
+    }
+
+    function displaySearchResult() {
+        var resultCtnr = document.getElementById('result');
+        while (resultCtnr.childElementCount > 0) {
+            resultCtnr.removeChild(resultCtnr.firstElementChild);
+        }
+
+        displayResultList(searchResult['visible']);
+        var title = document.createElement("DIV");
+        title.className="separator";
+        title.innerText = "Weiter weg:";
+        resultCtnr.appendChild(title);
+        displayResultList(searchResult['invisible']);
+
+        removeUnnecessaryMapMarkers();
+    }
+
+    function displayResultList(ids) {
+        for(var e in ids) {
+            var id = ids[e];
+            if (cache[id] == null) {
+                getResults([id], doDisplayResultListEntry);
+            } else {
+                doDisplayResultListEntry([id]);
+            }
+        }
+    }
+
+
+    function doDisplayResultListEntry(ids) {
+        var entry = cache[ids[0]];
+
+        var ctnr = document.createElement("DIV");
+        var title = document.createElement("A");
+        var description = document.createElement("DIV");
+        var dots = document.createElement("A");
+
+        ctnr.appendChild(title);
+        ctnr.appendChild(description);
+        ctnr.appendChild(dots);
+
+        title.innerText = entry.title;
+        title.href="#"+entry.id;
+        title.onclick = createShowFunc(ctnr, entry.id);
+        ctnr.onclick = title.onclick;
+        description.innerText = entry.description;
+
+        dots.innerText="...";
+        dots.href="#"+entry.id;
+        dots.onclick = title.onclick;
+        dots.className = "dots";
+
+
+        ctnr.className = "entry";
+
+        ctnr.onclick = title.onclick;
+
+        document.getElementById('result').appendChild(ctnr);
+        document.getElementById('details').style.display = 'none';
+
+        addMapMarker(entry);
+    }
+
+    function createShowFunc(ctnr, id) {
+        return function (event) {
+            backScrollY = window.pageYOffset || document.documentElement.scrollTop;
+            window.setTimeout(function () {
+                displayDetails(id);
+            }, 11);
+            event.preventDefault();
+            return false;
+        };
+    }
+
+    function scrollBack() {
+        if (backScrollY || backScrollY === 0) {
+            window.setTimeout(function () {
+                window.scrollTo(0, backScrollY);
+                backScrollY = null;
+            }, 11);
+        } else if (backScrollY === null) {
+            toggleMap();
+        }
+    }
+
+
+    function getResults(ids, callback) {
+        if (ids && ids[0] && ids[0].match && ids[0].match(/^osm_.*/)) {
+            return getOsmResults(ids, callback);
+        }
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4) {
+                if (xhttp.status == 200) {
+                    var entries = JSON.parse(xhttp.responseText);
+                    if (entries) {
+                        if(entries.id && entries.title) {
+                            cache[entries.id] = entries;
+                        } else {
+                            for(var e in entries) {
+                                cache[entries[e].id] = entries[e];
+                            }
+                        }
+                        callback(ids);
+                    }
+                    hideWait();
+                } else {
+                    hideWait('Internet Verbindung.');
+                }
+            }
+        };
+        showWait(null, xhttp);
+        xhttp.open("GET", srv + 'entries/' + ids.join(','), true);
+        xhttp.send();
+    }
+
+    function getCategories(callback) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var res = JSON.parse(xhttp.responseText);
+                if (res) {
+                    for (r in res) {
+                        if (res[r] && res[r].id) {
+                            if (!categories[res[r].id]) {
+                                if(!categories.length) {
+                                    categories.length = 1;
+                                } else {
+                                    categories.length = categories.length + 1;
+                                }
+                            }
+                            categories[res[r].id] = res[r];
+                        }
+                    }
+                }
+                callback();
+            }
+        };
+        xhttp.open("GET", srv + "categories/" , true);
+        xhttp.send();
+    }
+
+    function extract_keys_not_disabled(obj) {
+        var res = [];
+        for (e in obj) {
+            if ((!obj[e]) || !obj[e].disabled) {
+                res.push(e);
+            }
+        }
+        return res;
+    }
+
+    function extract_uncached(ary) {
+        var res = [];
+        if (ary) {
+            for (e in ary) {
+                if (!cache[ary[e]]) {
+                    res.push(ary[e]);
+                }
+            }
+        }
+        return res;
+    }
+
+    function toggleCat(categoryName) {
+        if (categoryName == 'OpenStreetMap') {
+            osmEnabled = !osmEnabled;
+            toggleClass('btn'+categoryName, 'active', osmEnabled);
+            if ((!osmEnabled) || (bbox && bbox.length == 4 &&
+                Math.abs(bbox[2] - bbox[0]) <= 0.201 && Math.abs(bbox[3] - bbox[1]) <= 0.241)) {
+                findOsm();
+            } else {
+                alert('Bitte Karten zeigen und NÄHER ZOOMEN, um Open Street Map Einträge zu zeigen. (Die OpenstreetMap-API ist zu langsam, um große Regionen abzufragen).');
+            }
+            if (osmEnabled) {
+                var ele = document.getElementById('overMap');
+                if (ele) {
+                    if ((!ele.style.height) || ele.style.height == 'auto') {
+                        document.getElementById('openstreetmap').scrollIntoView();
+                    }
+                }
+            }
+        } else if ((!categories) || (!categories.length) || categories.length == 0) {
+            getCategories(function () {
+                doToggleCat(categoryName)
+            });
+        } else {
+            doToggleCat(categoryName);
+        }
+    }
+
+    function doToggleCat(categoryName) {
+        for (c in categories) {
+            if (categories[c].name == categoryName) {
+                if (categories[c].disabled) {
+                    categories[c].disabled = false;
+                } else {
+                    categories[c].disabled = true;
+                }
+                toggleClass('btn'+categoryName, 'active', !categories[c].disabled);
+                find();
+            }
+        }
+    }
+
+    function toggleClass(elemId, className, addClass) {
+        var elem = document.getElementById(elemId);
+        if (elem) {
+            if (addClass) {
+                elem.classList.add(className);
+            } else {
+                elem.classList.remove(className);
+            }
+        }
+    }
+
+</script>
+
+
+<!-- ENTRY DETAILS VIEW -->
+<script type="text/javascript">
+
+    /* ENTRY DETAILS VIEW */
+
+    function displayDetails(id) {
+        if (cache[id] == null) {
+            getResults([id], doDisplayDetails);
+        } else {
+            doDisplayDetails([id]);
+        }
+    }
+
+    function doDisplayDetails(ids) {
+        var entry = cache[ids[0]];
+
+        location.hash = entry.id;
+
+        var ctnr = document.createElement("DIV");
+
+        var detailsCtnr = document.getElementById("details");
+        while (detailsCtnr.childElementCount > 2) {
+            detailsCtnr.removeChild(detailsCtnr.firstElementChild.nextElementSibling);
+        }
+        detailsCtnr.insertBefore(ctnr,
+                detailsCtnr.firstElementChild.nextElementSibling);
+        detailsCtnr.style.display = "block";
+
+        for (var key in entry) {
+            if (key != 'id' && key != 'created' && key != 'lat' && key !=
+                    'lon' && key != 'lng' && key != 'version') {
+                var label = document.createElement("DIV");
+                label.innerText = capitalizeFirstLetter(key) + ":";
+                label.className="title";
+                var value = document.createElement("DIV");
+                value.className="content";
+                if (!(entry[key])) {
+                    value.innerText = '';
+                }
+                else if (key == 'homepage') {
+                    var link = document.createElement("A");
+                    link.href = entry[key].indexOf('http') < 0 ? ('http://' +
+                    entry[key]) : entry[key];
+                    link.target = '_blank';
+                    link.className = 'blank';
+                    link.innerText = entry[key];
+                    value.appendChild(link);
+                }
+                else if (key == 'email') {
+                    var link = document.createElement("A");
+                    link.href = 'mailto:' + entry[key];
+                    link.innerText = entry[key];
+                    value.appendChild(link);
+                }
+                else if (key == 'telephone') {
+                    var link = document.createElement("A");
+                    link.href = 'tel:' + entry[key];
+                    link.innerText = entry[key];
+                    value.appendChild(link);
+                }
+                else if (key == 'tags') {
+                    for (var v in entry[key]) {
+                        var tag = document.createElement("SPAN");
+                        tag.style.display = 'block';
+                        tag.innerText = capitalizeFirstLetter(v) + ': ' + entry[key][v];
+                        value.appendChild(tag);
+                    }
+                }
+                else if (key == 'categories') {
+                    var first = true;
+                    for (var v in entry[key]) {
+                        var cat = categories ? categories[entry[key][v]] : null;
+                        if (cat) {
+                            if (first) {
+                                first = false;
+                            } else {
+                                value.innerText += ', ';
+                            }
+                            value.innerText += cat.name;
+                        }
+                    }
+                } else {
+                    value.innerText = entry[key];
+                }
+                ctnr.appendChild(label);
+                ctnr.appendChild(value);
+            }
+        }
+
+        var iMob = navigator.userAgent.indexOf('iPhone') >= 0  || navigator.userAgent.indexOf('iPad') >= 0 || navigator.userAgent.indexOf('iPod') >=0;
+        var andy = navigator.userAgent.indexOf('Android') >= 0;
+        var winp = navigator.userAgent.indexOf('Windows Phone') >= 0;
+
+        if (iMob || andy || winp) {
+            var map = document.createElement('A');
+            if (winp) {
+                map.href = 'maps:'+entry.lat+','+entry.lng;
+            }
+            if (andy) {
+                map.href = 'geo:'+entry.lat+','+entry.lng;
+            }
+            if (iMob) {
+                map.href = 'http://maps.apple.com?daddr='+entry.lat+','+entry.lng;
+            }
+            map.innerText = 'Mit Maps-App öffnen'
+
+            var mapCtnr = document.createElement("DIV");
+            mapCtnr.appendChild(map);
+            mapCtnr.className="maplink";
+            ctnr.appendChild(mapCtnr);
+        }
+
+        var map2 = document.createElement('A');
+        map2.href =
+                'http://www.openstreetmap.org/?mlat='+entry.lat+'&mlon='+entry.lng+'&zoom=16&layers=M';
+        map2.innerText = 'In Openstreet-Map zeigen';
+        map2.target = "_blank";
+        map2.className = 'blank';
+
+        var mapCtnr2 = document.createElement("DIV");
+        mapCtnr2.appendChild(map2);
+        mapCtnr2.className="mapLink";
+        ctnr.appendChild(mapCtnr2);
+
+        var edit = document.createElement('BUTTON');
+        edit.onclick = function() {location.href='edit.html#'+entry.id};
+        edit.innerText = 'Eintrag bearbeiten...';
+        ctnr.appendChild(edit);
+
+        window.scrollTo(0,1);
+        if (mapMarkers && mapMarkers[entry.id]) {
+            mapMarkers[entry.id].openPopup();
+        }
+    }
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+</script>
+
+
+<!-- CITY SEARCH AND SELECTION -->
+<script type="text/javascript">
+
+    /*  CITY SEARCH AND SELECTION  */
+
+    function gotoCity(addr) {
+        var xhttp = new XMLHttpRequest();
+        if (!showWait()) {
+            return;
+        }
+        showWait(null, xhttp);
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4) {
+                if (xhttp.status == 200) {
+                    displayCities(JSON.parse(xhttp.responseText));
+                    hideWait();
+                } else {
+                    hideWait('Internet Verbindung.');
+                }
+            }
+        };
+        xhttp.open("GET",
+                'https://nominatim.openstreetmap.org/search' +
+                '?format=json&addressdetails=1&q=' +
+                document.getElementById('city').value +
+                ' DE'
+                , true);
+        xhttp.send();
+    }
+
+    function displayCities(cities) {
+        var resultCtnr = document.getElementById('cities');
+        while (resultCtnr.childElementCount > 0) {
+            resultCtnr.removeChild(resultCtnr.firstElementChild);
+        }
+        if ((!cities) || cities.length == 0) {
+            var title = document.createElement('DIV');
+            title.innerText = "Nichts gefunden! Vollständigen Namen oder PLZ eingeben.";
+            title.className="title";
+            resultCtnr.appendChild(title);
+        } else {
+            var title = document.createElement('DIV');
+            title.innerText = "Stadt auswählen / anklicken:";
+            title.className="title";
+            resultCtnr.appendChild(title);
+            var found = false;
+            var foundLat = '';
+            var foundLon = '';
+            var foundCity = '';
+            var overMapEle = document.getElementById('overMap');
+            var mapVisible = (overMapEle && overMapEle.style.height && overMapEle.style.height != 'auto');
+            for (var e in cities) {
+                var city = cities[e];
+                if ((city.type == 'administrative' || city.type == 'city' ||
+                        city.type == 'town' || city.type == 'village' ||
+                        city.type == 'postcode') &&
+                        ((!city.address) || (!city.address.country_code) ||
+                        city.address.country_code == 'de' ||
+                        city.address.country_code == 'DE' ||
+                        city.address.country_code == 'De')) {
+                    var ctnr = document.createElement('A');
+
+                    if (city.address.city) {
+                        ctnr.innerText = city.address.city;
+                    }
+                    if (city.address.town) {
+                        ctnr.innerText += (ctnr.innerText ? ', ' : '') +
+                                city.address.town;
+                    }
+                    if (city.address.village) {
+                        ctnr.innerText += (ctnr.innerText ? ', ' : '') +
+                                city.address.village;
+                    }
+
+                    var myCity = ctnr.innerText || city.display_name;
+
+                    if (((foundLat === '' || foundLat == city.lat) && (foundLon === '' || foundLon == city.lon))
+                            || (foundLat && city.lat && Math.round(foundLat*10) == Math.round(city.lat*10) && foundLon && city.long && Math.round(foundLon*10) == Math.round(city.lon*10) && foundCity && myCity && (foundCity.indexOf(myCity)) >= 0 || myCity.indexOf(foundCity) >= 0)
+                    ) {
+                        foundLat = city.lat;
+                        foundLon = city.lon;
+                        if(!foundCity) {
+                            foundCity = ctnr.innerText;
+                        }
+                    } else {
+                        foundLat = null;
+                        foundLon = null;
+                        foundCity = null;
+                    }
+
+                    if (city.type == 'administrative' && city.address.county) {
+                        ctnr.innerText += (ctnr.innerText ? ', ' : '') +
+                                'Kreis ' + city.address.county;
+                    }
+                    else if (city.address.postcode) {
+                        if (ctnr.innerText) {ctnr.innerText += ' ' + city.address.postcode}
+                        else {ctnr.innerText = city.address.postcode;}
+                    }
+                    if (!ctnr.innerText) {
+                        ctnr.innerText = city.display_name;
+                    }
+
+                    ctnr.onclick = createGoto(ctnr.innerText, city.lat, city.lon, mapVisible);
+
+
+                    ctnr.href = "#";
+                    resultCtnr.appendChild(ctnr);
+                    found = true;
+                }
+            }
+            if (foundLon && foundLat && foundCity) {
+                goto(foundCity, foundLat, foundLon);
+            } else {
+                if (mapVisible) {
+                    toggleMap();
+                }
+                if (!found) {
+                    while (resultCtnr.childElementCount > 0) {
+                        resultCtnr.removeChild(resultCtnr.firstElementChild);
+                    }
+                    var title = document.createElement('DIV');
+                    title.innerText = "Nichts gefunden! Vollständigen Namen oder PLZ eingeben.";
+                    title.className="title";
+                    resultCtnr.appendChild(title);
+                }
+            }
+        }
+    }
+
+    function createGoto(text, nlat, nlon, map) {
+        return function(event) {
+            goto(text, nlat, nlon);
+            if (map) {
+                toggleMap();
+            }
+            event.preventDefault();
+            return false;
+        }
+    }
+
+    function goto(new_city, new_lat, new_lon) {
+
+        city = new_city;
+        lat = parseFloat(new_lat);
+        lon = parseFloat(new_lon);
+        bbox = [lat - 0.1, lon - 0.12, lat + 0.1, lon + 0.12];
+        document.getElementById('city').placeholder = 'Ort: ' + city;
+        document.getElementById('city').value = '';
+        var resultCtnr = document.getElementById('cities');
+        while (resultCtnr.childElementCount > 0) {
+            resultCtnr.removeChild(resultCtnr.firstElementChild);
+        }
+        saveCity();
+        if (resultMapObj) {
+            resultMapObj.fitBounds([[bbox[0],bbox[1]],[bbox[2],bbox[3]]]);
+        }
+        find();
+    }
+
+</script>
+
+
+<!-- OVERLAY (waiting information, cancel button)  -->
+<script type="text/javascript">
+
+    /*  OVERLAY (waiting information, cancel button)  */
+
+    var cancelCallback = null;
+    var cancelXhttp = null;
+    var waitIsVisible = false;
+    var disableOverlay = false;
+
+    function showWait(msg, xhttp, noOverlay) {
+        if(xhttp) {
+            cancelXhttp = xhttp;
+        }
+        if (waitIsVisible) {
+            return false;
+        }
+        if(disableOverlay || noOverlay) {
+            document.getElementById('ovl_wheel').style.display = 'inline-block';
+        } else {
+            document.getElementById('ovl_wait').style.display = 'block';
+            if (msg) {
+                document.getElementById('ovl_wait_msg').innerText = msg;
+            } else {
+                document.getElementById('ovl_wait_msg').innerText = 'lade Daten...';
+            }
+        }
+        return true;
+    }
+
+    function hideWait(err) {
+        cancelCallback = null;
+        cancelXhttp = null;
+        waitIsVisible = false;
+        if (err) {
+            alert("Problem mit " + err);
+        }
+        document.getElementById('ovl_wait').style.display = 'none';
+        document.getElementById('ovl_wheel').style.display = 'none';
+    }
+
+    function cancel() {
+        if (cancelCallback) {
+            cancelCallback();
+        }
+        if (cancelXhttp && cancelXhttp.abort) {
+            cancelXhttp.abort();
+        }
+        hideWait();
+    }
+
+</script>
+
+
+<!-- GEOLOCATION FUNCTIONS  -->
+<script type="text/javascript">
+
+    /*  GEOLOCATION FUNCTIONS  */
+
+    var geoLocationCancelled = false;
+
+    function geolocate() {
+        showWait('Positionsbestimmung...');
+        geoLocationCancelled = false;
+        cancelCallback = function(){geoLocationCancelled = true;}
+        getLocation(function(res) {
+            if (geoLocationCancelled) {
+                return;
+            }
+            if (res && res.coords) {
+                res = res.coords;
+            }
+            if (res && res.latitude && res.longitude) {
+                hideWait();
+                goto(res.latitude + ',' + res.longitude, res.latitude,
+                        res.longitude);
+            }
+            else if (res && res.lat && res.lon) {
+                hideWait();
+                goto(res.lat + ',' + res.lon, res.lat, res.lon);
+            } else if (res) {
+                showWait('Position nicht gefunden, versuche es neu für 15 Minuten...');
+                cancelCallback = function(){geoLocationCancelled = true;}
+                getLocation(function(res) {
+                    if (geoLocationCancelled) {
+                        return;
+                    }
+                    if (res && res.coords) {
+                        res = res.coords;
+                    }
+                    if (res && res.latitude && res.longitude) {
+                        hideWait();
+                        goto(res.latitude + ',' + res.longitude, res.latitude,
+                                res.longitude);
+                    }
+                    else if (res && res.lat && res.lon) {
+                        hideWait();
+                        goto(res.lat + ',' + res.lon, res.lat, res.lon);
+                    } else {
+                        hideWait('GPS');
+                    }
+                }, 900000);
+            } else {
+                hideWait('Berechtigungs-Einstellung');
+            }
+        });
+    }
+
+
+    /*# get location (default timeout 8.8 seconds for google and 99 seconds for GPS)
+     # with fallback to high accuracy in case that low accuracy is turned off
+     # (this is necessary for android with google location services turned off)
+     # callback will be called with NULL if position cannot be determined,
+     # or with object { coords: { latitude: 1.234, longitude: 5.678 } }
+     # ATTENTION: may never call the callback - in case the user does neither
+     # confirm nor deny the confirmation dialog that the browser usually
+     displays*/
+    function getLocation(callback, pTimeout) {
+        var errorCallback, ref, successCallback;
+        if (pTimeout == null) {
+            pTimeout = 99999;
+        }
+        if (!(typeof navigator !== "undefined" && navigator !== null ? (ref = navigator.geolocation) != null ? ref.getCurrentPosition : void 0 : void 0)) {
+            return callback(null);
+        } else {
+            successCallback = function(position) {
+                var ref1, ref2;
+                if ((position != null ? (ref1 = position.coords) != null ? ref1.latitude : void 0 : void 0) && (position != null ? (ref2 = position.coords) != null ? ref2.longitude : void 0 : void 0)) {
+                    return callback(position);
+                } else {
+                    return callback(null);
+                }
+            };
+            errorCallback = function(positionError) {
+                if (positionError != null && positionError.code != 1) {
+                    return window.setTimeout((function() {
+                        return navigator.geolocation.getCurrentPosition(successCallback, function(positionError2) {
+                            return callback({});
+                        }, {
+                            enableHighAccuracy: true,
+                            timeout: pTimeout,
+                            maximumAge: Infinity
+                        });
+                    }), 11);
+                } else {
+                    return callback(null);
+                }
+            };
+            return navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
+                enableHighAccuracy: false,
+                timeout: 8888,
+                maximumAge: 999999
+            });
+        }
+    }
+
+</script>
+
+
+<!-- COOKIE  and  REQUEST PARAMETER HANDLING -->
+<script type="text/javascript">
+
+    /* COOKIE  and  REQUEST PARAMETER HANDLING */
+
+    function saveCity() {
+        var ablauf = new Date();
+        var in400Tagen = ablauf.getTime() + (400 * 24 * 60 * 60 * 1000);
+        ablauf.setTime(in400Tagen);
+        document.cookie = 'city='+city+'; path=/; expires=' + ablauf.toGMTString();
+        document.cookie = 'lat='+lat+'; path=/; expires=' + ablauf.toGMTString();
+        document.cookie = 'lon='+lon+'; path=/; expires=' + ablauf.toGMTString();
+    }
+
+    function initCity() {
+        if (document.cookie) {
+            var ca = document.cookie.split(';');
+            if (ca) {
+                for(var i=0;i < ca.length;i++) {
+                    var c = ca[i];
+                    while (c.charAt(0)==' ') c = c.substring(1);
+                    if (c.indexOf('city=') == 0) {
+                        city = c.substring(5);
+                        document.getElementById('city').placeholder = 'Ort: ' + city;
+                    }
+                    if (c.indexOf('lat=') == 0) {
+                        lat = parseFloat(c.substring(4));
+                        bbox = [lat - 0.1, lon - 0.12, lat + 0.1, lon + 0.12];;
+                    }
+                    if (c.indexOf('lon=') == 0) {
+                        lon = parseFloat(c.substring(4));
+                        bbox = [lat - 0.1, lon - 0.12, lat + 0.1, lon + 0.12];
+                    }
+                }
+            }
+        }
+
+        if(location.hash && location.hash != '#' && location.hash.replace(' ', '') && location.hash.replace(' ', '') != '#') {
+            displayDetails(location.hash.replace(/^#/, ''));
+        }
+
+    }
+
+    </script>
+
+
+<!-- MAP FUNCTIONS -->
+<script type="text/javascript">
+
+    /* MAP FUNCTIONS */
+
+    var resultMapObj = null;
+    var mapMarkers = {};
+
+    function toggleMap() {
+        backScrollY = null;
+        if (!resultMapObj) {
+            if (confirm('Karte laden? (Langsam auf alten Handies!)')) {
+                initMap();
+            }
+        } else {
+            var ele = document.getElementById('overMap');
+            if (ele) {
+                if (ele.style.height && ele.style.height != 'auto') {
+                    ele.style.height = 'auto';
+                    ele.style.overflow = "";
+                    document.getElementById('mapBtn').innerText = "Karte";
+                } else {
+                    ele.style.height = "100px";
+                    ele.style.overflow = "hidden";
+                    document.getElementById('mapBtn').innerText = "Liste";
+                    if ((!searchResult) || ((!searchResult.visible) && (!searchResult.invisible))) {
+                        find();
+                    }
+                }
+            }
+        }
+    }
+
+    function doInitMap() {
+        document.getElementById('mapBtn').style.display = 'inline-block';
+
+        if (resultMapObj != null || (!L) || (!L.tileLayer) ||
+                (!L.tileLayer.provider) ||
+                (!L.tileLayer.provider('OpenStreetMap.DE'))) {
+            console.log(resultMapObj == null ?
+                    "Leaflet Scripts not yet loaded." :
+                    "Map is already loaded");
+            return;
+        }
+        resultMapObj = L.map('resultMap', {
+            layers: [L.tileLayer.provider('OpenStreetMap.DE')],
+            center: [lat, lon],
+            tapTolerance: 30,
+            tap: true,
+            zoom: 12
+        });
+
+        resultMapObj.fitBounds([[bbox[0], bbox[1]], [bbox[2], bbox[3]]]);
+
+        resultMapObj.on('moveend', function () {
+            var ele = document.getElementById('overMap');
+            if (ele && ele.style.height && ele.style.height != 'auto') {
+                bbox = [resultMapObj.getBounds().getSouthWest().lat, resultMapObj.getBounds().getSouthWest().lng, resultMapObj.getBounds().getNorthEast().lat, resultMapObj.getBounds().getNorthEast().lng];
+                lat = resultMapObj.getCenter().lat;
+                lon = resultMapObj.getCenter().lng;
+                city = lat + ',' + lon;
+                document.getElementById('city').placeholder = 'Ort: ' + city;
+                disableOverlay = true;
+                find();
+                window.setTimeout(function () {
+                    disableOverlay = false;
+                }, 333);
+                saveCity();
+            }
+        });
+
+        toggleMap();
+        find();
+    }
+
+    function initMap() {
+
+        var lfcss = document.createElement("LINK");
+        lfcss.rel = "stylesheet";
+        lfcss.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet.css";
+        document.head.appendChild(lfcss);
+
+        var facss = document.createElement("LINK");
+        facss.rel = "stylesheet";
+        facss.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css";
+        document.head.appendChild(facss);
+
+
+        var lfjs = document.createElement("SCRIPT");
+        lfjs.type = "text/javascript";
+        lfjs.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet.js";
+        lfjs.onload = function() {
+            var lfjs2 = document.createElement("SCRIPT");
+            lfjs2.type = "text/javascript";
+            lfjs2.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet-providers/1.1.10/leaflet-providers.min.js";
+            lfjs2.onload = doInitMap;
+            document.body.appendChild(lfjs2);
+        };
+        document.body.appendChild(lfjs);
+
+        var mapBtnEle = document.getElementById('btnInitMap');
+        if (mapBtnEle) {
+            mapBtnEle.innerText="Karte zeigen";
+            mapBtnEle.onclick=toggleMap;
+        }
+    }
+
+    function removeUnnecessaryMapMarkers() {
+        if (mapMarkers && resultMapObj) {
+            for (e in mapMarkers) {
+                var marker = mapMarkers[e];
+                if (marker && ((!e.match) || !e.match(/^osm_.+/))) {
+                    if ( ((!searchResult['visible'])   || (searchResult['visible']   && searchResult['visible'].indexOf(e) < 0))
+                            && ((!searchResult['invisible']) || (searchResult['invisible'] && searchResult['invisible'].indexOf(e) < 0)) ) {
+                        resultMapObj.removeLayer(marker);
+                        delete mapMarkers[e];
+                    }
+                } else if (marker && !osmIsResult(e)) {
+                    resultMapObj.removeLayer(marker);
+                    delete mapMarkers[e];
+                }
+            }
+        }
+    }
+
+    function addMapMarker(entry) {
+        if (resultMapObj && (!mapMarkers[entry.id]) && entry && entry.lat && entry.lng) {
+            var cat = categories && entry.categories && entry.categories.length
+            && entry.categories[0] ? categories[entry.categories[0]] : null;
+            mapMarkers[entry.id] = L.marker({lat:entry.lat, lng:entry.lng}, {icon:
+                    L.divIcon({iconSize: [28,40],
+                        iconAnchor:[14,40], className:'mapMarker '+(cat ?
+                    cat.name :'unknown'), html:'<i class="fa fa-map-marker"></i>'})});
+            mapMarkers[entry.id].addTo(resultMapObj);
+            mapMarkers[entry.id].bindPopup('<a href="#" onclick="displayDetails('+"'"+entry.id+"'"+');toggleMap();event.preventDefault();return false;">'+entry.title+'</a>');
+        }
+    }
+
+
+</script>
+
+<!-- OPEN STREET MAP SEARCH -->
+<script type="text/javascript">
+
+    var osmEnabled = true;
+    var osmCache = {};
+    var osmBbox = null;
+
+    var osmLoading = 0;
+
+    function findOsm() {
+        var resultCtnr = document.getElementById('openstreetmap');
+        while (resultCtnr.childElementCount > 0) {
+            resultCtnr.removeChild(resultCtnr.firstElementChild);
+        }
+        var head = document.createElement("H3");
+        head.innerText = "Open Street Map Results:"
+        resultCtnr.appendChild(head);
+        if (osmEnabled && osmBbox && bbox && bbox.length == 4 && osmBbox.length == 4 &&
+                osmBbox[0] && osmBbox[1] && osmBbox[2] && osmBbox[3] &&
+                bbox[0] && bbox[1] && bbox[2] && bbox[3] &&
+                osmBbox[0] <= bbox[0] && osmBbox[1] <= bbox[1] && osmBbox[2] >=
+                bbox[2] && osmBbox[3] >= bbox[3]) {
+            for (var e in cache) {
+                if (e && e.match(/^osm_/) ) {
+                    displayOsmFromCache(e);
+                }
+            }
+            return;
+        }
+        if (mapMarkers && resultMapObj) {
+            for (e in mapMarkers) {
+                var marker = mapMarkers[e];
+                if (marker && e.match && e.match(/^osm_.+/)) {
+                    resultMapObj.removeLayer(marker);
+                    delete mapMarkers[e];
+                }
+            }
+        }
+        if (osmEnabled && bbox && bbox.length == 4 && Math.abs(bbox[2] - bbox[0]) <= 0.201 && Math.abs(bbox[3] - bbox[1]) <= 0.241) {
+            osmBbox = [(bbox[2] + bbox[0])/2 - 0.1,
+                       (bbox[3] + bbox[1])/2 - 0.12,
+                       (bbox[2] + bbox[0])/2 + 0.1,
+                       (bbox[3] + bbox[1])/2 + 0.12];
+
+            var loading = document.createElement("DIV");
+            loading.className = "loading";
+            loading.innerText = "lade Daten...";
+            loading.id = "osmloading"
+            resultCtnr.appendChild(loading);
+
+            var ebtn = document.getElementById('btnOpenStreetMap');
+            if (ebtn) {
+                ebtn.innerText="Lade von OSM..."
+            }
+
+            doFindOsm('node[~"^(organic|diet:vegan|diet:vegetarian|fair_trade|regional|second_hand|charity|ngo|identity)$"~"^([^nN].*|[nN][^oO].*|[nN][oO].+)$"]');
+            doFindOsm('(way[~"^(organic|diet:vegan|diet:vegetarian|fair_trade|regional|second_hand|charity|ngo|identity)$"~"^([^nN].*|[nN][^oO].*|[nN][oO].+)$"];node(w))');
+            doFindOsm('node[~"^(office|shop|leisure|craft)$"~"^(organic|diet:vegan|diet:vegetarian|fair_trade|second_hand|charity|ngo|farm|garden|beekeeper|dressmaker|handicraft|pottery|beekeper|electronics_repair|basket_maker)$"]');
+            doFindOsm('(way[~"^(office|shop|craft)$"~"^(organic|diet:vegan|diet:vegetarian|fair_trade|second_hand|charity|ngo|farm|garden|beekeeper|dressmaker|handicraft|pottery|beekeper|electronics_repair|basket_maker)$"];node(w))');
+
+        } else if (osmEnabled || (bbox && bbox.length == 4 && (Math.abs(bbox[2] - bbox[0]) > 0.201 || Math.abs(bbox[3] - bbox[1]) > 0.241))) {
+            var ebtn = document.getElementById('btnOpenStreetMap');
+            if (ebtn) {
+                ebtn.innerText="ZOOM for OSM!"
+            }
+            osmBbox = null;
+        } else {
+            var ebtn = document.getElementById('btnOpenStreetMap');
+            if (ebtn) {
+                ebtn.innerText="OpenStreetMap"
+            }
+        }
+    }
+
+    function doFindOsm(query) {
+        var xhttp = new XMLHttpRequest();
+        //showWait(null, xhttp);
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4) {
+                if (xhttp.status == 200) {
+                    osmLoading--;
+                    if (osmLoading <= 0) {
+                        var elem = document.getElementById('osmloading');
+                        if (elem) {
+                            elem.style.display = 'none';
+                        }
+                        var ebtn = document.getElementById('btnOpenStreetMap');
+                        if (ebtn) {
+                            ebtn.innerText="OpenStreetMap"
+                        }
+                    }
+                    var response = JSON.parse(xhttp.responseText);
+                    var res = response ? response.elements : response;
+                    if (res) {
+                        for (var e in res) {
+                            if (res[e]&& res[e].tags && res[e].tags.name &&
+                               ((!res[e].tags.shop) || res[e].tags.shop != 'car')) {
+
+                                displayOsm(res[e]);
+                            }
+                            if (res[e] && res[e].id) {
+                                osmCache[res[e].id] = res[e];
+                            }
+                        }
+                    }
+                } else {
+                    var resultCtnr = document.getElementById('openstreetmap');
+                    var osmerr = document.createElement("DIV");
+                    osmerr.className = "loaderr";
+                    osmerr.innerText = "Server nicht erreichbar";
+                    resultCtnr.appendChild(osmerr);
+                }
+            }
+        };
+        xhttp.open("GET",
+                'https://api.openstreetmap.fr/oapi/interpreter/?data=[out:json][timeout:180][bbox:'
+                + osmBbox.join(',') + '];' + query + ';out;'
+                , true);
+        xhttp.send();
+        osmLoading++;
+    }
+
+    function displayOsm(osmEntry) {
+        var entry = {
+            id: 'osm_' + osmEntry.id,
+            title: osmEntry.tags.name,
+            lat: osmEntry.lat,
+            lng: osmEntry.lon,
+            description: getEntryType(osmEntry),
+            street: osmEntry.tags['addr:street'],
+            zip: osmEntry.tags['addr:postcode'] ?
+                    osmEntry.tags['addr:postcode'] : osmEntry.tags['addr:zip'],
+            city: osmEntry.tags['addr:city'] ? osmEntry.tags['addr:city']
+                    : osmEntry.tags['addr:town'] ? osmEntry.tags['addr:town']
+                    : osmEntry.tags['addr:village'],
+            homepage: osmEntry.tags['website'] ? osmEntry.tags['website'] :
+                    osmEntry.tags['url'] ? osmEntry.tags['url'] :
+                            osmEntry.tags['contact:website'],
+            tags: osmEntry.tags,
+            license: '© OpenStreetMap.org contributors, ODbL',
+            origin: 'openstreetmap.org'
+        }
+
+        if (osmEntry.nodes && osmEntry.nodes[0] && osmCache[osmEntry.nodes[0]]) {
+            entry.lat = osmCache[osmEntry.nodes[0]].lat;
+            entry.lng = osmCache[osmEntry.nodes[0]].lon;
+        }
+
+        cache[entry.id] = entry;
+
+        displayOsmFromCache(entry.id);
+    }
+
+    function displayOsmFromCache(entryId) {
+        if (osmIsResult(entryId)) {
+            var entry = cache[entryId];
+            if (entry && entry.lat >= bbox[0] && entry.lat <= bbox[2] &&
+                    entry.lng >= bbox[1] && entry.lng <= bbox[3]) {
+                var resultCtnr = document.getElementById('openstreetmap');
+                var osmCtnr = document.createElement("DIV");
+                osmCtnr.className = "entry";
+                osmCtnr.onclick = createShowFunc(osmCtnr, entryId);
+
+                var title = document.createElement("A");
+                title.innerText = entry.title;
+                title.href = '#' + entryId;
+                title.onclick = osmCtnr.onclick;
+
+                var desc = document.createElement("DIV");
+                desc.innerText = entry.description;
+
+                osmCtnr.appendChild(title);
+                osmCtnr.appendChild(desc);
+                resultCtnr.appendChild(osmCtnr);
+            }
+
+            if (!mapMarkers[entry.id]) {
+                addMapMarker(entry);
+            }
+        }
+    }
+
+    function osmIsResult(entryId) {
+        var filter = document.getElementById('text');
+        if (filter && filter.value) {
+            var entry = cache[entryId];
+            if (entry && entry.tags) {
+                for (var e in entry.tags) {
+                    if (e.indexOf(filter.value) >= 0) {
+                        return true;
+                    }
+                    if (entry.tags[e] && entry.tags[e].indexOf(filter.value) >= 0) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function getEntryType(osmEntry) {
+        var res = '';
+        if (osmEntry && osmEntry.tags) {
+            for (tag in osmEntry.tags) {
+                if (tag && tag.match(/^(office|shop|leisure|craft|organic|diet:vegan|diet:vegetarian|fair_trade|regional|second_hand|charity|ngo|identity)$/) ) {
+                    res += capitalizeFirstLetter(tag) + ": " + osmEntry.tags[tag] + ', ';
+                }
+            }
+        }
+        return res + '\n  © OpenStreetMap.org contributors, ODbL';
+    }
+
+    function getOsmResults(ids, callback) {
+        // do nothing.
+    }
+
+
+</script>
+
+</body>
+</html>
+

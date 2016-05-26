@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Karte von morgen - Edit</title>
+    <meta name="viewport" content="width=320,user-scalable=no" />
+
+    <style>
+        /* waiting message */
+
+        #ovl_wait {
+            display:none;
+            position:fixed;
+            background-color:rgba(0,0,0,0.2);
+            top:0;
+            left:0;
+            bottom:0;
+            right:0;
+            z-index:222;
+            text-align: center;
+        }
+
+        #ovl_wait > span {
+            display: inline-block;
+            padding: 1em 2em;
+            background-color: #EEE;
+            margin-top: 150px;
+            border: 1px solid black;
+            width: 180px;
+        }
+
+        #ovl_wait_btn {
+            margin-top: 50px;
+        }
+
+        #ovl_wait_btn button {
+            padding: 1em 2em;
+        }
+
+        /* search fields */
+        body {
+            width:320px;
+            margin-left:auto;
+            margin-right:auto;
+            font-size:16px;
+        }
+
+        form#add-entry-form {
+
+        }
+
+        form#add-entry-form input, form#add-entry-form select {
+            width: 80%;
+            height: 2.2em;
+            box-sizing: border-box;
+        }
+
+        form#add-entry-form textarea {
+            width: 80%;
+        }
+
+        form#add-entry-form div.btn {
+            text-align: right;
+        }
+
+        form#add-entry-form button {
+            width: 50%;
+            margin-top: 5px;
+            height: 2.2em;
+            box-sizing: border-box;
+            font-weight: bold;
+        }
+
+        form#add-entry-form div.error {
+            color: red;
+            padding: 5px;
+        }
+
+        form#add-entry-form button input.error, form#add-entry-form button
+        textarea.error, form#add-entry-form button select.error {
+            border: 2px solid red;
+        }
+
+    </style>
+
+    <link rel="stylesheet"
+          href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+
+</head>
+<body onload="initCity();">
+
+<div style="margin-bottom: 25px;font-size:14px;">
+    <a href="mobile.html"><< abbrechen und zurück zur Startseite</a>
+</div>
+
+<div id="ovl_wait">
+      <span>
+        <div id="ovl_wait_msg">lade Daten...</div>
+        <div id="ovl_wait_btn">
+            <button onclick="cancel();">Abbrechen</button>
+        </div>
+      </span>
+</div>
+
+<form id="add-entry-form" action="javascript:void();"
+      onsubmit="save();event.preventDefault();return false;">
+    <h3 id="heading">Neuer Eintrag</h3>
+    <fieldset>
+        <legend>Was</legend>
+        <div id="error_category"></div>
+        <select id="entry_category" name="category">
+            <option value="-1">- Kategorie auswählen -</option>
+            <option value="2cd00bebec0c48ba9db761da48678134">Initiative</option>
+            <option value="c2dc278a2d6a4b9b8a50cb606fc017ed"
+                    disabled="disabled">Event
+            </option>
+            <option value="77b3c33a92554bcf8e8c2c86cedd6f6f">Unternehmen</option>
+        </select>
+        <div id="error_title"></div>
+        <input id="entry_title" name="title" type="text" placeholder="Titel">
+        <div id="error_description"></div>
+        <textarea id="entry_description" name="description" rows="5"
+                  placeholder="Beschreibung"></textarea>
+    </fieldset>
+    <fieldset>
+        <legend>
+            <span style="white-space: nowrap">Ort
+                <span style="font-size:12px;"> (Karte klicken ODER Adresse
+                    eingeben)</span>
+           </span>
+        </legend>
+
+        <div id="error_lat"></div>
+        <input id="entry_lat" name="lat" type="text" readonly=""
+               style="width: 33% !important;">
+        <input id="entry_lng" name="lng" type="text" readonly=""
+               style="width: 33% !important;">
+        <button id="buttonGPS" onclick="geolocate();event.preventDefault(); return false;" style="width: 20% !important; margin-left: 5%;">GPS</button>
+        <div id="error_lng"></div>
+        <div id="entryMap" style="height: 300px;">
+
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Adresse</legend>
+        <div id="error_street"></div>
+        <input id="entry_street" name="street" placeholder="Straße"
+               onchange="addressWasEnteredManually=true;if(!locationWasEnteredManually)address2Marker();">
+        <div id="error_zip"></div>
+        <input id="entry_zip" name="zip" placeholder="PLZ"
+               onchange="addressWasEnteredManually=true;if(!locationWasEnteredManually)address2Marker();">
+        <div id="error_city"></div>
+        <input id="entry_city" name="city" placeholder="Stadt"
+               onchange="addressWasEnteredManually=true;if(!locationWasEnteredManually)address2Marker();">
+    </fieldset>
+    <fieldset>
+        <legend>Kontakt</legend>
+        <div id="error_homepage"></div>
+        <input id="entry_homepage" name="homepage" placeholder="Homepage">
+        <div id="error_email"></div>
+        <input id="entry_email" name="email" placeholder="eMail">
+        <div id="error_telephone"></div>
+        <input id="entry_telephone" name="telephone" placeholder="Telefon">
+    </fieldset>
+    <fieldset>
+        <legend>
+            <span style="white-space: nowrap;">Lizenz (CC-0)</span>
+        </legend>
+        <div id="error_license"></div>
+        <input id="entry_license" name="license" type="checkbox"
+               style="width: auto !important;" value="true">
+        <span> Ich habe die </span>
+        <a target="_blank" href="https://creativecommons.org/publicdomain/zero/1.0/deed.de">
+            Bestimmungen der Creative-Commons Lizenz CC0</a>
+        <span> gelesen und akzeptiere sie</span>
+    </fieldset>
+    <div id="entry_error"></div>
+    <div class="btn">
+        <button>Speichern</button>
+    </div>
+</form>
+
+<div style="margin-top: 50px;font-size:14px;">
+    <a href="mobile.html"><< abbrechen und zurück zur Startseite</a>
+</div>
+
+<script type="text/javascript">
+
+    var addressWasEnteredManually = false;
+    var locationWasEnteredManually = false;
+    var entryMapObj = null;
+    var entryMarker = null;
+
+    var origEntry = {};
+
+
+    var srv = "https://api.ofdb.io/v0/";
+
+    var city = "Stuttgart";
+    var lat = 48.75;
+    var lon = 9.2;
+    var bbox = [lat - 0.15, lon - 0.3, lat + 0.15, lon + 0.3];
+
+    var categories = [];
+
+    var cancelCallback = null;
+
+    var geoLocationCancelled = false;
+
+    function getCategories(callback) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                categories = JSON.parse(xhttp.responseText);
+                callback();
+            }
+        };
+        xhttp.open("GET", srv + "categories/" , true);
+        xhttp.send();
+    }
+
+    function getEntry(id, callback) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4) {
+                if (xhttp.status == 200) {
+                    origEntry = JSON.parse(xhttp.responseText);
+                    if (origEntry && origEntry.id == id) {
+                        for (var key in origEntry) {
+                            if (key == 'categories') {
+                                if (origEntry[key] &&
+                                        origEntry[key].length) {
+                                    document.getElementById('entry_category').value = origEntry[key][0];
+                                }
+                            } else {
+                                var ele =
+                                        document.getElementById('entry_' + key);
+                                if (ele) {
+                                    ele.value = origEntry[key];
+                                }
+                            }
+                        }
+                        document.getElementById('heading').innerText="Eintrag bearbeiten";
+                        entryMapObj.panTo(origEntry);
+                        onMapClick({automatic: true,
+                            latlng: {lat: origEntry.lat, lng: origEntry.lng}});
+                    } else {
+                        origEntry = {};
+                    }
+                    hideWait();
+                } else {
+                    hideWait('Internet Verbindung.');
+                }
+            }
+        };
+        showWait();
+        xhttp.open("GET", srv + 'entries/' + id, true);
+        xhttp.send();
+    }
+
+    function geolocate() {
+        showWait('Positionsbestimmung...');
+        geoLocationCancelled = false;
+        cancelCallback = function(){geoLocationCancelled = true;}
+        getLocation(function(res) {
+            if (geoLocationCancelled) {
+                return;
+            }
+            if (res && res.coords) {
+                res = res.coords;
+            }
+            if (res && res.latitude && res.longitude) {
+                hideWait();
+                goto(res.latitude + ',' + res.longitude, res.latitude,
+                        res.longitude);
+            }
+            else if (res && res.lat && res.lon) {
+                hideWait();
+                goto(res.lat + ',' + res.lon, res.lat, res.lon);
+            } else if (res) {
+                showWait('Position nicht gefunden, versuche es neu für 15 Minuten...');
+                cancelCallback = function(){geoLocationCancelled = true;}
+                getLocation(function(res) {
+                    if (geoLocationCancelled) {
+                        return;
+                    }
+                    if (res && res.coords) {
+                        res = res.coords;
+                    }
+                    if (res && res.latitude && res.longitude) {
+                        hideWait();
+                        goto(res.latitude + ',' + res.longitude, res.latitude,
+                                res.longitude);
+                    }
+                    else if (res && res.lat && res.lon) {
+                        hideWait();
+                        goto(res.lat + ',' + res.lon, res.lat, res.lon);
+                    } else {
+                        hideWait('GPS');
+                    }
+                }, 900000);
+            } else {
+                hideWait('Permission denied');
+            }
+        });
+    }
+
+
+    /*# get location (default timeout 8.8 seconds for google and 99 seconds for GPS)
+     # with fallback to high accuracy in case that low accuracy is turned off
+     # (this is necessary for android with google location services turned off)
+     # callback will be called with NULL if position cannot be determined,
+     # or with object { coords: { latitude: 1.234, longitude: 5.678 } }
+     # ATTENTION: may never call the callback - in case the user does neither
+     # confirm nor deny the confirmation dialog that the browser usually
+     displays*/
+    function getLocation(callback, pTimeout) {
+        var errorCallback, ref, successCallback;
+        if (pTimeout == null) {
+            pTimeout = 99999;
+        }
+        if (!(typeof navigator !== "undefined" && navigator !== null ? (ref = navigator.geolocation) != null ? ref.getCurrentPosition : void 0 : void 0)) {
+            return callback(null);
+        } else {
+            successCallback = function(position) {
+                var ref1, ref2;
+                if ((position != null ? (ref1 = position.coords) != null ? ref1.latitude : void 0 : void 0) && (position != null ? (ref2 = position.coords) != null ? ref2.longitude : void 0 : void 0)) {
+                    return callback(position);
+                } else {
+                    return callback(null);
+                }
+            };
+            errorCallback = function(positionError) {
+                if (positionError != null && positionError.code != 1) {
+                    return window.setTimeout((function() {
+                        return navigator.geolocation.getCurrentPosition(successCallback, function(positionError2) {
+                            return callback({});
+                        }, {
+                            enableHighAccuracy: true,
+                            timeout: pTimeout,
+                            maximumAge: Infinity
+                        });
+                    }), 11);
+                } else {
+                    return callback(null);
+                }
+            };
+            return navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
+                enableHighAccuracy: false,
+                timeout: 8888,
+                maximumAge: 999999
+            });
+        }
+    }
+
+    function showWait(msg) {
+        document.getElementById('ovl_wait').style.display = 'block';
+        if (msg) {
+            document.getElementById('ovl_wait_msg').innerText = msg;
+        } else {
+            document.getElementById('ovl_wait_msg').innerText = 'lade Daten...';
+        }
+    }
+
+    function hideWait(err) {
+        cancelCallback = null;
+        if (err) {
+            alert("Problem mit " + err);
+        }
+        document.getElementById('ovl_wait').style.display = 'none';
+    }
+
+    function cancel() {
+        if (cancelCallback) {
+            cancelCallback();
+        }
+        hideWait();
+    }
+
+    function initCity() {
+        if (document.cookie) {
+            var ca = document.cookie.split(';');
+            if (ca) {
+                for(var i=0;i < ca.length;i++) {
+                    var c = ca[i];
+                    while (c.charAt(0)==' ') c = c.substring(1);
+                    if (c.indexOf('city=') == 0) {
+                        city = c.substring(5);
+//                     document.getElementById('city').placeholder ='city: ' + city;
+                    }
+                    if (c.indexOf('lat=') == 0) {
+                        lat = parseFloat(c.substring(4));
+                        bbox = [lat - 0.15, lon - 0.3, lat + 0.15, lon + 0.3];
+                    }
+                    if (c.indexOf('lon=') == 0) {
+                        lon = parseFloat(c.substring(4));
+                        bbox = [lat - 0.15, lon - 0.3, lat + 0.15, lon + 0.3];
+                    }
+                }
+            }
+        }
+        showEntryForm();
+    }
+
+    function save() {
+        var data = {};
+        var fields = ['category', 'title', 'description', 'lat', 'lng',
+            'street', 'zip', 'city', 'email', 'homepage', 'telephone',
+            'license'];
+        for ( e in fields) {
+            var v = fields[e];
+            var elem = document.getElementById('entry_' + v);
+            if (elem) {
+                if (v == 'license') {
+                    data[v] = elem.checked;
+                } else if (v == 'category') {
+                    data[v] = elem.value == "-1" ? null : elem.value;
+                } else {
+                    data[v] = elem.value;
+                }
+                elem.className = elem.className.replace(' error ', '');
+                elem.className = elem.className.replace(' error ', '');
+                elem.className = elem.className.replace(' error ', '');
+            }
+            elem = document.getElementById('error_' + v);
+            if (elem) {
+                elem.innerText = '';
+                elem.className = elem.className.replace(' error ', '');
+                elem.className = elem.className.replace(' error ', '');
+                elem.className = elem.className.replace(' error ', '');
+            }
+        }
+        document.getElementById('entry_error').innerText = '';
+        document.getElementById('entry_error').className =
+                document.getElementById('entry_error').className.replace(' error ', '');
+        document.getElementById('entry_error').className =
+                document.getElementById('entry_error').className.replace(' error ', '');
+        document.getElementById('entry_error').className =
+                document.getElementById('entry_error').className.replace(' error ', '');
+        errors = validateEntry(data);
+        var hasError = false;
+        if (errors) {
+            for (e in errors) {
+                hasError = true;
+                var elem = document.getElementById('error_'+e);
+                if (elem) {
+                    elem.innerText = errors[e];
+                    elem.className += ' error ';
+                } else {
+                    document.getElementById('entry_error').innerText +=
+                            errors[e] + ' \n ';
+                    document.getElementById('entry_error').className +=
+                            ' error ';
+                }
+                elem = document.getElementById('entry_' + e);
+                if (elem) {
+                    elem.className += ' error ';
+                }
+            }
+        }
+        if(!hasError) {
+
+            doSave(data);
+
+        } else if (!document.getElementById('entry_error').innerText) {
+            document.getElementById('entry_error').innerText =
+                    'Bitte alle Felder richtig ausfüllen!';
+            document.getElementById('entry_error').className +=
+                    ' error ';
+        }
+    }
+
+    function doSave(data) {
+        var fields = ['title', 'description', 'lat', 'lng',
+            'street', 'zip', 'city', 'email', 'homepage', 'telephone'];
+        for (k in fields) {
+            origEntry[fields[k]] = data[fields[k]];
+        }
+        origEntry['categories'] = [data['category']];
+        origEntry['version'] = origEntry['version']? (origEntry['version']+1):1;
+        var origId = origEntry.id;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4) {
+                if (xhttp.status == 200 && xhttp.responseText) {
+                    alert((origId ? '' : 'Neuer ') +
+                            'Eintrag wurde erfolgreich abgespeichert mit id: '
+                            + xhttp.responseText);
+                    origEntry = {};
+                    document.getElementById('heading').innerText =
+                            'Neuer Eintrag';
+                    var fields = ['category', 'title', 'description', 'lat', 'lng',
+                        'street', 'zip', 'city', 'email', 'homepage', 'telephone',
+                        'license'];
+                    for ( e in fields) {
+                        var v = fields[e];
+                        var elem = document.getElementById('entry_' + v);
+                        if (elem) {
+                            if (v == 'license') {
+                                elem.checked = false;
+                            } else {
+                                elem.value = '';
+                            }
+                        }
+                    }
+                    hideWait();
+                    location.href='mobile.html#'+xhttp.responseText;
+                } else {
+                    hideWait('Fehler!! Der neue Eintrag konnte NICHT gespeichert werden. Bitte prüfen Sie die Eingaben.');
+                    document.getElementById('entry_error').innerText =
+                            'Bitte alle Felder richtig ausfüllen!';
+                    document.getElementById('entry_error').className +=
+                            ' error ';
+                }
+            }
+        };
+        showWait();
+        xhttp.open(origId ? "PUT" : "POST", srv + '/entries/' +
+                (origId ? origId : ''), true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.send(JSON.stringify(origEntry));
+    }
+
+    function showEntryForm() {
+        entryMapObj = L.map('entryMap', {
+            layers: [L.tileLayer.provider('OpenStreetMap.DE')],
+            center: [lat, lon],
+            zoom: 12
+        });
+
+        entryMapObj.on('click', onMapClick);
+
+        if (document.location.hash && document.location.hash.replace(' ', '') !=
+                '#') {
+            getEntry(document.location.hash.replace(/^#/, ''));
+        }
+    }
+
+    function onMapClick(e) {
+        if (entryMarker == null) {
+            entryMarker =
+                    L.marker(e.latlng, {draggable:true}).addTo(entryMapObj).on('dragend',
+                            function(e2) {
+                                document.getElementById('entry_lat').value
+                                        = entryMarker.getLatLng()['lat'];
+                                document.getElementById('entry_lng').value
+                                        = entryMarker.getLatLng()['lng'];
+                                if (!e.automatic) {
+                                    locationWasEnteredManually = true;
+                                }
+                                if (!addressWasEnteredManually) {
+                                    marker2Address();
+                                }
+                            });
+        } else {
+            entryMarker.setLatLng(e.latlng);
+        }
+        document.getElementById('entry_lat').value=e.latlng['lat'];
+        document.getElementById('entry_lng').value=e.latlng['lng'];
+        if (!e.automatic) {
+            locationWasEnteredManually = true;
+        }
+        if (!addressWasEnteredManually) {
+            marker2Address();
+        }
+    }
+
+    function marker2Address() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4) {
+                if (xhttp.status == 200 && xhttp.responseText) {
+                    var res = JSON.parse(xhttp.responseText);
+                    if (res && res.address) {
+                        if (res.address.city || res.address.town ||
+                                res.address.village) {
+                            document.getElementById('entry_city').value = res.address.city ? res.address.city : res.address.town ? res.address.town : res.address.village;
+                        }
+                        if (res.address.street || res.address.road) {
+                            document.getElementById('entry_street').value =
+                                    (res.address.street ? res.address.street
+                                            : res.address.road) +
+                                    (res.address.house_number ?
+                                            (' ' + res.address.house_number) :
+                                            '');
+                        }
+                        if (res.address.postcode || res.address.zip) {
+                            document.getElementById('entry_zip').value = res.address.postcode ? res.address.postcode : res.address.zip;
+                        }
+                    }
+                    hideWait();
+                } else {
+                    hideWait('Internet Verbindung.');
+                }
+            }
+        };
+        showWait();
+        xhttp.open("GET",
+                'http://open.mapquestapi.com/nominatim/v1/reverse.php?key=SJpWKrsbH6PZGQ9KZvyibuGzRkXS1LAw' +
+                '&format=json&zoom=18&lat=' +
+                document.getElementById('entry_lat').value + '&lon=' +
+                document.getElementById('entry_lng').value
+                , true);
+        xhttp.send();
+    }
+
+    function address2Marker() {
+        if ( document.getElementById('entry_city').value ||
+                document.getElementById('entry_zip').value) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (xhttp.readyState == 4) {
+                    if (xhttp.status == 200 && xhttp.responseText) {
+                        var res = JSON.parse(xhttp.responseText);
+                        if (res && res.length) {
+                            document.getElementById('entry_lat').value = res[0].lat;
+                            document.getElementById('entry_lng').value = res[0].lon;
+                            if (entryMapObj) {
+                                entryMapObj.panTo(res[0]);
+                                onMapClick({automatic: true,
+                                    latlng: {lat: res[0].lat, lng: res[0].lon}});
+                            }
+                        }
+                        hideWait();
+                    } else {
+                        hideWait('Internet Verbindung.');
+                    }
+                }
+            };
+            showWait();
+            xhttp.open("GET",
+                    'https://nominatim.openstreetmap.org/search' +
+                    '?format=json&addressdetails=1&q=' +
+                    (document.getElementById('entry_street').value ?
+                            (document.getElementById('entry_street').value + ' ') : '') +
+                    (document.getElementById('entry_zip').value ?
+                            (document.getElementById('entry_zip').value + ' ') : '') +
+                    (document.getElementById('entry_city').value ?
+                            (document.getElementById('entry_city').value + ' ') : '') +
+                    'DE', true);
+            xhttp.send();
+        }
+    }
+
+    function isInt(v) {
+        return (typeof v) === "number" && (isFinite(v)) && (Math.floor(v)) === v;
+    }
+
+    function validateEntry(data) {
+        var errors, l;
+        errors = {};
+        if (data == null) {
+            errors._error = "Ungültige Daten";
+            return errors;
+        }
+        if (data.title == null) {
+            errors.title = 'Pflichtangabe';
+        } else {
+            if (!((l = data.title.length) <= 40)) {
+                if (errors.title == null) {
+                    errors.title = "Zu langer Titel: " + l + " statt max. 40 Zeichen";
+                }
+            }
+            if (!((l = data.title.length) >= 3)) {
+                if (errors.title == null) {
+                    errors.title = "Zu kurzer Titel: " + l + " von mind. 3 Zeichen";
+                }
+            }
+        }
+        if (data.description == null) {
+            errors.description = 'Pflichtangabe';
+        } else {
+            if (!((l = data.description.length) <= 250)) {
+                if (errors.description == null) {
+                    errors.description = "Zu lange Beschreibung: " + l + " statt max. 250 Zeichen";
+                }
+            }
+            if (!((l = data.description.length) >= 10)) {
+                if (errors.description == null) {
+                    errors.description = "Zu wenig Text: " + l + " von mind. 10 Zeichen";
+                }
+            }
+        }
+        if (data.lat == null) {
+            errors.lat = 'Pflichtangabe';
+        } else {
+            if (!(data.lat * 1)) {
+                errors.lat = 'Ungültiger Breitengrad';
+            }
+        }
+        if (data.lng == null) {
+            errors.lng = 'Pflichtangabe';
+        } else {
+            if (!(data.lng * 1)) {
+                errors.lng = 'Ungültiger Längengrad';
+            }
+        }
+        if (data.category == null) {
+            errors.category = 'Pflichtangabe';
+        } else {
+            if ((typeof data.category) !== "string") {
+                errors.category = 'Ungültige Kategorie';
+            }
+        }
+        if (data.license == null) {
+            errors.license = 'Lizenzzustimmung ist nötig';
+        } else {
+            if ((typeof data.license) !== "boolean") {
+                errors.license = 'Ungültige Zustimmung';
+            } else if (data.license === false) {
+                errors.license = 'Lizenzzustimmung ist nötig';
+            }
+        }
+        return errors;
+    }
+
+    function goto(city, lat, lon) {
+        entryMapObj.panTo({lat: lat, lng: lon});
+        onMapClick({latlng: {lat: lat, lng: lon}});
+    }
+
+</script>
+
+<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js" type="text/javascript"></script>
+<script src="http://fairtrademap.de/templates/greenmaps/js/leaflet-providers.js" type="text/javascript"></script>
+
+</body>
+</html>
+
