@@ -1211,14 +1211,14 @@
 
         if (resultMapObj != null || (!L) || (!L.tileLayer) ||
                 (!L.tileLayer.provider) ||
-                (!L.tileLayer.provider('OpenStreetMap.Mapnik'))) {
+                (!L.tileLayer.provider('OpenMapSurfer.Roads'))) {
             console.log(resultMapObj == null ?
                     "Leaflet Scripts not yet loaded." :
                     "Map is already loaded");
             return;
         }
         resultMapObj = L.map('resultMap', {
-            layers: [L.tileLayer.provider('OpenStreetMap.Mapnik')],
+            layers: [L.tileLayer.provider('OpenMapSurfer.Roads')],
             center: [lat, lon],
             tapTolerance: 30,
             tap: true,
