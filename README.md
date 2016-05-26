@@ -26,7 +26,7 @@ Possibilty 2:
 
 Possibility 3:
 * Get a github account https://github.com/join
-* Edit the file mobile.html by opening the file and clicking the edit button on github in to top right corner
+* Edit the file mobile.html by opening the file and clicking the edit button on github in the top right corner
 * Commit your changes (will automatically be a pull request the first time)
 * I will pull your changes and you can see the changes immediately at http://wap.kartevonmorgen.org
 * Next time you edit something, your changes will be visible IMMEDIATELY, without need to wait for my confirmation!
