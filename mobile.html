@@ -1267,58 +1267,58 @@
     function setMapProvider(newStyle, newOverlay) {
         mapStyle = newStyle;
         mapOverlay = newOverlay;
-        if (resultMapObj && resultMapLayer) {
-            resultMapObj.removeLayer(resultMapLayer);
-            resultMapLayer = (!L.tileLayer.provider(mapStyle)) ? L.tileLayer.provider('OpenStreetMap.DE') : L.tileLayer.provider(mapStyle);
+        if (resultMapObj) {
+            if (resultMapLayer) {
+                resultMapObj.removeLayer(resultMapLayer);
+            }
+            try {
+                resultMapLayer = L.tileLayer.provider(mapStyle);
+            } catch(exception) {
+                resultMapLayer = L.tileLayer.provider('OpenStreetMap.DE');
+            }
             resultMapObj.addLayer(resultMapLayer);
             if (mapStyle == 'Esri.WorldImagery') {
                 document.getElementById('resultMap').classList.add('darkMap');
             } else {
                 document.getElementById('resultMap').classList.remove('darkMap');
             }
-        }
-        if (resultMapObj && resultMapOverlay) {
-            resultMapObj.removeLayer(resultMapOverlay);
-        }
-        if (mapOverlay && L.tileLayer.provider(mapOverlay)) {
-            resultMapOverlay = L.tileLayer.provider(mapOverlay);
-            resultMapObj.addLayer(resultMapOverlay);
+            if (resultMapOverlay) {
+                resultMapObj.removeLayer(resultMapOverlay);
+            }
+            if (mapOverlay) {
+                try {
+                    resultMapOverlay = L.tileLayer.provider(mapOverlay);
+                    resultMapObj.addLayer(resultMapOverlay);
+                } catch(exception) {
+                    resultMapOverlay = null;
+                    mapOverlay = null;
+                }
+            }
         }
         var ablauf = new Date();
         var in400Tagen = ablauf.getTime() + (400 * 24 * 60 * 60 * 1000);
         ablauf.setTime(in400Tagen);
         document.cookie = 'map='+mapStyle+'; path=/; expires=' + ablauf.toGMTString();
-        document.cookie = 'ovl='+mapOverlay+'; path=/; expires=' + ablauf.toGMTString();
+        document.cookie = 'ovl='+(mapOverlay ? mapOverlay : '') +'; path=/; expires=' + ablauf.toGMTString();
     }
 
     function doInitMap() {
         document.getElementById('mapBtn').style.display = 'inline-block';
 
-        if (resultMapObj != null || (!L) || (!L.tileLayer) || (!L.tileLayer.provider) || (!L.tileLayer.provider('OpenStreetMap.DE'))) {
+        if (resultMapObj != null || (!L) || (!L.tileLayer) || (!L.tileLayer.provider)) {
             console.log(resultMapObj == null ?
                     "Leaflet Scripts not yet loaded." :
                     "Map is already loaded");
             return;
         }
-        resultMapLayer = (!L.tileLayer.provider(mapStyle)) ? L.tileLayer.provider('OpenStreetMap.DE') : L.tileLayer.provider(mapStyle);
         resultMapObj = L.map('resultMap', {
-            layers: [resultMapLayer],
             center: [lat, lon],
             tapTolerance: 30,
             tap: true,
             zoom: 12
         });
 
-        if (mapOverlay && L.tileLayer.provider(mapOverlay)) {
-            resultMapOverlay = L.tileLayer.provider(mapOverlay);
-            resultMapObj.addLayer(resultMapOverlay);
-        }
-
-        if (mapStyle == 'Esri.WorldImagery') {
-            document.getElementById('resultMap').classList.add('darkMap');
-        } else {
-            document.getElementById('resultMap').classList.remove('darkMap');
-        }
+        setMapProvider(mapStyle, mapOverlay);
 
         resultMapObj.fitBounds([[bbox[0], bbox[1]], [bbox[2], bbox[3]]]);
 
