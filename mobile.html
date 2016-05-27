@@ -246,8 +246,8 @@
             /*color: #c9c9c9;*/
             /*color: #545454;*/
             color: #888888;
-            font-size: 47px;
-            line-height: 47px;
+            font-size: 40px;
+            line-height: 40px;
         }
         body.highres .mapMarker {
             color: transparent !important;
@@ -1257,7 +1257,7 @@
 
         var facss = document.createElement("LINK");
         facss.rel = "stylesheet";
-        facss.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css";
+        facss.href = "map-icons/css/map-icons.min.css";
         document.head.appendChild(facss);
 
 
@@ -1303,9 +1303,9 @@
             var cat = categories && entry.categories && entry.categories.length
             && entry.categories[0] ? categories[entry.categories[0]] : null;
             mapMarkers[entry.id] = L.marker({lat:entry.lat, lng:entry.lng}, {icon:
-                    L.divIcon({iconSize: [28,40],
-                        iconAnchor:[14,40], className:'mapMarker '+(cat ?
-                    cat.name :'unknown'), html:'<i class="fa fa-map-marker"></i>'})});
+                    L.divIcon({iconSize: [40,41],
+                        iconAnchor:[20,41], className:'mapMarker '+(cat ?
+                    cat.name :'unknown'), html:'<i class="map-icon map-icon-map-pin"></i>'})});
             mapMarkers[entry.id].addTo(resultMapObj);
             mapMarkers[entry.id].bindPopup('<a href="#" onclick="displayDetails('+"'"+entry.id+"'"+');toggleMap();event.preventDefault();return false;">'+entry.title+'</a>');
         }
@@ -1316,9 +1316,9 @@
 
 <!-- OPEN STREET MAP SEARCH -->
 <script type="text/javascript">
+    /* OPEN STREET MAP SEARCH */
 
     var osmEnabled = true;
-    var osmCache = {};
     var osmBbox = null;
 
     var osmLoading = 0;
@@ -1341,6 +1341,7 @@
                     displayOsmFromCache(e);
                 }
             }
+            findPoi();
             return;
         }
         if (mapMarkers && resultMapObj) {
@@ -1369,10 +1370,11 @@
                 ebtn.innerText="Lade von OSM..."
             }
 
-            doFindOsm('node[~"^(organic|diet:vegan|diet:vegetarian|fair_trade|regional|second_hand|charity|ngo|identity)$"~"^([^nN].*|[nN][^oO].*|[nN][oO].+)$"]');
-            doFindOsm('(way[~"^(organic|diet:vegan|diet:vegetarian|fair_trade|regional|second_hand|charity|ngo|identity)$"~"^([^nN].*|[nN][^oO].*|[nN][oO].+)$"];node(w))');
-            doFindOsm('node[~"^(office|shop|leisure|craft)$"~"^(organic|diet:vegan|diet:vegetarian|fair_trade|second_hand|charity|ngo|farm|garden|beekeeper|dressmaker|handicraft|pottery|beekeper|electronics_repair|basket_maker)$"]');
-            doFindOsm('(way[~"^(office|shop|craft)$"~"^(organic|diet:vegan|diet:vegetarian|fair_trade|second_hand|charity|ngo|farm|garden|beekeeper|dressmaker|handicraft|pottery|beekeper|electronics_repair|basket_maker)$"];node(w))');
+            doFindOsm('node[~"^(organic|diet:vegan|diet:vegetarian|fair_trade|regional|second_hand|charity|ngo|identity)$"~"^([^nN].*|[nN][^oO].*|[nN][oO].+)$"];out;');
+            doFindOsm('way[~"^(organic|diet:vegan|diet:vegetarian|fair_trade|regional|second_hand|charity|ngo|identity)$"~"^([^nN].*|[nN][^oO].*|[nN][oO].+)$"];out center meta;');
+            doFindOsm('node[~"^(office|shop|leisure|craft)$"~"^(organic|diet:vegan|diet:vegetarian|fair_trade|second_hand|charity|ngo|farm|garden|beekeeper|dressmaker|handicraft|pottery|beekeper|electronics_repair|basket_maker)$"];out;');
+            doFindOsm('way[~"^(office|shop|craft)$"~"^(organic|diet:vegan|diet:vegetarian|fair_trade|second_hand|charity|ngo|farm|garden|beekeeper|dressmaker|handicraft|pottery|beekeper|electronics_repair|basket_maker)$"];out center meta;');
+            
 
         } else if (osmEnabled || (bbox && bbox.length == 4 && (Math.abs(bbox[2] - bbox[0]) > 0.201 || Math.abs(bbox[3] - bbox[1]) > 0.241))) {
             var ebtn = document.getElementById('btnOpenStreetMap');
@@ -1386,6 +1388,8 @@
                 ebtn.innerText="OpenStreetMap"
             }
         }
+        
+        findPoi();
     }
 
     function doFindOsm(query) {
@@ -1414,9 +1418,6 @@
 
                                 displayOsm(res[e]);
                             }
-                            if (res[e] && res[e].id) {
-                                osmCache[res[e].id] = res[e];
-                            }
                         }
                     }
                 } else {
@@ -1430,7 +1431,7 @@
         };
         xhttp.open("GET",
                 'https://api.openstreetmap.fr/oapi/interpreter/?data=[out:json][timeout:180][bbox:'
-                + osmBbox.join(',') + '];' + query + ';out;'
+                + osmBbox.join(',') + '];' + query
                 , true);
         xhttp.send();
         osmLoading++;
@@ -1440,8 +1441,8 @@
         var entry = {
             id: 'osm_' + osmEntry.id,
             title: osmEntry.tags.name,
-            lat: osmEntry.lat,
-            lng: osmEntry.lon,
+            lat: osmEntry.center ? osmEntry.center.lat : osmEntry.lat,
+            lng: osmEntry.center ? osmEntry.center.lon : osmEntry.lon,
             description: getEntryType(osmEntry),
             street: osmEntry.tags['addr:street'],
             zip: osmEntry.tags['addr:postcode'] ?
@@ -1455,11 +1456,6 @@
             tags: osmEntry.tags,
             license: '© OpenStreetMap.org contributors, ODbL',
             origin: 'openstreetmap.org'
-        }
-
-        if (osmEntry.nodes && osmEntry.nodes[0] && osmCache[osmEntry.nodes[0]]) {
-            entry.lat = osmCache[osmEntry.nodes[0]].lat;
-            entry.lng = osmCache[osmEntry.nodes[0]].lon;
         }
 
         cache[entry.id] = entry;
@@ -1533,6 +1529,500 @@
     }
 
 
+</script>
+
+<!-- POI DISPLAY -->
+<script type="text/javascript">
+    /* POI DISPLAY */
+
+    var poiEnabled = true;
+    var poiMarkers = {};
+    var poiBbox = null;
+    var poiLoading = 0;
+    
+    function findPoi() {
+        if (poiEnabled && resultMapObj && resultMapObj.getZoom && resultMapObj.getZoom() > 16 && bbox && bbox.length && bbox.length >= 3) {
+            if ((!poiBbox) || (!poiBbox.length) || (poiBbox.length < 3) || poiBbox[0] > bbox[0] || poiBbox[1] > bbox[1] || poiBbox[2] < bbox[2] || poiBbox[3] < bbox[3]) {
+                for (e in poiMarkers) {
+                    resultMapObj.removeLayer(poiMarkers[e]);
+                    delete poiMarkers[e];
+                }
+                var poiBounds = resultMapObj.getBounds().pad(2);
+                poiBbox = [poiBounds.getSouthWest().lat, poiBounds.getSouthWest().lng, poiBounds.getNorthEast().lat, poiBounds.getNorthEast().lng];
+                doFindPoi('node[~"^(office|shop|amenity|craft)$"~"."];out;', true);
+                doFindPoi('way[~"^(office|shop|amenity|craft)$"~"."];out center meta;', true);
+            }
+        } else {
+            for (e in poiMarkers) {
+                resultMapObj.removeLayer(poiMarkers[e]);
+                delete poiMarkers[e];
+            }
+            poiBbox = null;
+        }
+    }
+
+    function doFindPoi(query) {
+        var xhttp = new XMLHttpRequest();
+        //showWait(null, xhttp);
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4) {
+                if (xhttp.status == 200) {
+                    poiLoading--;
+                    if (poiLoading <= 0) {
+                        var elem = document.getElementById('poiloading');
+                        if (elem) {
+                            elem.style.display = 'none';
+                        }
+                    }
+                    var response = JSON.parse(xhttp.responseText);
+                    var res = response ? response.elements : response;
+                    if (res) {
+                        for (var e in res) {
+                            if (res[e] && res[e].id && res[e].tags && (res[e].tags.office || res[e].tags.shop || res[e].tags.amenity || res[e].tags.craft)) {
+                                displayPoi(res[e]);
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        xhttp.open("GET",
+                'https://api.openstreetmap.fr/oapi/interpreter/?data=[out:json][timeout:180][bbox:'
+                + poiBbox.join(',') + '];' + query
+                , true);
+        xhttp.send();
+        poiLoading++;
+    }
+    
+    function displayPoi(osmEntry) {
+        var poi = {
+            id: 'osm_' + osmEntry.id,
+            title: osmEntry.tags.name ? osmEntry.tags.name : osmEntry.tags.shop ? ('shop: ' + osmEntry.tags.shop) : osmEntry.tags.amenity ? ('poi: ' + osmEntry.tags.amenity) : osmEntry.tags.craft ? ('craft: ' + osmEntry.tags.craft) : osmEntry.tags.office ? ('office: ' + osmEntry.tags.office) : 'unknown',
+            lat: osmEntry.center ? osmEntry.center.lat : osmEntry.lat,
+            lng: osmEntry.center ? osmEntry.center.lon : osmEntry.lon,
+            homepage: osmEntry.tags['website'] ? osmEntry.tags['website'] :
+                    osmEntry.tags['url'] ? osmEntry.tags['url'] :
+                            osmEntry.tags['contact:website'],
+            tags: osmEntry.tags,
+            license: '© OpenStreetMap.org contributors, ODbL',
+            origin: 'openstreetmap.org'
+        }
+        if (!poiMarkers[poi.id]) {
+            addPoiMarker(poi);
+        }
+    }
+
+    function addPoiMarker(entry) {
+        if (resultMapObj && (!poiMarkers[entry.id]) && entry && entry.lat && entry.lng) {
+            poiMarkers[entry.id] = L.marker({lat:entry.lat, lng:entry.lng}, {icon:
+                    L.divIcon({iconSize: [12,12],
+                        iconAnchor:[6,6], className:'poiMarker ', html:'<i class="map-icon map-icon-'+getMapIconName(entry)+'"></i>'})});
+            poiMarkers[entry.id].addTo(resultMapObj);
+            var href = entry.homepage && entry.homepage.trim ? entry.homepage.trim() : '';
+            poiMarkers[entry.id].bindPopup('<a' + (href ? ' href="'+((!href) || (!href.indexOf) || (href.trim().indexOf('http') == 0) ? '' : 'http://') + href : '') +'" target="_blank">' + entry.title + '</a>');
+        }
+    }
+    
+    function getMapIconName(poi) {
+        var fallback = tagMap.fall_back;
+        if (poi && poi.tags) {
+            for (k in poi.tags) {
+                var myMap = tagMap[k];
+                if (myMap) {
+                    var res = myMap[poi.tags[k]];
+                    if (res) {
+                        return res;
+                    }
+                    if (myMap.fall_back) {
+                      fallback = myMap.fall_back;
+                    }
+                }
+            }
+        }
+        return fallback;
+    }
+  
+    var tagMap = {
+      amenity: {
+        fall_back: 'postal-code',
+        parking: 'parking',
+        place_of_worship: 'place-of-worship',
+        school: 'school',
+        bench: 'park',
+        restaurant: 'restaurant',
+        fuel: 'gas-station',
+        cafe: 'cafe',
+        fast_food: 'food',
+        bank: 'bank',
+        post_box: 'post-box',
+        pharmacy: 'health',
+        kindergarten: 'playground',
+        recycling: 'snow green',
+        grave_yard: 'cemetery',
+        waste_basket: 'route',
+        bicycle_parking: 'bicycling',
+        toilets: 'toilet',
+        shelter: 'roofing-contractor',
+        hospital: 'hospital',
+        post_office: 'post-office',
+        pub: 'bar',
+        drinking_water: 'plumber',
+        public_building: 'political',
+        atm: 'atm',
+        telephone: 'volume-control-telephone',
+        bar: 'bar',
+        police: 'police',
+        fire_station: 'fire-station',
+        parking_space: 'parking',
+        hunting_stand: 'archery',
+        townhall: 'city-hall',
+        vending_machine: 'storage',
+        /*fountain: '',*/
+        doctors: 'doctor',
+        library: 'library',
+        social_facility: 'walking',
+        car_wash: 'car-wash',
+        university: 'university',
+        swimming_pool: 'swimming',
+        /*community_centre: '',*/
+        college: 'university',
+        dentist: 'dentist',
+        waste_disposal: 'route',
+        marketplace: 'convenience-store',
+        bus_station: 'bus-station',
+        clinic: 'hospital',
+        parking_entrance: 'parking',
+        taxi: 'taxi-stand',
+        theatre: 'movie-theater',
+        bicycle_rental: 'bicycle-store',
+        cinema: 'movie-theater',
+        veterinary: 'veterinary-care',
+        mobile_money_agent: 'finance',
+        courthouse: 'courthouse',
+        nightclub: 'night-club',
+        arts_centre: 'art-gallery',
+        bbq: 'restaurant',
+        nursing_home: '',
+        ferry_terminal: 'boat-tour',
+        grit_bin: '',
+        car_rental: 'car-rental',
+        clock: 'compass',
+        shower: 'hair-care',
+        biergarten: 'restaurant',
+        driving_school: '',
+        charging_station: '',
+        embassy: 'government',
+        ice_cream: 'cafe',
+        prison: 'police',
+        water_point: 'plumber',
+        car_sharing: 'car-rental',
+        childcare: 'playground',
+        emergency_phone: 'volume-control-telephone',
+        bureau_de_change: 'finance',
+        motorcycle_parking: 'motobike-trail',
+        studio: '',
+        residential: '',
+        shop: 'department-store',
+        food_court: '',
+        watering_place: '',
+        boat_storage: 'boating',
+        casino: 'casino',
+        sauna: '',
+        Residential: '',
+        brothel: '',
+        kiosk: 'convenience-store',
+        retirement_home: '',
+        gambling: '',
+        game_feeding: '',
+        compressed_air: '',
+        bicycle_repair_station: 'bicycle-store',
+        'parking;fuel': '',
+        social_centre: 'walking',
+        payment_terminal: '',
+        register_office: '',
+        kneipp_water_cure: '',
+        advertising: '',
+        public_bookcase: '',
+        dojo: '',
+        lavoir: '',
+        boat_rental: '',
+        gym: '',
+        monastery: '',
+        sanitary_dump_station: '',
+        ticket_validator: '',
+        garages: '',
+        office: '',
+        animal_shelter: '',
+        training: '',
+        vehicle_inspection: '',
+        internet_cafe: '',
+        water: '',
+        public_hall: '',
+        ranger_station: '',
+        stables: '',
+        stripclub: '',
+        dancing_school: '',
+        refugee_housing: '',
+        events_venue: '',
+        money_transfer: '',
+        feeding_place: '',
+        love_hotel: '',
+        mortuary: '',
+        crematorium: '',
+        weighbridge: '',
+        sanatorium: '',
+        emergency_service: 'health',
+        nursery: '',
+        dive_centre: '',
+        customs: ''
+      },
+      shop: {
+        fall_back: 'department-store',
+        convenience : 'convenience-store',
+        supermarket: 'grocery-or-supermarket',
+        clothes: 'clothing-store',
+        hairdresser: 'beauty-salon',
+        bakery: 'bakery',
+        car: 'car-dealer',
+        car_repair: 'car-repair',
+        kiosk: 'convenience-store',
+        doityourself: 'hardware-store',
+        butcher: '',
+        florist: 'florist',
+        mall: 'shopping-mall',
+        furniture: 'furniture-store',
+        shoes: 'clothing-store',
+        hardware: 'hardware-store',
+        electronics: 'point-of-interest',
+        alcohol: 'night-club',
+        beauty: 'beauty-salon',
+        bicycle: 'bicycle-store',
+        books: 'book-store',
+        mobile_phone: 'point-of-interest',
+        jewelry: 'jewelry-store',
+        department_store: 'department-store',
+        optician: '',
+        gift: '',
+        car_parts: '',
+        greengrocer: 'convenience-store',
+        chemist: '',
+        variety_store: 'convenience-store',
+        sports: '',
+        computer: '',
+        travel_agency: 'travel-agency',
+        stationery: '',
+        garden_centre: 'florist',
+        confectionery: '',
+        laundry: 'laundry',
+        beverages: 'liquor-store',
+        newsagent: '',
+        toys: '',
+        pet: '',
+        dry_cleaning: '',
+        vacant: '',
+        motorcycle: '',
+        boutique: '',
+        tyres: '',
+        deli: '',
+        copyshop: '',
+        funeral_directors: '',
+        hifi: '',
+        outdoor: 'climbing',
+        art: 'art-gallery',
+        farm: 'horse-riding',
+        tailor: '',
+        interior_decoration: '',
+        tobacco: '',
+        seafood: 'aquarium',
+        photo: 'point-of-interest',
+        fabric: '',
+        kitchen: '',
+        paint: '',
+        massage: '',
+        second_hand: '',
+        ticket: '',
+        video: '',
+        estate_agent: '',
+        wine: '',
+        music: '',
+        trade: '',
+        lottery: '',
+        pawnbroker: '',
+        charity: 'walking',
+        antiques: '',
+        cosmetics: '',
+        bed: '',
+        musical_instrument: '',
+        bookmaker: '',
+        tattoo: '',
+        houseware: '',
+        general: '',
+        fashion: '',
+        medical_supply: '',
+        craft: '',
+        baby_goods: '',
+        hearing_aids: '',
+        fishmonger: '',
+        carpet: '',
+        tea: '',
+        bag: '',
+        erotic: '',
+        coffee: '',
+        curtain: '',
+        frame: '',
+        video_games: '',
+        ice_cream: '',
+        food: '',
+        locksmith: '',
+        money_lender: '',
+        bathroom_furnishing: '',
+        energy: '',
+        cheese: '',
+        dairy: '',
+        glaziery: '',
+        organic: '',
+        herbalist: '',
+        fishing: '',
+        pastry: '',
+        chocolate: '',
+        perfumery: '',
+        radiotechnics: '',
+        grocery: '',
+        gas: '',
+        scuba_diving: '',
+        photo_studio: '',
+        insurance: '',
+        wholesale: '',
+        watches: '',
+        electrical: '',
+        'e-cigarette': '',
+        shoe_repair: '',
+        leather: '',
+        winery: '',
+        furnace: '',
+        religion: '',
+        hunting: '',
+        motorcycle_repair: '',
+        vacuum_cleaner: '',
+        solarium: '',
+        frozen_food: '',
+        fish: '',
+        household: '',
+        street_vendor: '',
+        weapons: '',
+        lighting: '',
+        sewing: '',
+      },
+      craft: {
+        fall_back: 'hardware_store',
+        carpenter: '',
+        shoemaker: '',
+        photographer: '',
+        electrician: '',
+        brewery: '',
+        winery: '',
+        tailor: '',
+        confectionery: '',
+        plumber: '',
+        metal_construction: '',
+        sawmill: '',
+        hvac: '',
+        gardener: '',
+        painter: '',
+        stonemason: '',
+        handicraft: '',
+        dressmaker: '',
+        glaziery: '',
+        caterer: '',
+        key_cutter: '',
+        pottery: '',
+        beekeeper: '',
+        roofer: '',
+        blacksmith: '',
+        window_construction: '',
+        photographic_laboratory: '',
+        upholsterer: '',
+        locksmith: '',
+        clockmaker: '',
+        tiler: '',
+        jeweller: '',
+        distillery: '',
+        optician: '',
+        watchmaker: '',
+        agricultural_engines: '',
+        joiner: '',
+        builder: '',
+        electronics_repair: 'point-of-interest',
+        tinsmith: '',
+        bookbinder: '',
+        plasterer: '',
+        scaffolder: '',
+        carpet_layer: '',
+        boatbuilder: '',
+        cabinet_maker: '',
+        electronics: 'point-of-interest',
+        saddler: '',
+        catering: '',
+        sculpter: '',
+        computer: '',
+        confectionary: ''
+      },
+      office: {
+        fall_back: 'city-hall',
+        company: 'insurance-agency',
+        government: '',
+        estate_agent: 'estate-agency',
+        insurance: 'insurance-agency',
+        administrative: '',
+        lawyer: 'lawyer',
+        educational_institution: 'museum',
+        telecommunication: '',
+        ngo: 'museum',
+        it: '',
+        accountant: 'finance',
+        research: 'university',
+        employment_agency: '',
+        religion: 'synagogue',
+        physician: 'physiotherapist',
+        association: '',
+        architect: '',
+        travel_agent: 'travel-agency',
+        newspaper: '',
+        financial: 'financial',
+        therapist: '',
+        political_party: '',
+        advertising_agency: '',
+        tax_advisor: 'financial',
+        notary: 'financial',
+        tax: 'financial',
+        foundation: '',
+        parish: '',
+        vacant: '',
+        consulting: '',
+        camping: 'campground',
+        forestry: '',
+        publisher: '',
+        quango: '',
+        administration: '',
+        register: '',
+        cooperative: '',
+        podologist: '',
+        charity: 'walking',
+        logistics: 'moving-company',
+        engineering: '',
+        solicitor: '',
+        healer: '',
+        water_utility: '',
+        taxi: 'taxi-stand',
+        university: 'university',
+        commercial: '',
+        real_estate: 'real-estate-agency',
+        medical: 'doctor',
+        education: 'school',
+      },
+      fall_back: 'embassy'
+    }
+  
 </script>
 
 </body>
