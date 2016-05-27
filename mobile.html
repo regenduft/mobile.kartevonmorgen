@@ -28,14 +28,15 @@
         form.searchForm  input {
             height: 2.2em;
             box-sizing: border-box;
-            width: 45%;
+            width: 42%;
         }
 
         form.searchForm  button {
-            width: 13%;
+            width: 12%;
             height: 2.2em;
             box-sizing: border-box;
             font-weight: bold;
+            padding: 0;
         }
 
         form.searchForm  .right {
@@ -44,10 +45,6 @@
 
         #findBtn, #mapBtn {
             width: 17% !important;
-        }
-
-        #city {
-            width: 45%;
         }
 
         .back {
@@ -305,7 +302,18 @@
             height: 2.2em;
             font-weight: bold;
         }
-
+        
+        #menu {
+          position: absolute;
+          top: 30px;
+          right: 0;
+          background: #DDDDDD;
+          border: 1px solid gray;
+          padding: 20px;
+          max-width: 70%;
+          z-index: 222;
+        }
+        
     </style>
 
 </head>
@@ -322,7 +330,8 @@
         <input id="city" type="text" name="city"
                placeholder="Ort / Stadt / PLZ" onchange="gotoCity();"/>
         <button onclick="gotoCity(); event.preventDefault; return false;">Go</button>
-        <button onclick="geolocate(); event.preventDefault; return false;" class="right">GPS</button>
+        <button onclick="geolocate(); event.preventDefault; return false;">GPS</button>
+        <button onclick="toggleMenu(); event.preventDefault; return false;" class="right">Menu</button>
     </form>
 
     <div id="cities">
@@ -379,6 +388,19 @@
     <div class="footerBtnCtnr">
         <button id="btnInitMap" onclick="initMap();">Karte aktivieren...</button>
     </div>
+    
+</div>
+<div id="menu" style="display:none;">
+  <div>
+    <h4>Map Style:</h4>
+    <a href="#" onclick="setMapProvider('OpenStreetMap.DE')" style="display:block;padding:5px 0;margin:5px 0;">Schnell (Empfohlen)</a>
+    <a href="#" onclick="setMapProvider('OpenStreetMap.Mapnik')" style="display:block;padding:5px 0;margin:5px 0;">Verschlüsselt</a>
+    <a href="#" onclick="setMapProvider('OpenMapSurfer.Roads')" style="display:block;padding:5px 0;margin:5px 0;">Symbol-Beschriftung</a>
+  </div>
+  <div>
+    <h4>OpenStreetMap:</h4>
+    <a id="menuPoi" href="#" onclick="togglePoi()" style="display:block;padding:5px 0;margin:5px 0;font-weight:bold;">Anklickbare Symbole (heranzoomen)</a>
+  </div>
 </div>
 
 <!-- CORE SEARCH FUNCTION -->
@@ -1160,6 +1182,16 @@
                         lon = parseFloat(c.substring(4));
                         bbox = [lat - 0.1, lon - 0.12, lat + 0.1, lon + 0.12];
                     }
+                    if (c.indexOf('poi=0') == 0) {
+                        poiEnabled = false;
+                        var mele = document.getElementById('menuPoi');
+                        if (mele) {
+                            mele.style.fontWeight = poiEnabled ? 'bold' : 'normal';
+                        }
+                    }
+                    if (c.indexOf('map=') == 0) {
+                        mapStyle = c.substring(4);
+                    }
                 }
             }
         }
@@ -1178,6 +1210,8 @@
 
     /* MAP FUNCTIONS */
 
+    var mapStyle = 'OpenMapSurfer.Roads';
+    var resultMapLayer = null;
     var resultMapObj = null;
     var mapMarkers = {};
 
@@ -1205,20 +1239,34 @@
             }
         }
     }
+    
+    function setMapProvider(newStyle) {
+        mapStyle = newStyle;
+        if (resultMapObj && resultMapLayer) {
+            resultMapObj.removeLayer(resultMapLayer);
+            resultMapLayer = (!L.tileLayer.provider(mapStyle)) ? L.tileLayer.provider('OpenStreetMap.DE') : L.tileLayer.provider(mapStyle);
+            resultMapObj.addLayer(resultMapLayer);
+        }
+        var ablauf = new Date();
+        var in400Tagen = ablauf.getTime() + (400 * 24 * 60 * 60 * 1000);
+        ablauf.setTime(in400Tagen);
+        document.cookie = 'map='+mapStyle+'; path=/; expires=' + ablauf.toGMTString();
+    }
 
     function doInitMap() {
         document.getElementById('mapBtn').style.display = 'inline-block';
 
         if (resultMapObj != null || (!L) || (!L.tileLayer) ||
                 (!L.tileLayer.provider) ||
-                (!L.tileLayer.provider('OpenMapSurfer.Roads'))) {
+                (!L.tileLayer.provider('OpenStreetMap.DE'))) {
             console.log(resultMapObj == null ?
                     "Leaflet Scripts not yet loaded." :
                     "Map is already loaded");
             return;
         }
+        resultMapLayer = (!L.tileLayer.provider(mapStyle)) ? L.tileLayer.provider('OpenStreetMap.DE') : L.tileLayer.provider(mapStyle);
         resultMapObj = L.map('resultMap', {
-            layers: [L.tileLayer.provider('OpenMapSurfer.Roads')],
+            layers: [resultMapLayer],
             center: [lat, lon],
             tapTolerance: 30,
             tap: true,
@@ -1539,6 +1587,19 @@
     var poiMarkers = {};
     var poiBbox = null;
     var poiLoading = 0;
+    
+    function togglePoi() {
+      poiEnabled = !poiEnabled;
+      findPoi();
+      var mele = document.getElementById('menuPoi');
+      if (mele) {
+          mele.style.fontWeight = poiEnabled ? 'bold' : 'normal';
+      }
+      var ablauf = new Date();
+      var in400Tagen = ablauf.getTime() + (400 * 24 * 60 * 60 * 1000);
+      ablauf.setTime(in400Tagen);
+      document.cookie = 'poi='+(poiEnabled ? '1' : '0')+'; path=/; expires=' + ablauf.toGMTString();
+    }
     
     function findPoi() {
         if (poiEnabled && resultMapObj && resultMapObj.getZoom && resultMapObj.getZoom() > 16 && bbox && bbox.length && bbox.length >= 3) {
@@ -2023,6 +2084,23 @@
       fall_back: 'embassy'
     }
   
+</script>
+
+
+<!-- MENU OPTIONS -->
+<script type="text/javascript">
+    /* MENU OPTIONS */
+    
+    function toggleMenu() {
+        var mele = document.getElementById('menu');
+        if (mele) {
+            if (mele.style.display == 'block') {
+                mele.style.display = 'none';
+            } else {
+                mele.style.display = 'block';
+            }
+        }
+    }
 </script>
 
 </body>
