@@ -1,1 +1,1 @@
-from https://github.com/scottdejonge/map-icons/
+from https://github.com/scottdejonge/map-icons/ (LICENSE: MIT)
