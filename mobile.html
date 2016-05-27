@@ -1236,6 +1236,9 @@
     var resultMapObj = null;
     var mapMarkers = {};
 
+    var cityLat = lat;
+    var cityLon = lon;
+
     function toggleMap() {
         backScrollY = null;
         if (!resultMapObj) {
@@ -1323,9 +1326,19 @@
             var ele = document.getElementById('overMap');
             if (ele && ele.style.height && ele.style.height != 'auto') {
                 bbox = [resultMapObj.getBounds().getSouthWest().lat, resultMapObj.getBounds().getSouthWest().lng, resultMapObj.getBounds().getNorthEast().lat, resultMapObj.getBounds().getNorthEast().lng];
+                if (resultMapObj.getZoom() < 16) {
+                    city = lat + ',' + lon;
+                    cityLat = null;
+                    cityLon = null;
+                } else {
+                    if ((!cityLat) || (!cityLon) ||
+                            Math.abs(resultMapObj.getCenter().lat - cityLat) > 0.01 || Math.abs(resultMapObj.getCenter().lng - cityLon) > 0.018) {
+                        city = lat + ',' + lon;
+                        mapCenter2City();
+                    }
+                }
                 lat = resultMapObj.getCenter().lat;
                 lon = resultMapObj.getCenter().lng;
-                city = lat + ',' + lon;
                 document.getElementById('city').placeholder = 'Ort: ' + city;
                 disableOverlay = true;
                 find();
@@ -1403,6 +1416,28 @@
         }
     }
 
+    function mapCenter2City() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4) {
+                if (xhttp.status == 200 && xhttp.responseText) {
+                    var res = JSON.parse(xhttp.responseText);
+                    if (res && res.address) {
+                        if (res.address.city || res.address.town || res.address.village) {
+                            city = res.address.city ? res.address.city : res.address.town ? res.address.town : res.address.village;
+                            cityLat = res.lat;
+                            cityLon = res.lon;
+                            saveCity();
+                        }
+                    }
+                }
+            }
+        };
+        xhttp.open("GET",
+                'http://open.mapquestapi.com/nominatim/v1/reverse.php?key=SJpWKrsbH6PZGQ9KZvyibuGzRkXS1LAw' +
+                '&format=json&zoom=18&lat=' + lat + '&lon=' + lon, true);
+        xhttp.send();
+    }
 
 </script>
 
@@ -1754,7 +1789,10 @@
                         iconAnchor:[12,12], className:'poiMarker ', html:'<i class="map-icon map-icon-'+getMapIconName(entry)+'"></i>'})});
             poiMarkers[entry.id].addTo(resultMapObj);
             var href = entry.homepage && entry.homepage.trim ? entry.homepage.trim() : '';
-            poiMarkers[entry.id].bindPopup('<a' + (href ? ' href="'+((!href) || (!href.indexOf) || (href.trim().indexOf('http') == 0) ? '' : 'http://') + href : '') +'" target="_blank">' + entry.title + '</a>');
+            poiMarkers[entry.id].bindPopup(
+                    (entry.name?'<a href="https://duckduckgo.com/?q='+encodeURIComponent(entry.name+' '+city)+'" target="_blank"><i class="map-icon map-icon-search"></i></a>&#160;':'')
+                    +'<a' + (href ? ' href="'+((!href) || (!href.indexOf) || (href.trim().indexOf('http') == 0) ? '' : 'http://') + href : '') +'" target="_blank">' + entry.title + '</a>'
+            );
         }
     }
 
