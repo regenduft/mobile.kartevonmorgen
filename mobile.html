@@ -1667,7 +1667,7 @@
     var poiMarkers = {};
     var poiBbox = null;
     var poiLoading = 0;
-    var poiResult = [];
+    var poiResult = {};
 
     function togglePoi() {
         poiEnabled = !poiEnabled;
@@ -1704,13 +1704,13 @@
                 }
                 var poiBounds = (bbox[3] - bbox[1]) > 0.007 ? resultMapObj.getBounds() : resultMapObj.getBounds().pad(1);
                 poiBbox = [poiBounds.getSouthWest().lat, poiBounds.getSouthWest().lng, poiBounds.getNorthEast().lat, poiBounds.getNorthEast().lng];
-                poiResult = [];
+                poiResult = {};
                 doFindPoi('node[~"^(office|shop|amenity|craft|restaurant|tourism|hiking)$"~"."];out qt;', true);
                 doFindPoi('way[~"^(office|shop|amenity|craft|restaurant|tourism|hiking)$"~"."];out center qt;', true);
             } else {
                 for (e in poiMarkers) {
                     if ((!poiResult[e]) || (!poiResult[e].lat) || (!poiResult[e].lng) || (!bbox) || bbox.length < 3
-                        || (poiResult[e].lat < bbox[0] && poiResult[e].lat > bbox[2] && poiResult[e].lng < bbox[1] && poiResult[e].lng > bbox[3])) {
+                        || poiResult[e].lat < bbox[0] || poiResult[e].lat > bbox[2] || poiResult[e].lng < bbox[1] || poiResult[e].lng > bbox[3]) {
                         resultMapObj.removeLayer(poiMarkers[e]);
                         delete poiMarkers[e];
                     }
@@ -1783,7 +1783,7 @@
             origin: 'openstreetmap.org'
         }
         if (!poiMarkers[poi.id]) {
-            poiResult.push(poi);
+            poiResult[poi.id] = poi;
             addPoiMarker(poi);
         }
     }
