@@ -1657,7 +1657,7 @@
         var ablauf = new Date();
         var in400Tagen = ablauf.getTime() + (400 * 24 * 60 * 60 * 1000);
         ablauf.setTime(in400Tagen);
-        document.cookie = 'poiName='+(poiEnabled ? '1' : '0')+'; path=/; expires=' + ablauf.toGMTString();
+        document.cookie = 'poiName='+(poiWithoutName ? '1' : '0')+'; path=/; expires=' + ablauf.toGMTString();
     }
 
     function findPoi() {
