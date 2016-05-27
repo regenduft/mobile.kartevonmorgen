@@ -1615,8 +1615,8 @@
     function addPoiMarker(entry) {
         if (resultMapObj && (!poiMarkers[entry.id]) && entry && entry.lat && entry.lng) {
             poiMarkers[entry.id] = L.marker({lat:entry.lat, lng:entry.lng}, {icon:
-                    L.divIcon({iconSize: [12,12],
-                        iconAnchor:[6,6], className:'poiMarker ', html:'<i class="map-icon map-icon-'+getMapIconName(entry)+'"></i>'})});
+                    L.divIcon({iconSize: [24,24],
+                        iconAnchor:[12,12], className:'poiMarker ', html:'<i class="map-icon map-icon-'+getMapIconName(entry)+'"></i>'})});
             poiMarkers[entry.id].addTo(resultMapObj);
             var href = entry.homepage && entry.homepage.trim ? entry.homepage.trim() : '';
             poiMarkers[entry.id].bindPopup('<a' + (href ? ' href="'+((!href) || (!href.indexOf) || (href.trim().indexOf('http') == 0) ? '' : 'http://') + href : '') +'" target="_blank">' + entry.title + '</a>');
