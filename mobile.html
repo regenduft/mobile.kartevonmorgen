@@ -239,6 +239,10 @@
             color:#000000 !important;
         }
 
+        .darkMap .poiMarker {
+            color: #FFFFFF;
+        }
+
         .mapMarker {
             /*color: #c9c9c9;*/
             /*color: #545454;*/
@@ -1264,6 +1268,11 @@
             resultMapObj.removeLayer(resultMapLayer);
             resultMapLayer = (!L.tileLayer.provider(mapStyle)) ? L.tileLayer.provider('OpenStreetMap.DE') : L.tileLayer.provider(mapStyle);
             resultMapObj.addLayer(resultMapLayer);
+            if (mapStyle == 'Esri.WorldImagery') {
+                document.getElementById('resultMap').classList.add('darkMap');
+            } else {
+                document.getElementById('resultMap').classList.remove('darkMap');
+            }
         }
         if (resultMapObj && resultMapOverlay) {
             resultMapObj.removeLayer(resultMapOverlay);
@@ -1300,6 +1309,12 @@
         if (mapOverlay && L.tileLayer.provider(mapOverlay)) {
             resultMapOverlay = L.tileLayer.provider(mapOverlay);
             resultMapObj.addLayer(resultMapOverlay);
+        }
+
+        if (mapStyle == 'Esri.WorldImagery') {
+            document.getElementById('resultMap').classList.add('darkMap');
+        } else {
+            document.getElementById('resultMap').classList.remove('darkMap');
         }
 
         resultMapObj.fitBounds([[bbox[0], bbox[1]], [bbox[2], bbox[3]]]);
