@@ -1705,8 +1705,8 @@
                 var poiBounds = (bbox[3] - bbox[1]) > 0.007 ? resultMapObj.getBounds() : resultMapObj.getBounds().pad(1);
                 poiBbox = [poiBounds.getSouthWest().lat, poiBounds.getSouthWest().lng, poiBounds.getNorthEast().lat, poiBounds.getNorthEast().lng];
                 poiResult = [];
-                doFindPoi('node[~"^(office|shop|amenity|craft)$"~"."];out qt;', true);
-                doFindPoi('way[~"^(office|shop|amenity|craft)$"~"."];out center qt;', true);
+                doFindPoi('node[~"^(office|shop|amenity|craft|restaurant|tourism|hiking)$"~"."];out qt;', true);
+                doFindPoi('way[~"^(office|shop|amenity|craft|restaurant|tourism|hiking)$"~"."];out center qt;', true);
             } else {
                 for (e in poiMarkers) {
                     if ((!poiResult[e]) || (!poiResult[e].lat) || (!poiResult[e].lng) || (!bbox) || bbox.length < 3
@@ -1745,7 +1745,14 @@
                     if (res) {
                         for (var e in res) {
                             if (res[e] && res[e].id && res[e].tags
-                             && (res[e].tags.office || res[e].tags.shop || res[e].tags.amenity || res[e].tags.craft)) {
+                             && ((res[e].tags.office && res[e].tags.office != 'no')
+                                || (res[e].tags.shop && res[e].tags.shop != 'no')
+                                || (res[e].tags.amenity && res[e].tags.amenity != 'no')
+                                || (res[e].tags.craft && res[e].tags.craft != 'no')
+                                || (res[e].tags.restaurant && res[e].tags.restaurant != 'no')
+                                || (res[e].tags.tourism && res[e].tags.tourism != 'no')
+                                || (res[e].tags.hiking && res[e].tags.hiking != 'no')
+                            )) {
                                 displayPoi(res[e]);
                             }
                         }
@@ -2006,7 +2013,7 @@
             tailor: '',
             interior_decoration: '',
             tobacco: '',
-            seafood: 'aquarium',
+            seafood: 'fish-cleaning',
             photo: 'point-of-interest',
             fabric: '',
             kitchen: '',
@@ -2192,6 +2199,51 @@
             real_estate: 'real-estate-agency',
             medical: 'doctor',
             education: 'school',
+        },
+        restaurant: {
+            fall_back: 'restaurant'
+        },
+        tourism: {
+            fall_back: 'natural-feature',
+            information: 'travel-agency',
+            hotel: 'lodging',
+            attraction: '',
+            viewpoint: '',
+            picnic_site: 'park',
+            camp_site: 'campground',
+            guest_house: 'lodging',
+            museum: 'museum',
+            artwork: 'art-gallery',
+            motel: 'lodging',
+            chalet: '',
+            hostel: 'lodging',
+            caravan_site: 'rv-park',
+            alpine_hut: 'roofing-contractor',
+            theme_park: 'amusement-park',
+            zoo: 'zoo',
+            apartment: 'lodging',
+            wilderness_hut: 'roofing-contractor',
+            gallery: 'art-gallery',
+            bed_and_breakfast: 'lodging',
+            hanami: '',
+            wine_cellar: 'night-club',
+            resort: 'lodging',
+            trail_riding_station: '',
+            disused_camp_site: 'roofing-contractor',
+            aquarium: 'aquarium',
+            apartments: 'lodging',
+            cabin: 'roofing-contractor',
+            winery: 'night-club',
+            lean_to: '',
+            hut: 'roofing-contractor',
+            picnic_table: 'park',
+            village_sign: 'viewing',
+            sign: 'viewing',
+            camping: 'campground'
+        },
+        hiking: {
+            fall_back: 'trail-walking',
+            no: ''
         },
         fall_back: 'embassy'
     }
