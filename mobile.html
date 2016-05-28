@@ -1666,6 +1666,7 @@
     var poiWithoutName = false;
     var poiMarkers = {};
     var poiBbox = null;
+    var transportBox = null;
     var poiLoading = 0;
     var poiResult = {};
 
@@ -1704,20 +1705,47 @@
                 }
                 var poiBounds = (bbox[3] - bbox[1]) > 0.007 ? resultMapObj.getBounds() : resultMapObj.getBounds().pad(1);
                 poiBbox = [poiBounds.getSouthWest().lat, poiBounds.getSouthWest().lng, poiBounds.getNorthEast().lat, poiBounds.getNorthEast().lng];
+                transportBox = poiBbox;
                 poiResult = {};
-                doFindPoi('node[~"^(office|shop|amenity|craft|restaurant|tourism|hiking)$"~"."];out qt;', true);
-                doFindPoi('way[~"^(office|shop|amenity|craft|restaurant|tourism|hiking)$"~"."];out center qt;', true);
-                doFindPoi('node[~"^(highway|railway|public_transport)$"~"^(station|platform|bus_stop|tram_stop|subway_entrance)$"];out qt;', true);
+                doFindPoi('node[~"^(office|shop|amenity|craft|restaurant|tourism|hiking)$"~"."];out qt;', poiBbox);
+                doFindPoi('way[~"^(office|shop|amenity|craft|restaurant|tourism|hiking)$"~"."];out center qt;', poiBbox);
+                doFindPoi('node[~"^(highway|railway|public_transport)$"~"^(station|platform|bus_stop|tram_stop|subway_entrance)$"];out qt;', poiBbox);
             } else {
                 for (e in poiMarkers) {
                     if ((!poiResult[e]) || (!poiResult[e].lat) || (!poiResult[e].lng) || (!bbox) || bbox.length < 3
-                        || poiResult[e].lat < bbox[0] || poiResult[e].lat > bbox[2] || poiResult[e].lng < bbox[1] || poiResult[e].lng > bbox[3]) {
+                            || poiResult[e].lat < bbox[0] || poiResult[e].lat > bbox[2] || poiResult[e].lng < bbox[1] || poiResult[e].lng > bbox[3]) {
                         resultMapObj.removeLayer(poiMarkers[e]);
                         delete poiMarkers[e];
                     }
                 }
                 for (j in poiResult) {
                     addPoiMarker(poiResult[j]);
+                }
+            }
+        } else if (resultMapObj && resultMapObj.getZoom && resultMapObj.getZoom() > 15 && bbox && bbox.length && bbox.length >= 3) {
+            if ((!transportBox) || (!transportBox.length) || (transportBox.length < 3) || transportBox[0] > bbox[0] || transportBox[1] > bbox[1] || transportBox[2] < bbox[2] || transportBox[3] < bbox[3]) {
+                for (e in poiMarkers) {
+                    resultMapObj.removeLayer(poiMarkers[e]);
+                    delete poiMarkers[e];
+                }
+                var poiBounds = (bbox[3] - bbox[1]) > 0.007 ? resultMapObj.getBounds() : resultMapObj.getBounds().pad(1);
+                transportBox = [poiBounds.getSouthWest().lat, poiBounds.getSouthWest().lng, poiBounds.getNorthEast().lat, poiBounds.getNorthEast().lng];
+                poiResult = {};
+                doFindPoi('node[~"^(highway|railway|public_transport)$"~"^(station|platform|bus_stop|tram_stop|subway_entrance)$"];out qt;', transportBox);
+            } else {
+                for (e in poiMarkers) {
+                    if ((!poiResult[e]) || (!poiResult[e].lat) || (!poiResult[e].lng) || (!bbox) || bbox.length < 3
+                            || poiResult[e].lat < bbox[0] || poiResult[e].lat > bbox[2] || poiResult[e].lng < bbox[1] || poiResult[e].lng > bbox[3]
+                            || (!(poiResult[e].tags.highway ||poiResult[e].tags.railway || poiResult[e].tags.public_transport))
+                        ) {
+                        resultMapObj.removeLayer(poiMarkers[e]);
+                        delete poiMarkers[e];
+                    }
+                }
+                for (j in poiResult) {
+                    if (poiResult[j] && (poiResult[j].tags.highway || poiResult[j].tags.railway || poiResult[j].tags.public_transport)) {
+                        addPoiMarker(poiResult[j]);
+                    }
                 }
             }
         } else {
@@ -1728,7 +1756,7 @@
         }
     }
 
-    function doFindPoi(query) {
+    function doFindPoi(query, myBbox) {
         var xhttp = new XMLHttpRequest();
         //showWait(null, xhttp);
         xhttp.onreadystatechange = function() {
@@ -1766,7 +1794,7 @@
         };
         xhttp.open("GET",
                 'https://api.openstreetmap.fr/oapi/interpreter/?data=[out:json][timeout:180][bbox:'
-                + poiBbox.join(',') + '];' + query
+                + myBbox.join(',') + '];' + query
                 , true);
         xhttp.send();
         poiLoading++;
