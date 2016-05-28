@@ -1707,6 +1707,7 @@
                 poiResult = {};
                 doFindPoi('node[~"^(office|shop|amenity|craft|restaurant|tourism|hiking)$"~"."];out qt;', true);
                 doFindPoi('way[~"^(office|shop|amenity|craft|restaurant|tourism|hiking)$"~"."];out center qt;', true);
+                doFindPoi('node[~"^(highway|railway|public_transport)$"~"^(station|platform|bus_stop|tram_stop|subway_entrance)$"];out qt;', true);
             } else {
                 for (e in poiMarkers) {
                     if ((!poiResult[e]) || (!poiResult[e].lat) || (!poiResult[e].lng) || (!bbox) || bbox.length < 3
@@ -1752,6 +1753,9 @@
                                 || (res[e].tags.restaurant && res[e].tags.restaurant != 'no')
                                 || (res[e].tags.tourism && res[e].tags.tourism != 'no')
                                 || (res[e].tags.hiking && res[e].tags.hiking != 'no')
+                                || (res[e].tags.highway && res[e].tags.highway != 'no')
+                                || (res[e].tags.railway && res[e].tags.railway != 'no')
+                                || (res[e].tags.public_transport && res[e].tags.public_transport != 'no')
                             )) {
                                 displayPoi(res[e]);
                             }
@@ -1796,10 +1800,14 @@
                         iconAnchor:[12,12], className:'poiMarker ', html:'<i class="map-icon map-icon-'+getMapIconName(entry)+'"></i>'})});
             poiMarkers[entry.id].addTo(resultMapObj);
             var href = entry.homepage && entry.homepage.trim ? entry.homepage.trim() : '';
-            poiMarkers[entry.id].bindPopup(
-                    (entry.name?'<a href="https://duckduckgo.com/?q='+encodeURIComponent(entry.name+' '+city)+'" target="_blank"><i class="map-icon map-icon-search"></i></a>&#160;':'')
-                    +'<a' + (href ? ' href="'+((!href) || (!href.indexOf) || (href.trim().indexOf('http') == 0) ? '' : 'http://') + href : '') +'" target="_blank">' + entry.title + '</a>'
-            );
+            if (entry.tags && entry.name && (entry.tags.highway || entry.tags.railway || entry.tags.public_transport)) {
+                poiMarkers[entry.id].bindPopup('<a href="https://mobile.bahn.de/bin/mobil/bhftafel.exe/dox?productsFilter=1111111111000000&input=' + encodeURIComponent(entry.name + (entry.name.indexOf(city)>=0 ? '' : (', ' + city))) + '" target="_blank">'+entry.name+'</a>');
+            } else {
+                poiMarkers[entry.id].bindPopup(
+                        (entry.name ? '<a href="https://duckduckgo.com/?q=' + encodeURIComponent(entry.name + ' ' + city) + '" target="_blank"><i class="map-icon map-icon-search"></i></a>&#160;' : '')
+                        + '<a' + (href ? ' href="' + ((!href) || (!href.indexOf) || (href.trim().indexOf('http') == 0) ? '' : 'http://') + href : '') + '" target="_blank">' + entry.title + '</a>'
+                );
+            }
         }
     }
 
@@ -2244,6 +2252,25 @@
         hiking: {
             fall_back: 'trail-walking',
             no: ''
+        },
+        highway: {
+            fall_back: 'bus-station',
+            bus_stop: 'bus-station',
+            platform: 'bus-station'
+        },
+        railway: {
+            fall_back: 'train-station',
+            station: 'train-station',
+            platform: 'train-station',
+            tram_stop: 'train-station',
+            subway_entrance: 'subway-station'
+        },
+        public_transport: {
+            fall_back: 'bus-station',
+            station: 'train-station',
+            tram_stop: 'train-station',
+            bus_stop: 'bus-station',
+            subway_entrance: 'subway-station'
         },
         fall_back: 'embassy'
     }
