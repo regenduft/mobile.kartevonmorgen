@@ -1712,8 +1712,8 @@
                 doFindPoi('node[~"^(highway|railway|public_transport)$"~"^(station|platform|bus_stop|tram_stop|subway_entrance)$"];out qt;', poiBbox);
             } else {
                 for (e in poiMarkers) {
-                    if ((!poiResult[e]) || (!poiResult[e].lat) || (!poiResult[e].lng) || (!bbox) || bbox.length < 3
-                            || poiResult[e].lat < bbox[0] || poiResult[e].lat > bbox[2] || poiResult[e].lng < bbox[1] || poiResult[e].lng > bbox[3]) {
+                    if ((!poiResult[e]) || (!poiResult[e].lat) || (!poiResult[e].lng) || (!bbox) || bbox.length < 3 || ((!poiWithoutName) && (!poiResult[e].name) )
+                       || poiResult[e].lat < bbox[0] || poiResult[e].lat > bbox[2] || poiResult[e].lng < bbox[1] || poiResult[e].lng > bbox[3]) {
                         resultMapObj.removeLayer(poiMarkers[e]);
                         delete poiMarkers[e];
                     }
@@ -1730,6 +1730,7 @@
                 }
                 var poiBounds = (bbox[3] - bbox[1]) > 0.007 ? resultMapObj.getBounds() : resultMapObj.getBounds().pad(1);
                 transportBox = [poiBounds.getSouthWest().lat, poiBounds.getSouthWest().lng, poiBounds.getNorthEast().lat, poiBounds.getNorthEast().lng];
+                poiBbox = null;
                 poiResult = {};
                 doFindPoi('node[~"^(highway|railway|public_transport)$"~"^(station|platform|bus_stop|tram_stop|subway_entrance)$"];out qt;', transportBox);
             } else {
