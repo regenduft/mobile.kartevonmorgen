@@ -1236,8 +1236,8 @@
     var resultMapObj = null;
     var mapMarkers = {};
 
-    var cityLat = lat;
-    var cityLon = lon;
+    var cityLat = null;
+    var cityLon = null;
 
     function toggleMap() {
         backScrollY = null;
@@ -1322,24 +1322,23 @@
 
         resultMapObj.fitBounds([[bbox[0], bbox[1]], [bbox[2], bbox[3]]]);
 
-        resultMapObj.on('moveend', function () {
+        resultMapObj.on('moveend', function (event) {
             var ele = document.getElementById('overMap');
             if (ele && ele.style.height && ele.style.height != 'auto') {
                 bbox = [resultMapObj.getBounds().getSouthWest().lat, resultMapObj.getBounds().getSouthWest().lng, resultMapObj.getBounds().getNorthEast().lat, resultMapObj.getBounds().getNorthEast().lng];
-                if (resultMapObj.getZoom() < 16) {
+                lat = resultMapObj.getCenter().lat;
+                lon = resultMapObj.getCenter().lng;
+                if (resultMapObj.getZoom() < 15) {
                     city = lat + ',' + lon;
                     cityLat = null;
                     cityLon = null;
+                    document.getElementById('city').placeholder = 'Ort: ' + city;
                 } else {
-                    if ((!cityLat) || (!cityLon) ||
-                            Math.abs(resultMapObj.getCenter().lat - cityLat) > 0.01 || Math.abs(resultMapObj.getCenter().lng - cityLon) > 0.018) {
-                        city = lat + ',' + lon;
+                    if ((!cityLat) || (!cityLon) || Math.abs(resultMapObj.getCenter().lat - cityLat) > 0.01 || Math.abs(resultMapObj.getCenter().lng - cityLon) > 0.018) {
+                        document.getElementById('city').placeholder = 'Ort: ' + lat + ',' + lon;
                         mapCenter2City();
                     }
                 }
-                lat = resultMapObj.getCenter().lat;
-                lon = resultMapObj.getCenter().lng;
-                document.getElementById('city').placeholder = 'Ort: ' + city;
                 disableOverlay = true;
                 find();
                 window.setTimeout(function () {
@@ -1425,6 +1424,7 @@
                     if (res && res.address) {
                         if (res.address.city || res.address.town || res.address.village) {
                             city = res.address.city ? res.address.city : res.address.town ? res.address.town : res.address.village;
+                            document.getElementById('city').placeholder = 'Ort: ' + city;
                             cityLat = res.lat;
                             cityLon = res.lon;
                             saveCity();
@@ -1703,13 +1703,13 @@
                     resultMapObj.removeLayer(poiMarkers[e]);
                     delete poiMarkers[e];
                 }
-                var poiBounds = (bbox[3] - bbox[1]) > 0.007 ? resultMapObj.getBounds() : resultMapObj.getBounds().pad(1);
+                var poiBounds = (bbox[3] - bbox[1]) > 0.008 ? resultMapObj.getBounds().pad(0.2) : resultMapObj.getBounds().pad(1);
                 poiBbox = [poiBounds.getSouthWest().lat, poiBounds.getSouthWest().lng, poiBounds.getNorthEast().lat, poiBounds.getNorthEast().lng];
                 transportBox = poiBbox;
                 poiResult = {};
                 doFindPoi('node[~"^(office|shop|amenity|craft|restaurant|tourism|hiking)$"~"."];out qt;', poiBbox);
                 doFindPoi('way[~"^(office|shop|amenity|craft|restaurant|tourism|hiking)$"~"."];out center qt;', poiBbox);
-                doFindPoi('node[~"^(highway|railway|public_transport)$"~"^(station|platform|bus_stop|tram_stop|subway_entrance)$"];out qt;', poiBbox);
+                doFindPoi('node[~"^(highway|railway|public_transport)$"~"^(station|platform|bus_stop|tram_stop|subway_entrance|halt)$"];out qt;', poiBbox);
             } else {
                 for (e in poiMarkers) {
                     if ((!poiResult[e]) || (!poiResult[e].lat) || (!poiResult[e].lng) || (!bbox) || bbox.length < 3 || ((!poiWithoutName) && (!poiResult[e].name) )
@@ -1728,11 +1728,11 @@
                     resultMapObj.removeLayer(poiMarkers[e]);
                     delete poiMarkers[e];
                 }
-                var poiBounds = (bbox[3] - bbox[1]) > 0.007 ? resultMapObj.getBounds() : resultMapObj.getBounds().pad(1);
+                var poiBounds = (bbox[3] - bbox[1]) > 0.012 ? resultMapObj.getBounds().pad(0.2) : resultMapObj.getBounds().pad(1);
                 transportBox = [poiBounds.getSouthWest().lat, poiBounds.getSouthWest().lng, poiBounds.getNorthEast().lat, poiBounds.getNorthEast().lng];
                 poiBbox = null;
                 poiResult = {};
-                doFindPoi('node[~"^(highway|railway|public_transport)$"~"^(station|platform|bus_stop|tram_stop|subway_entrance)$"];out qt;', transportBox);
+                doFindPoi('node[~"^(highway|railway|public_transport)$"~"^(station|platform|bus_stop|tram_stop|subway_entrance|halt)$"];out qt;', transportBox);
             } else {
                 for (e in poiMarkers) {
                     if ((!poiResult[e]) || (!poiResult[e].lat) || (!poiResult[e].lng) || (!bbox) || bbox.length < 3
