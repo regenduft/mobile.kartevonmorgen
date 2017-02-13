@@ -442,6 +442,8 @@
     var searchResult = [];
 
     var cache = {};
+    
+    var displayDetailsOnload = false;
 
     function find() {
         if (showWait()) {
@@ -501,6 +503,11 @@
         resultCtnr.appendChild(title);
         displayResultList(searchResult['invisible']);
 
+        if (displayDetailsOnload) {
+            displayDetails(displayDetailsOnload);
+            displayDetailsOnload = false;
+        }
+        
         removeUnnecessaryMapMarkers();
     }
 
@@ -1229,22 +1236,23 @@
 
         if(location.hash && location.hash != '#' && location.hash.replace(' ', '') && location.hash.replace(' ', '') != '#') {
             var parts = location.hash.replace(/^#/, '').split(';');
-            if (parts.length > 0 && parts[0]) {
-                displayDetails(parts[0]);
-            }
             if (parts.length > 1 && parts[1]) {
                 var ll = parts[1].split(',');
                 if (ll.length > 1 && ll[1] && ll[0] && ll[0].match(/^[0-9]+\.[0-9]*$/) && ll[1].match(/[0-9]+\.[0-9]*$/)) {
                         lat = parseFloat(ll[0]);
                         lon = parseFloat(ll[1]);
                         bbox = [lat - 0.1, lon - 0.12, lat + 0.1, lon + 0.12];
-                        find();
+                        displayDetailsOnload = parts[0];
                         initMap();
                 } else if (parts[1].match(/^[0-9a-zA-Z\u00C0-\u017F,.;() :+\?/_-]+$/)) {
                     city = parts[1];
                     document.getElementById('city').placeholder = 'Ort: ' + city;
+                    displayDetailsOnload = parts[0];
                     find();
                 }
+            }
+            if (parts.length > 0 && parts[0] && !displayDetailsOnload) {
+                displayDetails(parts[0]);
             }
             
         }
