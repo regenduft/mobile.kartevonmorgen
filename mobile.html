@@ -1181,6 +1181,7 @@
         document.cookie = 'city='+city+'; path=/; expires=' + ablauf.toGMTString();
         document.cookie = 'lat='+lat+'; path=/; expires=' + ablauf.toGMTString();
         document.cookie = 'lon='+lon+'; path=/; expires=' + ablauf.toGMTString();
+        document.location.hash=';'+city;
     }
 
     function initCity() {
@@ -1362,9 +1363,11 @@
                     cityLat = null;
                     cityLon = null;
                     document.getElementById('city').placeholder = 'Ort: ' + city;
+                    document.location.hash = ';' + city;
                 } else {
                     if ((!cityLat) || (!cityLon) || Math.abs(resultMapObj.getCenter().lat - cityLat) > 0.01 || Math.abs(resultMapObj.getCenter().lng - cityLon) > 0.018) {
                         document.getElementById('city').placeholder = 'Ort: ' + lat + ',' + lon;
+                        document.location.hash = ';' + lat + ',' + lon;
                         mapCenter2City();
                     }
                 }
