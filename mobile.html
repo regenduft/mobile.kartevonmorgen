@@ -1237,9 +1237,12 @@
                         lat = parseFloat(ll[0]);
                         lon = parseFloat(ll[1]);
                         bbox = [lat - 0.1, lon - 0.12, lat + 0.1, lon + 0.12];
+                        find();
+                        initMap();
                 } else {
                     city = parts[1];
                     document.getElementById('city').placeholder = 'Ort: ' + city;
+                    find();
                 }
             }
             
