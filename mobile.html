@@ -722,7 +722,7 @@
     function doDisplayDetails(ids) {
         var entry = cache[ids[0]];
 
-        location.hash = entry.id;
+        location.hash = entry.id + ';' + (resultMapObj ? (lat + ',' + lon) : city);
 
         var ctnr = document.createElement("DIV");
 
@@ -1181,7 +1181,7 @@
         document.cookie = 'city='+city+'; path=/; expires=' + ablauf.toGMTString();
         document.cookie = 'lat='+lat+'; path=/; expires=' + ablauf.toGMTString();
         document.cookie = 'lon='+lon+'; path=/; expires=' + ablauf.toGMTString();
-        document.location.hash=';'+city;
+        document.location.hash = ';' + city;
     }
 
     function initCity() {
