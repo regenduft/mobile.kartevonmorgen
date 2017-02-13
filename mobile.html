@@ -1239,7 +1239,7 @@
                         bbox = [lat - 0.1, lon - 0.12, lat + 0.1, lon + 0.12];
                         find();
                         initMap();
-                } else {
+                } else if (parts[1].match(/^[0-9a-zA-Z\u00C0-\u017F,.;() :+\?/_-]+$/)) {
                     city = parts[1];
                     document.getElementById('city').placeholder = 'Ort: ' + city;
                     find();
