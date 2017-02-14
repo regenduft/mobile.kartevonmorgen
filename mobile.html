@@ -360,10 +360,10 @@
     <div id="details" style="display:none;">
         <div class="back">
             <a href="#"
-               onclick="document.getElementById('details').style.display = 'none';scrollBack();event.preventDefault();location.hash='';return false;">[ <<< ] ZURÜCK</a>
+               onclick="document.getElementById('details').style.display = 'none';scrollBack();event.preventDefault();location.hash=location.hash?location.hash.replace(/^[^;]*;/,';'):'';return false;">[ <<< ] ZURÜCK</a>
         </div>
         <div class="back">
-            <a href="#" onclick="document.getElementById('details').style.display = 'none';scrollBack();event.preventDefault();location.hash='';return false;">[ <<< ] ZURÜCK</a>
+            <a href="#" onclick="document.getElementById('details').style.display = 'none';scrollBack();event.preventDefault();location.hash=location.hash?location.hash.replace(/^[^;]*;/,';'):'';return false;">[ <<< ] ZURÜCK</a>
         </div>
     </div>
 
@@ -1371,11 +1371,9 @@
                     cityLat = null;
                     cityLon = null;
                     document.getElementById('city').placeholder = 'Ort: ' + city;
-                    document.location.hash = ';' + city;
                 } else {
                     if ((!cityLat) || (!cityLon) || Math.abs(resultMapObj.getCenter().lat - cityLat) > 0.01 || Math.abs(resultMapObj.getCenter().lng - cityLon) > 0.018) {
                         document.getElementById('city').placeholder = 'Ort: ' + lat + ',' + lon;
-                        document.location.hash = ';' + lat + ',' + lon;
                         mapCenter2City();
                     }
                 }
@@ -1385,6 +1383,7 @@
                     disableOverlay = false;
                 }, 333);
                 saveCity();
+                document.location.hash = ';' + lat + ',' + lon;
             }
         });
 
