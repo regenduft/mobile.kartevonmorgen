@@ -879,7 +879,7 @@
         xhttp.open("GET",
                 'https://nominatim.openstreetmap.org/search' +
                 '?format=json&addressdetails=1&q=' +
-                document.getElementById('city').value +
+                (document.getElementById('city').value || !addr ? document.getElementById('city').value : addr) +
                 ' DE'
                 , true);
         xhttp.send();
@@ -1245,10 +1245,9 @@
                         displayDetailsOnload = parts[0];
                         initMap();
                 } else if (parts[1].match(/^[0-9a-zA-Z\u00C0-\u017F,.;() :+\?/_-]+$/)) {
-                    city = parts[1];
                     document.getElementById('city').placeholder = 'Ort: ' + city;
                     displayDetailsOnload = parts[0];
-                    find();
+                    gotoCity(parts[1]);
                 }
             }
             if (parts.length > 0 && parts[0] && !displayDetailsOnload) {
