@@ -1244,10 +1244,13 @@
                         bbox = [lat - 0.1, lon - 0.12, lat + 0.1, lon + 0.12];
                         displayDetailsOnload = parts[0];
                         initMap();
-                } else if (parts[1].match(/^[0-9a-zA-Z\u00C0-\u017F,.;() :+\?/_-]+$/)) {
-                    document.getElementById('city').placeholder = 'Ort: ' + city;
-                    displayDetailsOnload = parts[0];
-                    gotoCity(parts[1]);
+                } else {
+                    var txt = decodeURIComponent(parts[1]);
+                    if (txt.match(/^[0-9a-zA-Z\u00C0-\u017F,.;() :+\?/_-]+$/)) {
+                        document.getElementById('city').placeholder = 'Ort: ' + city;
+                        displayDetailsOnload = parts[0];
+                        gotoCity(txt);
+                    }
                 }
             }
             if (parts.length > 0 && parts[0] && !displayDetailsOnload) {
