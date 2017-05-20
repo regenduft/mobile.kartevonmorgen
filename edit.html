@@ -471,16 +471,20 @@
     }
 
     function doSave(data) {
-        var fields = ['title', 'description', 'lat', 'lng',
+       var origId = origEntry.id;
+        if (!origId) origEntry['id'] = null;
+        origEntry['tags'] = ["mobile"];
+        var fields = ['title', 'description', 
             'street', 'zip', 'city', 'email', 'homepage', 'telephone'];
         for (k in fields) {
-            origEntry[fields[k]] = data[fields[k]];
+            origEntry[fields[k]] = data[fields[k]] ? data[fields[k]] : null;
         }
+        origEntry['lat']=parseFloat(data['lat']);
+        origEntry['lng']=parseFloat(data['lng']);
         origEntry['categories'] = [data['category']];
-        origEntry['version'] = origEntry['version']? (origEntry['version']+1):1;
-        origEntry['tags'] = ["mobile"];
-        origEntry['license']="CC0-1.0";
-        var origId = origEntry.id;
+        origEntry['version'] = origEntry['version'] && origId? (origEntry['version']+1):1;
+        origEntry['license'] = "CC0-1.0";
+
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (xhttp.readyState == 4) {
