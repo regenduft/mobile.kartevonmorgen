@@ -224,7 +224,7 @@
         xhttp.onreadystatechange = function() {
             if (xhttp.readyState == 4) {
                 if (xhttp.status == 200) {
-                    origEntry = JSON.parse(xhttp.responseText);
+                    origEntry = JSON.parse(xhttp.responseText)[0];
                     if (origEntry && origEntry.id == id) {
                         for (var key in origEntry) {
                             if (key == 'categories') {
