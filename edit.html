@@ -510,7 +510,7 @@
                         }
                     }
                     hideWait();
-                    location.href='mobile.html#'+xhttp.responseText;
+                    location.href='mobile.html#'+xhttp.responseText.replace('"','').replace('"','');
                 } else {
                     hideWait('Fehler!! Der neue Eintrag konnte NICHT gespeichert werden. Bitte prüfen Sie die Eingaben.');
                     document.getElementById('entry_error').innerText =
