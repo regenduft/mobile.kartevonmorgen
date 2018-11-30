@@ -1598,7 +1598,7 @@
             }
         };
         xhttp.open("GET",
-                'https://api.openstreetmap.fr/oapi/interpreter/?data=[out:json][timeout:180][bbox:'
+                'https://overpass.kumi.systems/api/interpreter/?data=[out:json][timeout:180][bbox:'
                 + osmBbox.join(',') + '];' + query
                 , true);
         xhttp.send();
@@ -1835,7 +1835,7 @@
             }
         };
         xhttp.open("GET",
-                'https://api.openstreetmap.fr/oapi/interpreter/?data=[out:json][timeout:180][bbox:'
+                'https://overpass.kumi.systems/api/interpreter/?data=[out:json][timeout:180][bbox:'
                 + myBbox.join(',') + '];' + query
                 , true);
         xhttp.send();
