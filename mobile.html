@@ -26,14 +26,16 @@
         }
 
         form.searchForm  input {
-            height: 2.2em;
+            height: 1.8em;
             box-sizing: border-box;
             width: 42%;
+            border: 1px solid grey;
+            border-radius:3px;
         }
 
         form.searchForm  button {
             width: 12%;
-            height: 2.2em;
+            height: 1.8em;
             box-sizing: border-box;
             font-weight: bold;
             padding: 0;
@@ -462,13 +464,22 @@
         xhttp.onreadystatechange = function() {
             if (xhttp.readyState == 4) {
                 if (xhttp.status == 200) {
-                    searchResult = JSON.parse(xhttp.responseText);
-                    for (e in searchResult['visible']) {
-                        searchResult['visible'][e]=searchResult['visible'][e].id;
+                    searchResultOrig = JSON.parse(xhttp.responseText);
+                    searchResult={'visible':[],'invisible':[]};
+                    var totalCount = 0;
+                    for (e in searchResultOrig['visible']) {
+                        totalCount++;
+                        if(totalCount <= 200) {
+                                searchResult['visible'][e]=searchResultOrig['visible'][e].id;
+                        }
                     }
-                    for (e in searchResult['invisible']) {
-                        searchResult['invisible'][e]=searchResult['invisible'][e].id;
+                    for (e in searchResultOrig['invisible']) {
+                        totalCount++;
+                        if (totalCount <= 200){ 
+                                searchResult['invisible'][e]=searchResultOrig['invisible'][e].id;
+                        }
                     }
+
                     var uncached = extract_uncached(searchResult['visible']);
                     var uncached2 = extract_uncached(searchResult['invisible']);
                     if (uncached2 && uncached2.length > 0) {
@@ -520,9 +531,7 @@
     function displayResultList(ids) {
         for(var e in ids) {
             var id = ids[e];
-            if (cache[id] == null) {
-                getResults([id], doDisplayResultListEntry);
-            } else {
+            if (cache[id] != null) {
                 doDisplayResultListEntry([id]);
             }
         }
