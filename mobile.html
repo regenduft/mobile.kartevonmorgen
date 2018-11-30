@@ -463,6 +463,12 @@
             if (xhttp.readyState == 4) {
                 if (xhttp.status == 200) {
                     searchResult = JSON.parse(xhttp.responseText);
+                    for (e in searchResult['visible']) {
+                        searchResult['visible'][e]=searchResult['visible'][e].id;
+                    }
+                    for (e in searchResult['invisible']) {
+                        searchResult['invisible'][e]=searchResult['invisible'][e].id;
+                    }
                     var uncached = extract_uncached(searchResult['visible']);
                     var uncached2 = extract_uncached(searchResult['invisible']);
                     if (uncached2 && uncached2.length > 0) {
