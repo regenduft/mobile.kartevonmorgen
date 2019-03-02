@@ -2,14 +2,14 @@
 
 This DEVELOPMENT BUILD can be found on http://wap.kartevonmorgen.org
 
-The PRODUCTIVE RELEASE can be found on http://m.prototyp.kartevonmorgen.org
+The PRODUCTIVE RELEASE can be found on https://m.kartevonmorgen.org
 
 How to join? - IT's SIMPLE!!
 
 Possibilty 1:
 * Add Entries to our map: Go to our productive release
-* for web http://prototyp.kartevonmorgen.org 
-* or mobile http://m.prototyp.kartevonmorgen.org and 
+* for web https://www.kartevonmorgen.org 
+* or mobile https://m.kartevonmorgen.org and 
 * click the button "Add Entry". 
 * Enter Name and Description about your new entry,
 * select the location, 
