@@ -1,0 +1,336 @@
+
+
+        /* search fields */
+        body {
+            max-width:1024px;
+            margin-left:auto;
+            margin-right:auto;
+            font-size:16px;
+            margin-top: 0;
+        }
+
+        form.searchForm {
+            text-align: left;
+            margin: 0.5em 3px;
+        }
+
+        form.searchForm  span {
+            width: 15%;
+            display:inline-block;
+        }
+
+        form.searchForm  input {
+            height: 1.8em;
+            box-sizing: border-box;
+            width: 42%;
+            border: 1px solid grey;
+            border-radius:3px;
+        }
+
+        form.searchForm  button {
+            width: 12%;
+            height: 1.8em;
+            box-sizing: border-box;
+            font-weight: bold;
+            padding: 0;
+        }
+
+        form.searchForm  .right {
+            float: right;
+        }
+
+        #findBtn, #mapBtn {
+            width: 17% !important;
+        }
+
+        .back {
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        a.blank:after {
+            content:'(neues Fenster)';
+            padding: 0 3px;
+            display: inline-block;
+            color: black;
+            text-decoration: none;
+        }
+
+        /* waiting message */
+
+        #ovl_wait {
+            display:none;
+            position:fixed;
+            background-color:rgba(0,0,0,0.2);
+            top:0;
+            left:0;
+            bottom:0;
+            right:0;
+            z-index:222;
+            text-align: center;
+        }
+
+        #ovl_wait > span {
+            display: inline-block;
+            padding: 1em 2em;
+            background-color: #EEE;
+            margin-top: 150px;
+            border: 1px solid black;
+            width: 180px;
+        }
+
+        #ovl_wait_btn {
+            margin-top: 50px;
+        }
+
+        #ovl_wait_btn button {
+            padding: 1em 2em;
+        }
+
+        #ovl_wheel {
+            position:fixed;
+            display:none;
+            right:1px;
+            top:1px;
+            z-index:233;
+            background-color:rgba(255,255,255,0.8);
+            padding:5px;
+        }
+
+
+        /* search result list */
+
+        .result_ctnr .separator {
+            padding: 8px 2px;
+            margin: 8px 2px;
+            font-weight: bold;
+        }
+
+        .result_ctnr .entry a {
+            display: inline-block;
+        }
+
+        .result_ctnr .entry .dots {
+            position: absolute;
+            bottom: 8px;
+            right: 3px;
+            background: transparent linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white) repeat scroll 0% 0%;
+            text-align: right;
+            width: 30px;
+        }
+
+        .result_ctnr .entry div {
+            max-height: 3.5em;
+            overflow: hidden;
+        }
+
+        .result_ctnr .entry  {
+            padding: 8px 3px;
+            margin: 8px 3px;
+            border-bottom: 1px solid black;
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* view single search result details */
+
+        #details div {
+            padding: 3px;
+        }
+
+        #details div.title {
+            margin-top: 10px;
+        }
+
+        #details div.content {
+            margin-bottom: 10px;
+        }
+
+        #details .mapLink a {
+            padding: 10px 0;
+            margin: 5px 0;
+            display: inline-block;
+        }
+
+        #details button {
+            margin: 10px;
+            height: 2.2em;
+            font-weight: bold;
+        }
+
+        /* city search result list */
+
+        #cities .title {
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        #cities a {
+            margin: 5px;
+            padding: 5px;
+            border-bottom: 1px solid black;
+            display: block;
+        }
+
+        /* the map */
+
+        #resultMapCtnr {
+            position:fixed;
+            bottom:0;
+            right: 0;
+            left: 0;
+            top: 0;
+        }
+
+        #resultMap {
+            height: 100%;
+            max-width: 1024px;
+            margin:0 auto;
+        }
+
+        #overMap {
+            position: absolute;
+            background-color: rgba(255,255,255,0.8);
+            top: 0;
+            bottom: 0;
+            width: 320px;
+            overflow: hidden;
+        }
+
+        #btnInitiative, #btnEvent, #btnUnternehmen, #btnOpenStreetMap {
+            height: 2.2em;
+            box-sizing: border-box;
+            font-size: 10px;
+            padding: 2px;
+        }
+
+        #btnOpenStreetMap {
+            background-color: #545454;
+            color:#DDDDDD;
+        }
+        #btnUnternehmen {
+            background-color: #006e5f;
+            color:#DDDDDD;
+        }
+        #btnEvent {
+            background-color: #c11f5a;
+            color:#DDDDDD;
+        }
+        #btnInitiative {
+            background-color: #658208;
+            color:#DDDDDD;
+        }
+
+        #btnOpenStreetMap.active {
+            background-color: #c9c9c9 !important;
+            color:#000000 !important;
+        }
+        #btnUnternehmen.active {
+            background-color: #00ccbd !important;
+            color:#000000 !important;
+        }
+        #btnEvent.active {
+            background-color: #ea84aa !important;
+            color:#000000 !important;
+        }
+        #btnInitiative.active {
+            background-color: #bef019 !important;
+            color:#000000 !important;
+        }
+
+        .darkMap .poiMarker {
+            color: #FFFFFF;
+        }
+
+        .mapMarker {
+            /*color: #c9c9c9;*/
+            /*color: #545454;*/
+            color: #888888;
+            font-size: 40px;
+            line-height: 40px;
+        }
+        body.highres .mapMarker {
+            color: transparent !important;
+            background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAoCAYAAADt5povAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAG7AAABuwBHnU4NQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAAWdEVYdEF1dGhvcgBNYXJrdXMgS29obGhhc2W9p8FDAAAAUnRFWHRDb3B5cmlnaHQAQ0MgQXR0cmlidXRpb24tU2hhcmVBbGlrZSBodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9saWNlbnNlcy9ieS1zYS8zLjAvXoNavAAABEZJREFUWIWdl01oZEUQx6u6emIkQkjwFDcrqydB2dXVsAbcwZiAp4VFNiDGMYe5xOBCBsxhyCGfG/YQiYxDCMGNGRDFj4OLgiGBDQSJuKvCHjwIIiG6GgRzCIaMvury8jp2Ov3ezFhQzMx73fXrf3VXvTcIdVilUjlDRC8BQB8ingKAzvjWjoj8YoxZE5FPc7ncz7ViYdrN5eXlZ4joOhE9r5QCRDxyAAARAREBYwyICDDzLWPMm4ODg982BCyXyw+0tLSUiehVIkKlFFi3MBcYw8AYA8xsjDErSqk3crncXzWBKysrDxljPtNanyciUEqB/XRViggAgKvOAq3fZeZL+Xx+OxG4uLh4OpPJbBFRh9YaiOjIfaCrMACDKIqAme8dHh5eGB4e3rEM5aaRiG4iYoebQusW7C/EX5CX/o6mpqablUql5QQwk8mUEfGsqyINat297mbB+X7u4ODgnWPAhYWFJwFgwAX50JCqkDp/fuyvlUqlp12FbyGi8gYFlboKfZC7v14MJKLrAABYKpXOaK1/0lqjm6okt6oA4Ohw1OvVavVRBQBXQuWRZG7KGjUiuqwB4IVGJxpjGobF9qKG//riCXM7iW1hzHys6G3h+x4yRHxMi8ip0IQQzC94e92HhhYbj31QpwGUUkcBXZhNqQt0wUmqRaSqRWRbRB73V2xhiAjMfGzVPty2tjqg21pENi0wpCrUO/09DkH9BcS+qYwxn7srCk0INOWgJ6l0oF/o/f39L1tbW7cR8WFXlU2jfwD8+nODJqmM7+90dnauqvHxcSMiN+pV5ypMUxuAL/X397OK62PJGPNPEsj3JHCKyggRbwDEzXtkZOQ3Zv7YX10SLAmcovCjQqHwKwCAtnvBzOOIeAURM6G9c/c31I1CexmDOYqiSTue7Je1tbU/+/r6TgPAU6HGnNQcQnvvpffd0dHR92wc7QZVSo0z8ysAcH+o69RaSEDlYbVanXLHk/tjdXV1v7e3tw0Aumup8ztTSJ2IvF0sFj9xYx1TGNsEM78sIh2+uiSFAMfrMX6T20XEKX88+RfW19f/7unp+UNELtdSl1a7IjJULBZv+/GDj20Rwenp6VtKqWzS+0qopzoL+GpsbOw5RDzxYFT+hTigMPNVZo5CNRiqRacmI2Z+PQQLptTaxsbGbjabvc8YczF0ElPK4trExMSHSXFDh8a1SWa+hIhPuOl0zXvC/0BEM2kBa756FYvFc4j4DQBkfKgHixDx2ZmZmTtp8RJTam1zc/P37u7uJhG56J9ML8Uzs7Oz79eKFzw0vu3t7U0y83d+o3YO0d3m5ubpemLV/TZbKBTOAsBtAMh4tyJEvDA3N5f4r9e1mim1trW1tdvV1aVFJOuldmp+fv6DeuPUlVJrbW1tU8z8tVNzd9rb2681EqPhPwhDQ0OPiMj3AKCY+fzS0tKPjcZo2PL5/EA+nx/4P3P/BZjms2q4gXrIAAAAAElFTkSuQmCC');
+            /*
+            background:url('data:image/svg+xml;utf8,<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28" height="40" viewBox="17 17 58 82" id="svg4168" version="1.1"><defs id="defs4170"><linearGradient id="linearGradient4865"><stop id="stop4867" offset="0" style="stop-color:#c9c9c9;stop-opacity:1"/><stop id="stop4869" offset="1" style="stop-color:#545454;stop-opacity:1"/></linearGradient><radialGradient xlink:href="#linearGradient4865" id="radialGradient4857" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-2.0733135,-0.00485178,0.00562694,-2.4045773,857.57643,495.26569)" cx="392.2" cy="189.1" fx="392.2" fy="189.1" r="28"/></defs><path id="path4855" d="m45.7 97.7c0 0-28-37.2-28-52 0-14.8 13.2-28 28-28 14.8 0 28 13.2 28 28 0 14.8-28 52-28 52z" fill="url(#radialGradient4857)"/></svg>')
+            */
+        }
+
+        .mapMarker.event, .mapMarker.Event {
+            /*color: #ea84aa !important;*/
+            color: rgb(229,  98,   146) !important;
+            /*color: #c11f5a !important;*/
+        }
+        body.highres .mapMarker.event, body.highres .mapMarker.Event {
+            background:url('data:image/svg+xml;utf8,<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28" height="40" viewBox="17 17 58 82" id="svg4168" version="1.1"><defs id="defs4170"><linearGradient id="linearGradient4865"><stop id="stop4867" offset="0" style="stop-color:#ea84aa;stop-opacity:1"/><stop id="stop4869" offset="1" style="stop-color:#c11f5a;stop-opacity:1"/></linearGradient><radialGradient xlink:href="#linearGradient4865" id="radialGradient4857" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-2.0733135,-0.00485178,0.00562694,-2.4045773,857.57643,495.26569)" cx="392.2" cy="189.1" fx="392.2" fy="189.1" r="28"/></defs><path id="path4855" d="m45.7 97.7c0 0-28-37.2-28-52 0-14.8 13.2-28 28-28 14.8 0 28 13.2 28 28 0 14.8-28 52-28 52z" fill="url(#radialGradient4857)"/></svg>') !important;
+        }
+
+        .mapMarker.initiative, .mapMarker.Initiative {
+            /*color: #bef019 !important;*/
+            /*color: #658208 !important;*/
+            color: rgb(151,  191,  13 ) !important;
+        }
+        body.highres .mapMarker.initiative, body.highres .mapMarker.Initiative {
+            background:url('data:image/png;base64,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');
+            /*
+            background:url('data:image/svg+xml;utf8,<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28" height="40" viewBox="17 17 58 82" id="svg4168" version="1.1"><defs id="defs4170"><linearGradient id="linearGradient4865"><stop id="stop4867" offset="0" style="stop-color:#bef019;stop-opacity:1"/><stop id="stop4869" offset="1" style="stop-color:#658208;stop-opacity:1"/></linearGradient><radialGradient xlink:href="#linearGradient4865" id="radialGradient4857" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-2.0733135,-0.00485178,0.00562694,-2.4045773,857.57643,495.26569)" cx="392.2" cy="189.1" fx="392.2" fy="189.1" r="28"/></defs><path id="path4855" d="m45.7 97.7c0 0-28-37.2-28-52 0-14.8 13.2-28 28-28 14.8 0 28 13.2 28 28 0 14.8-28 52-28 52z" fill="url(#radialGradient4857)"/></svg>') !important;
+            */
+        }
+
+        .mapMarker.business, .mapMarker.Business, .mapMarker.unternehmen, .mapMarker.Unternehmen {
+            /*color: #00ccbd !important;*/
+            /*color: #006e5f !important;*/
+            color: rgb(0,    152,  137) !important;
+        }
+        body.highres .mapMarker.business, body.highres .mapMarker.Business, body.highres .mapMarker.unternehmen, body.highres .mapMarker.Unternehmen {
+            background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAoCAYAAADt5povAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAG7AAABuwBHnU4NQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAAWdEVYdEF1dGhvcgBNYXJrdXMgS29obGhhc2W9p8FDAAAAUnRFWHRDb3B5cmlnaHQAQ0MgQXR0cmlidXRpb24tU2hhcmVBbGlrZSBodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9saWNlbnNlcy9ieS1zYS8zLjAvXoNavAAAA99JREFUWIWdl09oHUUcxz8zsy8eGujFU2yE6slTK0Wpog2iQk+CiAGx5lJKrUnFRmtqBHkmJrQVetA+RQOBFER50oNFoVKxQimKRoUKgorII7YaPKgUieXtzHhY5739M7O7rz/48XbfzPw++/3N/GZ2BXWsvbSVSD2CkA8i2AJiNGmwa1h+xZpzxPo04/t+qQolSltPv30HRMeQ8j6kBPF/d/drbdaNOY/Whxnf9/VgwHZrGDHUQkVPIKVACHpA59ZmocY4Nxi7wkbjIBMT/1QD22/ehGh8gJQ7UCoBOXewtGVhiWsNxlyie+0hHp/qhIHtt27Gis9RaqQHS0Od0jQsBEygVzDdnTw2ueaG9Ee3W8MYziDlSE9JWl0arlTR8w+VXI8g1BlOvbqpCOyKFkJsyw0ogkMgX+qFAMR21PDJbEpXXrudRmMVpSRKQRT5AyuVncd0Ol0afR7HFq3vZOLgaqJQRScQQhYWRfpJ3ZOH0pj3zEoRAiGOJQpPvb4VKX9GKRFUl/9Pyr66oprwfbd7awQ86i2PtMr8vQO6Wqzq31sx4uEIa+8Pwtw85e+N8beF+vfpuyOsHS108A1K15xrd9dpL4PDbRGwxTuguE9m99L8A/i8GOvG6LpAvrKoB74mEXSCIBekrNZ8/cLgjsTYC5Wg8F6ZhVaDL0iE+dCbFh80pNCn1gc29iNJ5+pZrO0Ed34fzKfU59mYa2we/VjSbBqwy6WpzAf1KQxBezHtEuPjOtlLu2IJa7uVcxVKZ9lcJr8xsVgGdzztP/QbxrwfTGnZSVBLqW1zYPpyHwgQ6ybG+FWG7n3XxbnWyHjOYfrAJ5//CWNWvMFDq7KewmX2zvxQBALEsokxG965qSoJP/RfunI+jcgCD0xfJtZvBBdE2fx5+5sWk8+uhYEAQ7yMNVdqpzO082i9jrTz+fBF4N6Zq3T1Ee+iCBW+d2/Vz7H/yN/58P6T3lrBycXzKDlWeE/xvQin38KT2rvI5Oy9CFE4EIsKk6AWzdNoHQ9Ug8l1TMxTPhiA8gIBzn66zu6xG4BdBRWho8wYMHqRZ156LxTWr9DZn3YOrb+rtdskq/J7/mKhLGT55xrA8eZ2lPkSIRr9UakT35m1MULfxfTCalm4cEqdnfvsdx64Zwhrd3nT6jZobRc4vPBOVbjylDrb/MccWn8TrMNYX2IjeqVOqOqUOjs6sw3DV0Aj1xIjxE5eOBr86k1bdUqdfXJxnbG7I6wZy63SeV48/m7dMPVS6sxsmseYL1I7zSp6eHGQEPVT6qx56BaM+RaQSLWD5okfB44xsM1O7WF2as/1DP0Pa/h44KB7qbgAAAAASUVORK5CYII=');
+            /*
+            background:url('data:image/svg+xml;utf8,<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28" height="40" viewBox="17 17 58 82" id="svg4168" version="1.1"><defs id="defs4170"><linearGradient id="linearGradient4865"><stop id="stop4867" offset="0" style="stop-color:#00ccbd;stop-opacity:1"/><stop id="stop4869" offset="1" style="stop-color:#006e5f;stop-opacity:1"/></linearGradient><radialGradient xlink:href="#linearGradient4865" id="radialGradient4857" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-2.0733135,-0.00485178,0.00562694,-2.4045773,857.57643,495.26569)" cx="392.2" cy="189.1" fx="392.2" fy="189.1" r="28"/></defs><path id="path4855" d="m45.7 97.7c0 0-28-37.2-28-52 0-14.8 13.2-28 28-28 14.8 0 28 13.2 28 28 0 14.8-28 52-28 52z" fill="url(#radialGradient4857)"/></svg>') !important;
+            */
+        }
+
+        .leaflet-popup {
+            padding-bottom: 25px;
+        }
+
+        /* footer */
+
+        .footerBtnCtnr {
+            margin-top:50px;
+            text-align:center;
+        }
+
+        .footerBtnCtnr button {
+            height: 2.2em;
+            font-weight: bold;
+        }
+
+        #menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: #DDDDDD;
+            border: 1px solid gray;
+            padding: 20px;
+            max-width: 70%;
+            z-index: 222;
+        }
+
+.scroll_ctnr {
+    position: absolute;
+    top: 100px;
+    bottom:100px;
+    width: 320px;
+    overflow: auto;
+    overflow-y: scroll;
+}
+
+.bottomCtnr {
+    position: absolute;
+    bottom: 0;
+    height: 100px;
+    overflow: auto;
+    width: 320px;
+}
