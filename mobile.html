@@ -269,7 +269,7 @@
     }
 
     function scrollBack() {
-        if (backScrollY || backScrollY === 0) {
+        if ((backScrollY && backScrollY >= 0) || backScrollY === 0) {
             window.setTimeout(function () {
                 document.getElementById('overMapScroll').scrollTo(0, backScrollY);
                 backScrollY = null;
@@ -1152,7 +1152,7 @@
                         iconAnchor:[20,41], className:'mapMarker '+(cat ?
                                 cat.name :'unknown'), html:'<i class="map-icon map-icon-map-pin"></i>'})});
             mapMarkers[entry.id].addTo(resultMapObj);
-            mapMarkers[entry.id].bindPopup('<a href="#" onclick="displayDetails('+"'"+entry.id+"'"+');toggleMap();event.preventDefault();return false;">'+entry.title+'</a>');
+            mapMarkers[entry.id].bindPopup('<a href="#" onclick="displayDetails('+"'"+entry.id+"'"+');if(isMapInFront()){toggleMap();backScrollY=null;}else{backScrollY=-1;}event.preventDefault();return false;">'+entry.title+'</a>');
         }
     }
 
