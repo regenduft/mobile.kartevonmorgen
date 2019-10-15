@@ -5,20 +5,1164 @@
     <title>Karte von morgen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="style.css"></link>
+    <link rel="stylesheet" href="default.css"></link>
+    <link rel="stylesheet" href="dev.css"></link>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"></link>
 
+<style>
+
+
+.fZGVr div.map {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    margin: 0px;
+    z-index: 0;
+    padding: 0px;
+    top: 0px;
+    left: 0px;
+}
+
+.fZGVr .osm.attr,
+.fZGVr .leaflet-control-attribution.leaflet-control a {
+    color: rgb(102, 102, 102);
+}
+
+.gYOxnk {
+    bottom: 95px;
+    position: absolute;
+    z-index: 0;
+}
+
+.fMdKZX {
+    box-shadow: none !important;
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    background-clip: padding-box;
+}
+
+.evrwXb {
+    cursor: pointer;
+    font-size: 14px;
+    color: rgb(51, 51, 51);
+    width: 30px !important;
+    height: 30px !important;
+    line-height: 30px !important;
+}
+
+.kWYPha {
+    width: 12px;
+    height: 12px;
+}
+
+.hegYIf {
+    max-width: 130px;
+    color: rgb(51, 51, 51) !important;
+    background: rgb(242, 242, 242) none repeat scroll 0% 0% !important;
+    margin-top: 2px !important;
+    opacity: 1 !important;
+    border-radius: 0.5rem !important;
+    padding: 6px 17px !important;
+    hyphens: auto;
+}
+
+.hegYIf::after {
+    border-bottom-color: rgb(242, 242, 242) !important;
+}
+
+.hegYIf > h3 {
+    margin: 0.5rem 0px -0.5rem;
+    padding: 0px;
+    font-size: 0.9rem;
+}
+
+.NavButton {
+    cursor: pointer;
+    box-sizing: border-box;
+    font-weight: normal;
+    padding: 0.3em;
+    font-size: 1.2em;
+    border-color: transparent currentcolor;
+    border-style: solid none;
+    border-width: 4px medium;
+    border-image: none 100% / 1 / 0 stretch;
+    color: rgb(221, 221, 221);
+    background: transparent none repeat scroll 0% 0%;
+}
+
+.NavButton:hover {
+    color: rgb(255, 255, 255);
+    border-bottom: 4px solid rgb(255, 255, 255);
+}
+
+.NavButton i {
+    margin-right: 0.5em;
+}
+
+.gleiBQ {
+    margin-right: 10px !important;
+}
+
+.ResultListOuter {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.ResultListEntry {
+    -moz-box-flex: 1;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    overflow-y: hidden;
+}
+
+.TitleCategoryAndDescription {
+    -moz-box-flex: 1;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.ResultListEntryTitle {
+    font-size: 1.1em;
+    margin: 0.2rem 0.3em 0.2rem 0px;
+    font-weight: 500;
+    position: relative;
+    z-index: 3;
+}
+
+.ResultListElement {
+    position: relative;
+    height: 115px;
+    overflow-y: hidden;
+    cursor: pointer;
+    margin: 0px;
+    padding: 0.7em 0.5em 0.4em 0.7em;
+    border-bottom: 1px solid rgb(221, 221, 221);
+    border-left: 5px solid transparent;
+}
+
+.ResultListElement div.category {
+    height: 1.2em;
+}
+
+.ResultListElement.current-entry {
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+}
+
+.ResultListElement:hover {
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+}
+
+.ResultListElement.event.current-entry {
+    border-left: 5px solid rgb(229, 98, 146);
+}
+
+.ResultListElement.event:hover {
+    border-left: 5px solid rgb(229, 98, 146);
+}
+
+.ResultListElement.event span.category {
+    color: rgb(229, 98, 146);
+}
+
+.ResultListElement.company.current-entry {
+    border-left: 5px solid rgb(0, 152, 137);
+}
+
+.ResultListElement.company:hover {
+    border-left: 5px solid rgb(0, 152, 137);
+}
+
+.ResultListElement.company span.category {
+    color: rgb(0, 152, 137);
+}
+
+.ResultListElement.initiative.current-entry {
+    border-left: 5px solid rgb(151, 191, 13);
+}
+
+.ResultListElement.initiative:hover {
+    border-left: 5px solid rgb(151, 191, 13);
+}
+
+.ResultListElement.initiative span.category {
+    color: rgb(151, 191, 13);
+}
+
+.ResultListElement span.category {
+    font-size: 0.8em;
+    color: rgb(170, 170, 170);
+    text-transform: uppercase;
+}
+
+.ResultListElement span.title {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-right: 0.3em;
+}
+
+.ResultListElement span.subtitle {
+    font-size: 0.8em;
+    color: rgb(85, 85, 85);
+}
+
+.ResultListElement .highlight-entry div.chevron {}
+
+.ResultListElement .highlight-entry.initiative div.chevron {}
+
+.ResultListElement .highlight-entry.company div.chevron {}
+
+.ResultListElement .highlight-entry.event div.chevron {}
+
+.ResultListDescription {
+    margin-top: 2px;
+    max-height: 42px;
+    overflow: hidden;
+    hyphens: auto;
+    position: relative;
+    z-index: 3;
+    font-size: 0.8em;
+    color: rgb(85, 85, 85);
+}
+
+.TagsWrapper {
+    height: 21px;
+    overflow-y: hidden;
+    margin-top: 5px;
+    float: left;
+}
+
+.TagsWrapper ul {
+    list-style: outside none none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.Tag {
+    line-height: 14px;
+    font-size: 0.75em;
+    display: inline-block;
+    background: rgb(234, 234, 234) none repeat scroll 0% 0%;
+    color: rgb(51, 51, 51);
+    border-radius: 0.3em;
+    padding: 0.2em 0.4em;
+    margin-right: 0.4em;
+    margin-bottom: 0.2em;
+    border: 0px none;
+    letter-spacing: 0.06em;
+    height: 12px;
+    overflow: hidden;
+}
+
+.FlowerWrapper {
+    margin: 22px 10px 0px;
+}
+
+.ResultListWrapper {
+    box-sizing: border-box;
+}
+
+.ResultListWrapper .result-list p.no-results {
+    margin: 0px;
+    padding: 1em;
+    font-size: 0.9em;
+}
+
+.ResultListWrapper .result-list p.no-results span {
+    margin-left: 0.5em;
+}
+
+.ResultListWrapper .result-list p.loading {
+    margin: 20px 0px 0px;
+    padding: 1em;
+    font-size: 0.9em;
+}
+
+.ResultListWrapper .result-list p.loading span {
+    margin-left: 0.5em;
+}
+
+.ResultListWrapper .result-list ul {
+    list-style: outside none none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.StyledScrollableDiv {
+    -moz-box-flex: 1;
+    flex-grow: 1;
+    overflow-y: scroll;
+    box-sizing: border-box;
+}
+
+.StyledScrollableDiv::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.StyledScrollableDiv::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%;
+}
+
+.StyledScrollableDiv::-webkit-scrollbar-thumb {
+    background: rgb(153, 153, 153) none repeat scroll 0% 0%;
+}
+
+.eVwvVu {
+    display: flex;
+    border-radius: 50%;
+    border-color: rgb(102, 102, 102) white white;
+    border-style: solid;
+    border-width: 3px;
+    border-image: none 100% / 1 / 0 stretch;
+    height: 17px;
+    width: 17px;
+    animation: 1s linear 0s infinite normal none running iECmZH;
+}
+
+.gnVtmb {
+    margin: 0.1em 0px 0px 0.1em;
+    animation-duration: 150ms;
+    animation-name: turn;
+}
+
+@keyframes turn {
+    0% {
+        transform: rotate(330deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes turn {
+    0% {
+        transform: rotate(330deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.MainCategories {
+    font-size: 0.8em;
+    color: rgb(102, 102, 102);
+}
+
+.MainCategories button {
+    padding: 0.5em;
+    text-transform: uppercase;
+    background-color: rgb(247, 247, 247);
+}
+
+.MainCategories button > i.toggle {
+    text-align: left;
+    display: block;
+    width: 1.8em;
+    height: 0.9em;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 0.5em;
+    float: right;
+}
+
+.MainCategories button > i.toggle > i {
+    display: inline-block;
+    height: 0.9em;
+    width: 0.9em;
+    border-radius: 0.5em;
+    background-color: rgb(255, 255, 255);
+    vertical-align: top;
+    border: 1px solid rgb(255, 255, 255);
+    margin: -1px;
+}
+
+.MainCategories button.active > i.toggle {
+    text-align: right !important;
+}
+
+.MainCategories .active {
+    color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.4) 0.2px 0.2px 2px 1px inset;
+}
+
+.MainCategories .initiative.active {
+    background: rgb(151, 191, 13) none repeat scroll 0% 0%;
+}
+
+.MainCategories .event.active {
+    background: rgb(229, 98, 146) none repeat scroll 0% 0%;
+}
+
+.MainCategories .company.active {
+    background: rgb(0, 152, 137) none repeat scroll 0% 0%;
+}
+
+.SearchInput {
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 0px !important;
+    font-size: 1.1em !important;
+    line-height: 1.7em !important;
+    font-weight: 300;
+    padding-left: 3.1em !important;
+}
+
+.SearchInput::-webkit-input-placeholder {
+    color: rgb(170, 170, 170);
+}
+
+.SearchInput::placeholder {
+    color: rgb(170, 170, 170);
+}
+
+.SearchInput::placeholder {
+    color: rgb(170, 170, 170);
+}
+
+.SearchBar {
+    border-bottom: 1px solid rgb(221, 221, 221);
+    width: 100%;
+    box-sizing: border-box;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+}
+
+.SearchBar input,
+.SearchBar button {
+    box-sizing: border-box;
+    border: medium none;
+    outline: currentcolor none medium;
+}
+
+.SearchBar input,
+.SearchBar span.search-icon {
+    font-size: 1.2em;
+}
+
+.SearchBar input {
+    padding: 0.4em 0.4em 0.4em 2em;
+}
+
+.SearchBar .search-icon {
+    position: absolute;
+    margin: 0.5em 0px 0px 0.9em;
+    display: inline-block;
+    color: rgb(102, 102, 102);
+    z-index: 5;
+    font-size: 1.2rem;
+}
+
+.SidebarComponent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.GroupHeader {
+    border-top: 3px solid rgb(221, 221, 221);
+    padding: 0.5em 1em;
+    margin: 0px;
+    background: rgb(234, 234, 234) none repeat scroll 0% 0%;
+    color: rgb(102, 102, 102);
+}
+
+.AddEntryButton {
+    z-index: 10;
+    padding: 0px;
+    margin: 0px;
+    background: rgb(26, 26, 26) none repeat scroll 0% 0%;
+    text-align: center;
+    bottom: 0px;
+}
+
+.AddEntryButton li {
+    cursor: pointer;
+    box-sizing: border-box;
+    font-weight: normal;
+    padding: 0.3em;
+    font-size: 1.2em;
+    border-color: transparent currentcolor;
+    border-style: solid none;
+    border-width: 4px medium;
+    border-image: none 100% / 1 / 0 stretch;
+    color: rgb(221, 221, 221);
+    background: transparent none repeat scroll 0% 0%;
+}
+
+.AddEntryButton li:hover {
+    color: rgb(255, 255, 255);
+    border-bottom: 4px solid rgb(255, 255, 255);
+}
+
+.AddEntryButton li i {
+    margin-right: 0.5em;
+}
+
+.ResultWrapper {
+    background: rgb(247, 247, 247) none repeat scroll 0% 0%;
+}
+
+.ResultWrapper .city-list ul {
+    background: rgb(247, 247, 247) none repeat scroll 0% 0%;
+}
+
+.ResultWrapper .city-list ul li {
+    padding: 0.2em 0.7em;
+    line-height: 0.9;
+    border-left: 5px solid transparent;
+}
+
+.ResultWrapper .city-list ul li:hover {
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+    border-left: 5px solid rgb(102, 102, 102);
+}
+
+.ResultWrapper .city-list ul li:hover div.chevron {
+    color: rgb(102, 102, 102);
+}
+
+.ResultWrapper .city-list ul li span.state {
+    color: rgb(85, 85, 85);
+}
+
+.ResultWrapper .city-list ul li span.country {
+    color: rgb(136, 136, 136);
+}
+
+.ResultWrapper .city-list ul li span.prefix {
+    color: rgb(136, 136, 136);
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+        font-size: 80%;
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h7 {
+    font-family: "Rubik", sans-serif;
+}
+
+html,
+button,
+input,
+select,
+textarea {
+    font-family: "Rubik", sans-serif;
+}
+
+.leTWXz {
+    padding-right: 0.45rem;
+}
+
+.bVtZdE {
+    margin-right: 0.3em;
+    width: 0.7em;
+}
+
+.SwipeableLeftPanel {
+    position: relative;
+    height: 100%;
+    z-index: 2;
+    order: -1;
+    overflow-y: hidden;
+    float: left;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.5) 1px 1px 5px;
+}
+
+.SwipeableLeftPanel .content {
+    width: 100%;
+    box-sizing: border-box;
+    padding-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.SwipeableLeftPanel.closed {
+    width: 0px;
+}
+
+.SwipeableLeftPanel.opened {
+    max-width: 380px;
+    width: 90%;
+}
+
+.SwipeableLeftPanel.opened .menu {
+    width: 100%;
+}
+
+.SwipeableLeftPanel .search.closed {
+    display: none;
+}
+
+.SwipeableLeftPanel .search .main-categories {
+    height: 2.1em;
+}
+
+.iMCOcx {
+    position: absolute;
+    top: 15px;
+    right: 0px;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+    color: rgb(26, 26, 26);
+}
+
+.iMCOcx .menu-toggle button {
+    outline: currentcolor none medium;
+    position: relative;
+    z-index: 1;
+    top: 0px;
+    right: 0px;
+    font-size: 15pt;
+    text-transform: uppercase;
+    text-align: right;
+    color: rgb(102, 102, 102);
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+    border-radius: 0.2em 0px 0px 0.2em;
+    border: medium none;
+    padding: 0.2em;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px 0.2px;
+}
+
+.iMCOcx .menu-toggle button:hover {
+    color: rgb(26, 26, 26);
+    box-shadow: rgb(0, 0, 0) 0px 1px 3px 0.2px;
+}
+
+.iMCOcx .menu-toggle button .pincloud {
+    display: inline-block;
+    width: 3.5em;
+    height: 1.2em;
+    background-position: left center;
+    background-image: url("data:image/png;base64,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");
+    background-repeat: no-repeat;
+    background-size: 50% auto;
+}
+
+.iMCOcx .menu-toggle button i {
+    margin-right: 0.3em;
+}
+
+.LeftPanelAndHideSidebarButton {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.HideSidebar {
+    position: relative;
+    z-index: 2;
+    height: 0px;
+}
+
+.HideSidebar > button {
+    position: relative;
+    padding: 10px 3px 10px 7px;
+    top: 72px;
+    font-size: 13pt;
+    color: rgb(102, 102, 102);
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+    border-color: currentcolor currentcolor currentcolor rgb(221, 221, 221);
+    border-style: none none none solid;
+    border-width: medium medium medium 1px;
+    border-image: none 100% / 1 / 0 stretch;
+    border-radius: 0px 0.2em 0.2em 0px;
+    box-shadow: rgba(0, 0, 0, 0.4) 2px 1px 4px 0px;
+}
+
+.HideSidebar > button:hover {
+    color: rgb(26, 26, 26);
+}
+
+.HideSidebar > button i {
+    margin-right: 0.3em;
+}
+
+.StyledApp {
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+.StyledApp .tutorial {
+    margin-bottom: 3em;
+}
+
+.StyledApp .tutorial img {
+    width: 100%;
+}
+
+@media not all {
+    .StyledApp body {
+        font-size: 80%;
+    }
+}
+
+.StyledApp input,
+.StyledApp select,
+.StyledApp textarea,
+.StyledApp button {
+    font-family: "Rubik", sans-serif;
+}
+
+.StyledApp h1,
+.StyledApp h2,
+.StyledApp h3,
+.StyledApp h4,
+.StyledApp h5,
+.StyledApp h6,
+.StyledApp h7 {
+    font-family: "Rubik", sans-serif;
+    font-weight: 500;
+    margin-block-end: 2px;
+}
+
+.StyledApp button {
+    font-family: "Rubik", sans-serif;
+}
+
+.StyledApp button.pure-button i {
+    margin-right: 0.5em;
+}
+
+.StyledApp .fa {
+    font-family: "FontAwesome" !important;
+}
+
+.StyledApp .pure-g [class*="pure-u"] {
+    font-family: "Rubik", sans-serif;
+}
+
+.StyledApp::-webkit-scrollbar {
+    background-color: rgb(238, 238, 238);
+}
+
+.StyledApp::-webkit-scrollbar-thumb {
+    border-radius: 0px;
+    background-color: rgb(204, 204, 204);
+}
+
+.StyledApp .pure-menu-list {
+    margin: 0px 50px;
+}
+
+.StyledApp .pure-menu-link:hover {
+    color: rgb(0, 0, 0);
+}
+
+.StyledApp label span.desc {
+    color: rgb(102, 102, 102);
+    font-size: 0.8em;
+    margin-left: 0.5em;
+}
+
+.StyledApp legend span.desc {
+    color: rgb(102, 102, 102);
+    font-size: 0.8em;
+    margin-left: 0.5em;
+}
+
+.StyledApp form div.err {
+    color: rgb(255, 68, 68);
+    font-size: 0.9em;
+}
+
+.StyledApp form input[type="text"].err {
+    border-color: rgb(255, 68, 68);
+}
+
+.StyledApp form textarea.err {
+    border-color: rgb(255, 68, 68);
+}
+
+.StyledApp form select.err {
+    border-color: rgb(255, 68, 68);
+}
+
+.StyledApp .banner {
+    position: relative;
+    z-index: 10;
+    color: rgb(238, 238, 238);
+    text-align: center;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.StyledApp .banner .banner-link {
+    color: rgb(0, 0, 0);
+}
+
+.StyledApp div.chevron {
+    position: relative;
+    color: rgb(221, 221, 221);
+}
+
+.StyledApp div.chevron i {
+    position: absolute;
+    display: inline-table;
+    top: 0px;
+    bottom: 0px;
+    margin: auto;
+}
+
+.StyledApp .close-button {
+    text-align: center;
+    margin: 0px;
+    padding: 1em;
+}
+
+.StyledApp .close-button button {
+    margin: 0px 5px;
+}
+
+.StyledApp .message {
+    white-space: pre-wrap;
+    margin: 0px;
+    padding: 1em;
+}
+
+.StyledApp .new-rating-form {
+    margin: 2em 1.8em 1.8em;
+}
+
+.StyledApp .new-rating-form .radio-button {
+    margin: 0.2em 0.3em 0.2em 0px;
+}
+
+.StyledApp .new-rating-form .form-heading {
+    font-weight: bold;
+    margin-top: 0.5em;
+    margin-bottom: 0px;
+}
+
+.StyledApp .new-rating-form .rating-context-explanation {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    font-style: italic;
+}
+
+.StyledApp .new-rating-form .title {
+    margin-bottom: 0.5em;
+}
+
+.StyledApp .optional::-webkit-input-placeholder {
+    color: rgb(119, 119, 119);
+}
+
+.StyledApp .optional::placeholder {
+    color: rgb(119, 119, 119);
+}
+
+.StyledApp .optional::placeholder {
+    color: rgb(119, 119, 119);
+}
+
+.StyledApp input,
+.StyledApp textarea,
+.StyledApp select {
+    box-shadow: none !important;
+    border-radius: 3px !important;
+}
+
+.StyledApp .info .landing-img {
+    width: 70%;
+}
+
+.StyledApp .info h3 {
+    margin-top: 50px;
+}
+
+.StyledApp .license input {
+    margin-top: 0.7em;
+}
+
+@keyframes iECmZH {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes iECmZH {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+</style>
 </head>
 <body onload="initCity();" class="lowres">
+
+
+<div class="app StyledApp">
 
 <div id="resultMapCtnr">
     <div id="resultMap"></div>
 </div>
 
-<div id="overMap">
+<div class="LeftPanelAndHideSidebarButton">
+    <div class="left opened SwipeableLeftPanel">
+        <div class="SidebarComponent">
+            <div class="search open">
+                <div class="SearchBar pure-g SearchBar">
+                    <div class="main-categories pure-u-1 pure-g MainCategories">
+                        <div><button class="initiative pure-u-8-24 active" id="btnInitiative" onclick="toggleCat('Initiative')">Initiative</button><button class="event pure-u-7-24" id="btnEvent" onclick="toggleCat('Event')">Event</button><button class="company pure-u-9-24 active" id="btnUnternehmen" onclick="toggleCat('Unternehmen')">Unternehmen </button></div>
+                    </div>
+                    <div class="pure-u-1">
+                        <div class="search-icon">
+                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16 SearchBar__MagnifyingGlassIcon-sc-14ao0uv-0 gnVtmb" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                <path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path>
+                            </svg>
+                        </div>
+                        <input id="text" onchange="find();" class="pure-u-1 SearchInput" placeholder="Wonach suchst du? (# für Tags)" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="result ResultWrapper StyledScrollableDiv">
+                <div class="ResultListWrapper">
+                    <div class="result-list">
+                        <ul id="results_visible">
+                        </ul>
+						<ul id="result_example">
+                            <li class="initiative ResultListElement" id="template_result">
+                                <div class="ResultListOuter">
+                                    <div class="ResultListEntry">
+                                        <div class="TitleCategoryAndDescription"><span class="category" id="result_category">Initiative</span>
+                                            <div>
+                                                <h3 id="result_title" class="title ResultListEntryTitle">Appel un' Ei</h3></div>
+                                            <div id="result_description" class="ResultListDescription">Appel un' Ei ist eine studentische Kooperative, die regionale, biologisch angebaute...</div>
+                                        </div>
+                                        <div class="FlowerWrapper">
+                                            <div>
+                                                <svg width="64" height="64">
+                                                    <g transform="translate(32,32)">
+                                                        <circle cx="0" cy="0" r="31" fill="#fff" stroke="#ccc" stroke-width="0.5"></circle>
+                                                        <g>
+	                                                        <path id="result_rating_diversity" d="M 0,0 C 0,0 9.87,13.098900000000002 9.87,18.330000000000002 9.87,23.561100000000003 5.2311,28.2 0,28.2 -5.2311,28.2 -9.87,23.561100000000003 -9.87,18.330000000000002 -9.87,13.098900000000002 0,0 0,0 Z" fill="rgb(151,  191,  13 )" transform="translate(1.7999999999999998,0)       rotate(-90)       scale(0.9990000000000001)" data-tip="" data-html="true" currentItem="false"></path>
+	                                                        <path id="result_rating_renewable" d="M 0,0 C 0,0 9.87,13.098900000000002 9.87,18.330000000000002 9.87,23.561100000000003 5.2311,28.2 0,28.2 -5.2311,28.2 -9.87,23.561100000000003 -9.87,18.330000000000002 -9.87,13.098900000000002 0,0 0,0 Z" fill="rgb(255,  221,  0  )" transform="translate(0.9000000000000001,1.5588457268119893)       rotate(-30)       scale(0.766)" data-tip="" data-html="true" currentItem="false"></path>
+	                                                        <path id="result_rating_fairness" d="M 0,0 C 0,0 9.87,13.098900000000002 9.87,18.330000000000002 9.87,23.561100000000003 5.2311,28.2 0,28.2 -5.2311,28.2 -9.87,23.561100000000003 -9.87,18.330000000000002 -9.87,13.098900000000002 0,0 0,0 Z" fill="rgb(229,  98,   146)" transform="translate(-0.8999999999999995,1.5588457268119895)       rotate(30)       scale(0.9990000000000001)" data-tip="" data-html="true" currentItem="false"></path>
+	                                                        <path id="result_rating_humanity" d="M 0,0 C 0,0 9.87,13.098900000000002 9.87,18.330000000000002 9.87,23.561100000000003 5.2311,28.2 0,28.2 -5.2311,28.2 -9.87,23.561100000000003 -9.87,18.330000000000002 -9.87,13.098900000000002 0,0 0,0 Z" fill="rgb(170,  56,   108)" transform="translate(-1.7999999999999998,2.2043642384652356e-16)       rotate(90)       scale(0.766)" data-tip="" data-html="true" currentItem="false"></path>
+	                                                        <path id="result_rating_transparency" d="M 0,0 C 0,0 9.87,13.098900000000002 9.87,18.330000000000002 9.87,23.561100000000003 5.2311,28.2 0,28.2 -5.2311,28.2 -9.87,23.561100000000003 -9.87,18.330000000000002 -9.87,13.098900000000002 0,0 0,0 Z" fill="rgb(100,  122,  133)" transform="translate(-0.9000000000000007,-1.5588457268119889)       rotate(150)       scale(0.9990000000000001)" data-tip="" data-html="true" currentItem="false"></path>
+	                                                        <path id="result_rating_solidarity" d="M 0,0 C 0,0 9.87,13.098900000000002 9.87,18.330000000000002 9.87,23.561100000000003 5.2311,28.2 0,28.2 -5.2311,28.2 -9.87,23.561100000000003 -9.87,18.330000000000002 -9.87,13.098900000000002 0,0 0,0 Z" fill="rgb(0,    153,  173)" transform="translate(0.9000000000000001,-1.5588457268119893)       rotate(210)       scale(0.9990000000000001)" data-tip="" data-html="true" currentItem="false"></path>
+                                                        </g>
+                                                    </g>
+                                                </svg>
+                                                <div class="__react_component_tooltip place-bottom type-dark " data-id="tooltip"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="TagsWrapper">
+                                        <ul id="result_tags">
+                                            <div class="Tag">#bio</div>
+                                            <div class="Tag">#bundhshd</div>
+                                            <div class="Tag">#kooperative</div>
+                                            <div class="Tag">#mobile</div>
+                                            <div class="Tag">#regional</div>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="ResultListElement">
+                                <div><a href="#">mehr Einträge anzeigen...</a></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <div class="GroupHeader">Weitere Ergebnisse außerhalb des sichtbaren Bereichs der Karte:</div>
+                    <div class="ResultListWrapper">
+                        <div class="result-list">
+<!-- id=openstreetmap ? --> <ul id="results_invisible" >
+                                <li class="company ResultListElement">
+                                    <div class="ResultListOuter">
+                                        <div class="ResultListEntry">
+                                            <div class="TitleCategoryAndDescription"><span class="category">Unternehmen</span>
+                                                <div>
+                                                    <h3 id="27bccef5a7ef49dab2414f6eb6cd8ef4" class="title ResultListEntryTitle">Heidelberger Solidarstrom</h3></div>
+                                                <div class="ResultListDescription">Heidelberger Ökostrom der nicht nur den Wechsel zu erneuerbaren Energien fördert...</div>
+                                            </div>
+                                            <div class="FlowerWrapper">
+                                                <div>
+                                                    <svg width="64" height="64">
+                                                        <g transform="translate(32,32)">
+                                                            <circle cx="0" cy="0" r="31" fill="#fff" stroke="#ccc" stroke-width="0.5"></circle>
+                                                            <g>
+	                                                            <path id="result2_rating_diversity" d="M 0,0 C 0,0 9.87,13.098900000000002 9.87,18.330000000000002 9.87,23.561100000000003 5.2311,28.2 0,28.2 -5.2311,28.2 -9.87,23.561100000000003 -9.87,18.330000000000002 -9.87,13.098900000000002 0,0 0,0 Z" fill="rgb(221,  221,  221)" transform="translate(1.7999999999999998,0)       rotate(-90)       scale(0.59)" data-tip="" data-html="true" currentItem="false"></path>
+	                                                            <path id="result2_rating_renewable" d="M 0,0 C 0,0 9.87,13.098900000000002 9.87,18.330000000000002 9.87,23.561100000000003 5.2311,28.2 0,28.2 -5.2311,28.2 -9.87,23.561100000000003 -9.87,18.330000000000002 -9.87,13.098900000000002 0,0 0,0 Z" fill="rgb(255,  221,  0  )" transform="translate(0.9000000000000001,1.5588457268119893)       rotate(-30)       scale(0.766)" data-tip="" data-html="true" currentItem="false"></path>
+	                                                            <path id="result2_rating_fairness"h d="M 0,0 C 0,0 9.87,13.098900000000002 9.87,18.330000000000002 9.87,23.561100000000003 5.2311,28.2 0,28.2 -5.2311,28.2 -9.87,23.561100000000003 -9.87,18.330000000000002 -9.87,13.098900000000002 0,0 0,0 Z" fill="rgb(221,  221,  221)" transform="translate(-0.8999999999999995,1.5588457268119895)       rotate(30)       scale(0.59)" data-tip="" data-html="true" currentItem="false"></path>
+	                                                            <path id="result2_rating_humanity" d="M 0,0 C 0,0 9.87,13.098900000000002 9.87,18.330000000000002 9.87,23.561100000000003 5.2311,28.2 0,28.2 -5.2311,28.2 -9.87,23.561100000000003 -9.87,18.330000000000002 -9.87,13.098900000000002 0,0 0,0 Z" fill="rgb(221,  221,  221)" transform="translate(-1.7999999999999998,2.2043642384652356e-16)       rotate(90)       scale(0.59)" data-tip="" data-html="true" currentItem="false"></path>
+	                                                            <path id="result2_rating_transparency" d="M 0,0 C 0,0 9.87,13.098900000000002 9.87,18.330000000000002 9.87,23.561100000000003 5.2311,28.2 0,28.2 -5.2311,28.2 -9.87,23.561100000000003 -9.87,18.330000000000002 -9.87,13.098900000000002 0,0 0,0 Z" fill="rgb(221,  221,  221)" transform="translate(-0.9000000000000007,-1.5588457268119889)       rotate(150)       scale(0.59)" data-tip="" data-html="true" currentItem="false"></path>
+	                                                            <path id="result2_rating_solidarity" d="M 0,0 C 0,0 9.87,13.098900000000002 9.87,18.330000000000002 9.87,23.561100000000003 5.2311,28.2 0,28.2 -5.2311,28.2 -9.87,23.561100000000003 -9.87,18.330000000000002 -9.87,13.098900000000002 0,0 0,0 Z" fill="rgb(221,  221,  221)" transform="translate(0.9000000000000001,-1.5588457268119893)       rotate(210)       scale(0.59)" data-tip="" data-html="true" currentItem="false"></path>
+                                                            </g>
+                                                        </g>
+                                                    </svg>
+                                                    <div class="__react_component_tooltip place-bottom type-dark " data-id="tooltip"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="TagsWrapper">
+                                            <ul id="result2_tags">
+                                                <div class="Tag">#energiewende</div>
+                                                <div class="Tag">#gemeinwohl</div>
+                                                <div class="Tag">#mitbestimmung</div>
+                                                <div class="Tag">#nachhaltigkeit</div>
+                                                <div class="Tag">#transformation</div>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="ResultListElement">
+                                    <div><a href="#">mehr Einträge anzeigen...</a></div>
+                                </li>                                <li class="ResultListElement">
+                                    <div><a href="#">mehr Einträge anzeigen...</a></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="details" class="Sidebar__ScrollableEntryDetailsWrapper-bwfae2-0 dwHqrZ ScrollableDiv__StyledScrollableDiv-sc-168a1f7-0 dJIxVX" >
+                <div class="EntryDetails__Entry-fg0d9y-2 kOGlKj">
+                    <nav class="menu-top EntryDetails__Navbar-fg0d9y-1 WuzFA">
+                        <div class="NavButtonWhite__NavigationButtonWrapper-e4q989-0 fdqOYY"><span class="NavButtonWhite__NavigationButton-e4q989-2 iJYAJX"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" class="svg-inline--fa fa-chevron-left fa-w-10 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"></path></svg> zurück</span></div>
+                        <div class="NavButtonWhite__NavigationButtonWrapperRight-e4q989-1 hTDXur"><span class="NavButtonWhite__NavigationButton-e4q989-2 iJYAJX"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="pencil-alt" class="svg-inline--fa fa-pencil-alt fa-w-16 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg> </span></div>
+                    </nav>
+                    <div class="BusinessCard__EntryDetailPage-sc-1voivxq-2 hOTvAL">
+                        <div id="details_category" class="BusinessCard__EntryCategory-sc-1voivxq-6 iRaMrp"><span>Initiative</span></div>
+                        <h3 id="details_title" class="BusinessCard__EntryTitle-sc-1voivxq-5 gikeND">Vegan in Heidelberg e. V.</h3>
+                        <p id="details_description" class="BusinessCard__EntryDescription-sc-1voivxq-7 eNRaZV">Wir sind eine wachsende Gruppe von Leuten, die sich dazu entschieden haben, die frohe Botschaft des Veganismus nicht mit Feuer und Schwert unters Volk zu bringen, sondern mit Kalorien.
+
+                        </p>
+                        <div class="BusinessCard__EntryDetailsOtherData-sc-1voivxq-8 jMoKGe">
+                            <div>
+                                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="globe-africa" class="svg-inline--fa fa-globe-africa fa-w-16 BusinessCard__FontAwesomeIconElement-sc-1voivxq-0 cGRUjF" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
+                                    <path fill="currentColor" d="M248 8C111.03 8 0 119.03 0 256s111.03 248 248 248 248-111.03 248-248S384.97 8 248 8zm160 215.5v6.93c0 5.87-3.32 11.24-8.57 13.86l-15.39 7.7a15.485 15.485 0 0 1-15.53-.97l-18.21-12.14a15.52 15.52 0 0 0-13.5-1.81l-2.65.88c-9.7 3.23-13.66 14.79-7.99 23.3l13.24 19.86c2.87 4.31 7.71 6.9 12.89 6.9h8.21c8.56 0 15.5 6.94 15.5 15.5v11.34c0 3.35-1.09 6.62-3.1 9.3l-18.74 24.98c-1.42 1.9-2.39 4.1-2.83 6.43l-4.3 22.83c-.62 3.29-2.29 6.29-4.76 8.56a159.608 159.608 0 0 0-25 29.16l-13.03 19.55a27.756 27.756 0 0 1-23.09 12.36c-10.51 0-20.12-5.94-24.82-15.34a78.902 78.902 0 0 1-8.33-35.29V367.5c0-8.56-6.94-15.5-15.5-15.5h-25.88c-14.49 0-28.38-5.76-38.63-16a54.659 54.659 0 0 1-16-38.63v-14.06c0-17.19 8.1-33.38 21.85-43.7l27.58-20.69a54.663 54.663 0 0 1 32.78-10.93h.89c8.48 0 16.85 1.97 24.43 5.77l14.72 7.36c3.68 1.84 7.93 2.14 11.83.84l47.31-15.77c6.33-2.11 10.6-8.03 10.6-14.7 0-8.56-6.94-15.5-15.5-15.5h-10.09c-4.11 0-8.05-1.63-10.96-4.54l-6.92-6.92a15.493 15.493 0 0 0-10.96-4.54H199.5c-8.56 0-15.5-6.94-15.5-15.5v-4.4c0-7.11 4.84-13.31 11.74-15.04l14.45-3.61c3.74-.94 7-3.23 9.14-6.44l8.08-12.11c2.87-4.31 7.71-6.9 12.89-6.9h24.21c8.56 0 15.5-6.94 15.5-15.5v-21.7C359.23 71.63 422.86 131.02 441.93 208H423.5c-8.56 0-15.5 6.94-15.5 15.5z"></path>
+                                </svg><a id="details_url" href="http://veganinheidelberg.de/" target="_blank" class="BusinessCard__EntryLink-sc-1voivxq-4 dfFoLf">veganinheidelberg.de</a></div>
+                            <div>
+                                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="envelope" class="svg-inline--fa fa-envelope fa-w-16 BusinessCard__FontAwesomeIconElement-sc-1voivxq-0 cGRUjF" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                    <path fill="currentColor" d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"></path>
+                                </svg><a id="details_mail" href="mailto:mail@veganinheidelberg.de" class="BusinessCard__EntryLink-sc-1voivxq-4 dfFoLf">mail@veganinheidelberg.de</a></div>
+                            <div>
+                                <div class="address pure-g">
+                                    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="map-marker-alt" class="svg-inline--fa fa-map-marker-alt fa-w-12 pure-u-2-24 BusinessCard__FontAwesomeIconElement-sc-1voivxq-0 cGRUjF" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                                        <path fill="currentColor" d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"></path>
+                                    </svg>
+                                    <div class="pure-u-22-24 BusinessCard__AddressWrapper-sc-1voivxq-1 izdaQz">
+                                        <div class="pure-u-22-24 AddressLine-krxwf9-0 cDrNWk"><span id="details_street">Emil-Maier-Straße 16</span><span class="delimiter">, </span><span id="details_zip">69115</span><span class="delimiter"> </span><span id="details_city">Heidelberg</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="route" class="svg-inline--fa fa-route fa-w-16 BusinessCard__FontAwesomeIconElement-sc-1voivxq-0 cGRUjF" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                        <path fill="currentColor" d="M416 320h-96c-17.6 0-32-14.4-32-32s14.4-32 32-32h96s96-107 96-160-43-96-96-96-96 43-96 96c0 25.5 22.2 63.4 45.3 96H320c-52.9 0-96 43.1-96 96s43.1 96 96 96h96c17.6 0 32 14.4 32 32s-14.4 32-32 32H185.5c-16 24.8-33.8 47.7-47.3 64H416c52.9 0 96-43.1 96-96s-43.1-96-96-96zm0-256c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zM96 256c-53 0-96 43-96 96s96 160 96 160 96-107 96-160-43-96-96-96zm0 128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"></path>
+                                    </svg><a title="Hinfinden mit Graphhopper Maps" href="https://graphhopper.com/maps/?point=&amp;point=Emil-Maier-Straße 16+69115+Heidelberg&amp;locale=de-DE&amp;vehicle=bike&amp;weighting=fastest&amp;elevation=false&amp;use_miles=false&amp;layer=Omniscale" target="_blank" class="BusinessCard__EntryLink-sc-1voivxq-4 dfFoLf">Routenplaner</a></div>
+                            </div>
+                            <div class="BusinessCard__TagsWrapper-sc-1voivxq-9 bPTTLN">
+                                <ul class="BusinessCard__TagList-sc-1voivxq-10 eHjMJU" id="details_tags">
+                                    <li id="details_tag" class="BusinessCard__Tag-sc-1voivxq-11 cmEprd"><a id="details_tagname" class="BusinessCard__TagLink-sc-1voivxq-12 sQaea">#vegan</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="Ratings__RatingsWrapper-sc-1igczor-4 igfNBZ">
+                    <div class="Ratings__FlowerWrapper-sc-1igczor-15 eCOAjZ">
+                        <div>
+                            <svg width="84" height="84">
+                                <g transform="translate(42,42)">
+                                    <circle cx="0" cy="0" r="41" fill="#fff" stroke="#ccc" stroke-width="0.5"></circle>
+                                    <g>
+                                        <path id="details_rating_diversity" d="M 0,0 C 0,0 13.16,17.465200000000003 13.16,24.44 13.16,31.4148 6.9748,37.6 0,37.6 -6.9748,37.6 -13.16,31.4148 -13.16,24.44 -13.16,17.465200000000003 0,0 0,0 Z" fill="rgb(151,  191,  13 )" transform="translate(2.4,0)       rotate(-90)       scale(0.766)" data-tip="<h3>Natürlichkeit</h3><p>Ökologische Vielfalt, Bio, wenige Zusatzstoffe etc.</p>" data-html="true" currentItem="false"></path>
+                                        <path id="details_rating_renewable" d="M 0,0 C 0,0 13.16,17.465200000000003 13.16,24.44 13.16,31.4148 6.9748,37.6 0,37.6 -6.9748,37.6 -13.16,31.4148 -13.16,24.44 -13.16,17.465200000000003 0,0 0,0 Z" fill="rgb(255,  221,  0 )" transform="translate(1.2000000000000002,2.0784609690826525)       rotate(-30)       scale(0.59)" data-tip="<h3>Erneuerbarkeit</h3><p>Umweltschutz, kurze Transportwege, effizienter/geringer Einsatz von Rohstoffen und Energie, Circular Economy etc.</p>" data-html="true" currentItem="false"></path>
+                                        <path id="details_rating_fairness" d="M 0,0 C 0,0 13.16,17.465200000000003 13.16,24.44 13.16,31.4148 6.9748,37.6 0,37.6 -6.9748,37.6 -13.16,31.4148 -13.16,24.44 -13.16,17.465200000000003 0,0 0,0 Z" fill="rgb(229,  98,   146)" transform="translate(-1.1999999999999995,2.078460969082653)       rotate(30)       scale(0.59)" data-tip="<h3>Fairness</h3><p>Sichere, inklusive, faire und angemessene Arbeitsbedingungen in der gesamten Wertschöpfungskette.</p>" data-html="true" currentItem="false"></path>
+                                        <path id="details_rating_humanity" d="M 0,0 C 0,0 13.16,17.465200000000003 13.16,24.44 13.16,31.4148 6.9748,37.6 0,37.6 -6.9748,37.6 -13.16,31.4148 -13.16,24.44 -13.16,17.465200000000003 0,0 0,0 Z" fill="rgb(170,  56,   108)" transform="translate(-2.4,2.9391523179536476e-16)       rotate(90)       scale(0.59)" data-tip="<h3>Menschlichkeit</h3><p>Haben alle Beteiligten Freiraum für eigene Ideen, Weiterentwicklung und kulturelle Vielfalt? Gibt es Mitbestimmungsrechte und demokratische Prozesse?</p>" data-html="true" currentItem="false"></path>
+                                        <path id="details_rating_transparency" d="M 0,0 C 0,0 13.16,17.465200000000003 13.16,24.44 13.16,31.4148 6.9748,37.6 0,37.6 -6.9748,37.6 -13.16,31.4148 -13.16,24.44 -13.16,17.465200000000003 0,0 0,0 Z" fill="rgb(100,  122,  133)" transform="translate(-1.200000000000001,-2.078460969082652)       rotate(150)       scale(0.59)" data-tip="<h3>Transparenz</h3><p>Sind Produktions-, Finanzierungs- und Handelsketten öffentlich nachvollziehbar? </p>" data-html="true" currentItem="false"></path>
+                                        <path id="details_rating_solidarity" d="M 0,0 C 0,0 13.16,17.465200000000003 13.16,24.44 13.16,31.4148 6.9748,37.6 0,37.6 -6.9748,37.6 -13.16,31.4148 -13.16,24.44 -13.16,17.465200000000003 0,0 0,0 Z" fill="rgb(0,    153,  173)" transform="translate(1.2000000000000002,-2.0784609690826525)       rotate(210)       scale(0.59)" data-tip="<h3>Solidarität</h3><p>Kooperative Arbeitsweise, Finanzierung und Investitionen nachhaltig und ethisch, zugänglich für jeden Geldbeutel etc.</p>" data-html="true" currentItem="false"></path>
+                                    </g>
+                                </g>
+                            </svg>
+                            <div class="__react_component_tooltip place-bottom type-dark " data-id="tooltip"></div>
+                        </div>
+                    </div>
+                    <div class="Ratings__HeadingWrapper-sc-1igczor-9 cJWJBB">
+                        <h3>Bewertungen</h3>
+                        <div class="Ratings__AdditionalRatingButtonWrapper-sc-1igczor-5 csghfS">
+                            <button class="Ratings__AdditionalRatingButton-sc-1igczor-6 jeBEmU">Bewertung abgeben</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="Ratings__RatingContextWrapper-sc-1igczor-16 huONCp">
+                            <h5 class="Ratings__RatingContextHeading-sc-1igczor-12 hDxVbP"><span style="color: rgb(151, 191, 13);">Natürlichkeit</span></h5>
+                            <div class="Ratings__LeafWrapper-sc-1igczor-17 bMjhDx">
+                                <svg width="35" height="35">
+                                    <g transform="translate(17.5,35)">
+                                        <path d="M 0,0 C 0,0 12.25,16.2575 12.25,22.75 12.25,29.2425 6.492500000000001,35 0,35 -6.492500000000001,35 -12.25,29.2425 -12.25,22.75 -12.25,16.2575 0,0 0,0 Z" fill="rgb(151,  191,  13 )" transform="rotate(180)" data-html="true"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <ul class="Ratings__RatingListForContext-sc-1igczor-11 cILtHD">
+                                <li id="details_ratings">
+                                </li>
+                                <li id="ratings_example">
+                                    <div id="template_rating" class="Ratings__RatingWrapper-sc-1igczor-0 heoUoh">
+                                        <div class="Ratings__RatingTitleWrapper-sc-1igczor-2 brkfCq"><span>von morgen:</span><span class="Ratings__RatingTitle-sc-1igczor-1 fzimZc">Tierlieb</span></div>
+                                        <ul class="Ratings__RatingCommentList-sc-1igczor-13 hbRbhO">
+                                            <li>
+                                                <div id="rating_text" class="comment">Wir kochen, wir backen, wir essen. Wir reden, wir trinken, wir essen. Wir lachen, wir grillen, wir essen. Wir tanzen (nicht so oft, weil wir gerade gegessen haben). Wir machen Exkursionen zu Orten, an denen wir – Sie haben es vielleicht bereits erraten – essen. Wir ärgern uns mit Alltäglichem herum, gehen zur Arbeit oder studieren, bezahlen unsere Rechnungen, erziehen unsere Kinder und fragen uns, ob die Menschheit sich wirklich wie die Axt im Wald verhalten darf, nur weil sie es zweifellos kann</div>
+                                            </li>
+                                        </ul>
+                                        <div class="Ratings__SourceWrapper-sc-1igczor-3 kXplOr"><span>  <a id="rating_source" target="_blank" href="http://veganinheidelberg.de/" class="Ratings__Link-sc-1igczor-18 iKPAZe">Quelle</a> </span></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="SidebarFooter__FooterWrapper-sc-1e1c5s-0 ijISYL">
+                    <div class="SidebarFooter__MetaFoot-sc-1e1c5s-1 eRNWYu"><a href="mailto:report@kartevonmorgen.org?subject=Eintrag melden&amp;body=%0D%0AMit dem Eintrag  «Vegan in Heidelberg e. V.»%0D%0A (https%3A%2F%2Fkartevonmorgen.org%2F%23%2F%3Fentry%3D96232aa0f714489ebc6d804d20f388b9%26zoom%3D15.00)%0D%0A  gibt es folgendes Problem:%0D%0A%0D%0A"><b>Diesen Eintrag melden</b></a><span><a title="27.4.2018, 17:53:45">Letzte Änderung: 336 Tage her // v0</a></span></div>
+                </div>
+            </div>
+
+
+            <nav class="AddEntryButton">
+                <li class="pure-u-1 NavButton">
+                    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus fa-w-14 NavButton__Icon-sc-1qs2r2q-1 gleiBQ" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path fill="currentColor" d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path>
+                    </svg>Eintrag hinzufügen</li>
+            </nav>
+        </div>
+    </div>
+    <div class="HideSidebar">
+        <button>
+            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-left" class="svg-inline--fa fa-caret-left fa-w-6 App__ToggleLeftSidebarIcon-sc-1x77ogt-1 bVtZdE" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512">
+                <path fill="currentColor" d="M192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142L29.196 270.142c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z"></path>
+            </svg>
+        </button>
+    </div>
+</div>
+</div>
+
+<div id="overMap" style="display:hidden;">
     <div style="text-align:center;">
-        <button id="btnInitiative" class="active"onclick="toggleCat('Initiative')">Initiativen</button>
-        <button id="btnEvent" class="active" onclick="toggleCat('Event')">Events</button>
-        <button id="btnUnternehmen" class="active" onclick="toggleCat('Unternehmen')">Unternehmen</button>
-        <button id="btnOpenStreetMap" class="active" onclick="toggleCat('OpenStreetMap')">OpenStreetMap</button>
+        <button id="_btnInitiative" class="active" onclick="toggleCat('Initiative')">Initiativen</button>
+        <button id="_btnEvent" class="active" onclick="toggleCat('Event')">Events</button>
+        <button id="_btnUnternehmen" class="active" onclick="toggleCat('Unternehmen')">Unternehmen</button>
+        <button id="_btnOpenStreetMap" class="active" onclick="toggleCat('OpenStreetMap')">OpenStreetMap</button>
     </div>
     <form class="searchForm">
         <span>WO:</span>
@@ -35,7 +1179,7 @@
 
     <form class="searchForm">
         <span>WAS:</span>
-        <input id="text" type="text" name="text"
+        <input id="_text" type="text" name="text"
                placeholder="Suchbegriff, leer = Alle" onchange="find();"/>
         <button id="findBtn" onclick="find(); event.preventDefault; return false;" >Finde</button>
         <button id="mapBtn" onclick="toggleMap();event.preventDefault; return false;" class="right">Karte</button>
@@ -43,7 +1187,7 @@
 
 
     <div id="overMapScroll" class="scroll_ctnr">
-    <div id="details" style="display:none;">
+    <div id="_details" style="display:none;">
 
         <div class="back">
             <a href="#"
@@ -53,7 +1197,7 @@
             <a href="#" onclick="document.getElementById('details').style.display = 'none';scrollBack();event.preventDefault();location.hash=location.hash?location.hash.replace(/^[^;]*;/,';'):'';return false;">[ &lt;&lt;&lt; ] ZURÜCK</a>
         </div>
     </div>
-    <div id="result" class="result_ctnr">
+    <div id="_result" class="result_ctnr">
 
         </div>
 
@@ -126,11 +1270,14 @@
 
     var categories = {};
 
+    var searchResultOrig = [];
     var searchResult = [];
 
     var cache = {};
 
     var displayDetailsOnload = false;
+    
+    window.onload = function() {initMap();};
 
     function find() {
         if (showWait()) {
@@ -193,17 +1340,14 @@
     }
 
     function displaySearchResult() {
-        var resultCtnr = document.getElementById('result');
-        while (resultCtnr.childElementCount > 0) {
-            resultCtnr.removeChild(resultCtnr.firstElementChild);
-        }
+        var resultCtnr = document.getElementById('results_visible');
+        resultCtnr.innerHTML = '';
 
-        displayResultList(searchResult['visible']);
-        var title = document.createElement("DIV");
-        title.className="separator";
-        title.innerText = "Weiter weg:";
-        resultCtnr.appendChild(title);
-        displayResultList(searchResult['invisible']);
+        displayResultList(resultCtnr, searchResultOrig['visible']);
+        
+        resultCtnr = document.getElementById('results_invisible');
+        resultCtnr.innerHTML = '';
+        displayResultList(resultCtnr, searchResultOrig['invisible']);
 
         if (displayDetailsOnload) {
             displayDetails(displayDetailsOnload);
@@ -213,48 +1357,89 @@
         removeUnnecessaryMapMarkers();
     }
 
-    function displayResultList(ids) {
-        for(var e in ids) {
-            var id = ids[e];
-            if (cache[id] != null) {
-                doDisplayResultListEntry([id]);
-            }
+    function displayResultList(ctnr, entries) {
+        for(var e in entries) {
+	        doDisplayResultListEntry(ctnr, entries[e]);
         }
     }
 
 
-    function doDisplayResultListEntry(ids) {
-        var entry = cache[ids[0]];
+    function doDisplayResultListEntry(resultsCtnr, entry) {
+/*{"0":{"id":"4c20979fe0754e74875afa4308d73ce7","lat":48.720333561636664,"lng":9.152239220753424,
+	"title":"slowtec GmbH","description":"long long test","categories":["77b3c33a92554bcf8e8c2c86cedd6f6f"],
+	"tags":["assoziativ","ie-stationsidee","ingenieurbüro","initiativ-kolloquium2","kartevonmorgen","linux","new-work","open-source","potentialentfaltung","regelungstechnik","regpis","selbstgeführt","smart-lowtec","socent","software","sozialezukunft","soziokratie","teal-organization","transforming-capitalism-lab","urbane-landwirtschaft"],
+	"ratings":{"total":1.25,"diversity":2,"fairness":0,"humanity":2,"renewable":1.5,"solidarity":0,"transparency":2}}}
+*/
+        var ctnr0 = document.getElementById('template_result').cloneNode(true);
+        ctnr0.removeAttribute('id');
+        ctnr0.setAttribute('class', categories[entry.categories[0]].name.toLowerCase().replace('unternehmen', 'company') + ' ResultListElement');
+        
+        setInnerTextOfChildWithId(ctnr0, 'result_category', categories[entry.categories[0]].name);
+        setInnerTextOfChildWithId(ctnr0, 'result_title', entry.title);
+        setInnerTextOfChildWithId(ctnr0, 'result_description', entry.description);
+        
+        var ratingTypes = ['diversity','fairness','humanity','renewable','solidarity','transparency'];
+        for (var t in ratingTypes) {
+        	var type = ratingTypes[t];
+        	var rating = entry.ratings[type];
+       		var flower = findChildWithId(ctnr0, 'result_rating_'+type);
+            if (flower) {
+            	flower.setAttribute('transform', flower.getAttribute('transform').replace(/scale\([0-9.]+\)/, 'scale(' + ((rating || 1) * 0.49) + ')') );
+            	if (! rating) {
+            		flower.setAttribute('fill', 'rgb(221,  221,  221)');
+            	}
+            }
+        }
+        
+        var tagCtnr = findChildWithId(ctnr0, 'result_tags');
+        if (tagCtnr) {
+        	tagCtnr.innerHTML = '';
+        	var first = true;
+        	for (var t in entry.tags) {
+        		if (first) {
+        			first = false;
+        		} else {
+        			tagCtnr.appendChild(document.createTextNode(' '));
+        		}
+        		var div = document.createElement('DIV');
+        		div.setAttribute('class', 'Tag');
+        		div.innerText = '#' + entry.tags[t];
+        		tagCtnr.appendChild(div);
+        	}
+        }
+        		
+        ctnr0onclick = createShowFunc(ctnr0, entry.id);
 
-        var ctnr = document.createElement("DIV");
-        var title = document.createElement("A");
-        var description = document.createElement("DIV");
-        var dots = document.createElement("A");
-
-        ctnr.appendChild(title);
-        ctnr.appendChild(description);
-        ctnr.appendChild(dots);
-
-        title.innerText = entry.title;
-        title.href="#"+entry.id;
-        title.onclick = createShowFunc(ctnr, entry.id);
-        ctnr.onclick = title.onclick;
-        description.innerText = entry.description;
-
-        dots.innerText="...";
-        dots.href="#"+entry.id;
-        dots.onclick = title.onclick;
-        dots.className = "dots";
-
-
-        ctnr.className = "entry";
-
-        ctnr.onclick = title.onclick;
-
-        document.getElementById('result').appendChild(ctnr);
+        resultsCtnr.appendChild(ctnr0);
         document.getElementById('details').style.display = 'none';
 
         addMapMarker(entry);
+    }
+    
+    function setInnerTextOfChildWithId(ctnr1, id, innerTxt) {
+        var elem = findChildWithId(ctnr1, id);
+        if (elem) {
+        	elem.innerText = innerTxt;
+        } else {
+        	console.log(id + ' not found in ');
+        	console.log(ctnr1);
+        }
+    }
+    
+    function findChildWithId(ctnr2, id) {
+    	for (var i = 0; i < ctnr2.children.length; i++) {
+    		if (ctnr2.children[i].id == id) {
+    			ctnr2.children[i].removeAttribute('id');
+    			return ctnr2.children[i];
+    		}
+    		if (ctnr2.children[i].firstChild) {
+    			var child = findChildWithId(ctnr2.children[i], id);
+    			if (child) {
+    				return child;
+    			}
+    		}
+    	}
+    	return null;
     }
 
     function createShowFunc(ctnr, id) {
@@ -426,6 +1611,38 @@
     function doDisplayDetails(ids) {
         var entry = cache[ids[0]];
 
+        /*      categories: (1) […]
+		0: "77b3c33a92554bcf8e8c2c86cedd6f6f"
+    city: "Stuttgart"
+    country: null
+    created: 1549735281
+    description: "long long text"
+    email: "post@slowtec.de"
+    homepage: "http://www.slowtec.de/"
+    id: "4c20979fe0754e74875afa4308d73ce7"
+    image_link_url: "https://slowtec.de/"
+    image_url: "https://slowtec.de/images/slowtec_sinn_voll_entwickeln.png"
+    lat: 48.720333561636664
+    license: "CC0-1.0"
+    lng: 9.152239220753424
+    ratings: (5) […]
+		0: "3f9859013b404843ba5a64daf48a20d2"
+		​​​1: "6a9896d8cd4e45319919f185a84ff015"
+		​​​2: "0e65bc0f7a46467a8db1a8a53b76b677"
+		​​​3: "f3acab513e2e4a2ab66197a8d4cea3e6"
+		​​​4: "281bfdfef8124b3e8b643150fe61daed"
+	street: "Friedrichsberg 55"
+    tags: (20) […]
+		0: "assoziativ"
+		​​​1: "ie-stationsidee"
+		​​​2: "ingenieurbüro"
+	telephone: null
+    title: "slowtec GmbH"
+    version: 38
+    zip: "70567" */
+        
+        
+        
         location.hash = entry.id + ';' + (resultMapObj ? (lat + ',' + lon) : city);
 
         var ctnr = document.createElement("DIV");
@@ -984,10 +2201,10 @@
         } else {
             var ele = document.getElementById('overMap');
             if (ele) {
-                if (ele.style.left && ele.style.left == '-300px') {
+                if ((!ele.style.left) || ele.style.left !== '0') {
                     ele.style.left = '0';
                     ele.style.overflow = "";
-                    document.getElementById('resultMapCtnr').style.left='320px';
+                    document.getElementById('resultMapCtnr').style.left='380px';
                     document.getElementById('mapBtn').innerText = "Karte";
                 } else {
                     ele.style.left = "-300px";
@@ -1186,7 +2403,7 @@
 <script type="text/javascript">
     /* OPEN STREET MAP SEARCH */
 
-    var osmEnabled = true;
+    var osmEnabled = false;
     var osmBbox = null;
 
     var osmLoading = 0;

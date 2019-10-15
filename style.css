@@ -186,7 +186,7 @@
         #resultMap {
             height: 100%;
             max-width: 1024px;
-            margin:0 auto;
+            margin:0 auto 0 0;
         }
 
         #overMap {
@@ -198,43 +198,43 @@
             overflow: hidden;
         }
 
-        #btnInitiative, #btnEvent, #btnUnternehmen, #btnOpenStreetMap {
+        #_btnInitiative, #_btnEvent, #_btnUnternehmen, #_btnOpenStreetMap {
             height: 2.2em;
             box-sizing: border-box;
             font-size: 10px;
             padding: 2px;
         }
 
-        #btnOpenStreetMap {
+        #_btnOpenStreetMap {
             background-color: #545454;
             color:#DDDDDD;
         }
-        #btnUnternehmen {
+        #_btnUnternehmen {
             background-color: #006e5f;
             color:#DDDDDD;
         }
-        #btnEvent {
+        #_btnEvent {
             background-color: #c11f5a;
             color:#DDDDDD;
         }
-        #btnInitiative {
+        #_btnInitiative {
             background-color: #658208;
             color:#DDDDDD;
         }
 
-        #btnOpenStreetMap.active {
+        #_btnOpenStreetMap.active {
             background-color: #c9c9c9 !important;
             color:#000000 !important;
         }
-        #btnUnternehmen.active {
+        #_btnUnternehmen.active {
             background-color: #00ccbd !important;
             color:#000000 !important;
         }
-        #btnEvent.active {
+        #_btnEvent.active {
             background-color: #ea84aa !important;
             color:#000000 !important;
         }
-        #btnInitiative.active {
+        #_btnInitiative.active {
             background-color: #bef019 !important;
             color:#000000 !important;
         }
