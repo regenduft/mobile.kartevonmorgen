@@ -933,7 +933,8 @@ textarea {
                     </div>
                 </div>
             </div>
-            <div class="result ResultWrapper StyledScrollableDiv">
+
+            <div id="overMapScroll" class="result ResultWrapper StyledScrollableDiv">
                 <div class="ResultListWrapper">
                     <div class="result-list">
                         <ul id="results_visible">
@@ -1040,7 +1041,7 @@ textarea {
             <div id="details" class="Sidebar__ScrollableEntryDetailsWrapper-bwfae2-0 dwHqrZ ScrollableDiv__StyledScrollableDiv-sc-168a1f7-0 dJIxVX" >
                 <div class="EntryDetails__Entry-fg0d9y-2 kOGlKj">
                     <nav class="menu-top EntryDetails__Navbar-fg0d9y-1 WuzFA">
-                        <div class="NavButtonWhite__NavigationButtonWrapper-e4q989-0 fdqOYY"><span class="NavButtonWhite__NavigationButton-e4q989-2 iJYAJX"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" class="svg-inline--fa fa-chevron-left fa-w-10 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"></path></svg> zurück</span></div>
+                        <div class="NavButtonWhite__NavigationButtonWrapper-e4q989-0 fdqOYY"><a onclick="document.getElementById('details').style.display = 'none';scrollBack();event.preventDefault();location.hash=location.hash?location.hash.replace(/^[^;]*;/,';'):'';return false;" class="NavButtonWhite__NavigationButton-e4q989-2 iJYAJX"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" class="svg-inline--fa fa-chevron-left fa-w-10 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"></path></svg> zurück</a></div>
                         <div class="NavButtonWhite__NavigationButtonWrapperRight-e4q989-1 hTDXur"><span class="NavButtonWhite__NavigationButton-e4q989-2 iJYAJX"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="pencil-alt" class="svg-inline--fa fa-pencil-alt fa-w-16 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg> </span></div>
                     </nav>
                     <div class="BusinessCard__EntryDetailPage-sc-1voivxq-2 hOTvAL">
@@ -1138,7 +1139,6 @@ textarea {
                 </div>
             </div>
 
-
             <nav class="AddEntryButton">
                 <li class="pure-u-1 NavButton">
                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus fa-w-14 NavButton__Icon-sc-1qs2r2q-1 gleiBQ" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -1186,7 +1186,7 @@ textarea {
     </form>
 
 
-    <div id="overMapScroll" class="scroll_ctnr">
+    <div id="_overMapScroll" class="scroll_ctnr">
     <div id="_details" style="display:none;">
 
         <div class="back">
@@ -1408,7 +1408,7 @@ textarea {
         	}
         }
         		
-        ctnr0onclick = createShowFunc(ctnr0, entry.id);
+        ctnr0.onclick = createShowFunc(ctnr0, entry.id);
 
         resultsCtnr.appendChild(ctnr0);
         document.getElementById('details').style.display = 'none';
@@ -1456,7 +1456,7 @@ textarea {
     function scrollBack() {
         if ((backScrollY && backScrollY >= 0) || backScrollY === 0) {
             window.setTimeout(function () {
-                document.getElementById('overMapScroll').scrollTo(0, backScrollY);
+                document.getElementById('overMapScroll').style.display='block';//.scrollTo(0, backScrollY);
                 backScrollY = null;
             }, 11);
         } else if (backScrollY === null) {
@@ -1648,9 +1648,9 @@ textarea {
         var ctnr = document.createElement("DIV");
 
         var detailsCtnr = document.getElementById("details");
-        while (detailsCtnr.childElementCount > 2) {
+      /*  while (detailsCtnr.childElementCount > 2) {
             detailsCtnr.removeChild(detailsCtnr.firstElementChild.nextElementSibling);
-        }
+        }*/
         detailsCtnr.insertBefore(ctnr,
                 detailsCtnr.firstElementChild.nextElementSibling);
         detailsCtnr.style.display = "block";
@@ -1658,61 +1658,67 @@ textarea {
         for (var key in entry) {
             if (key != 'id' && key != 'created' && key != 'lat' && key !=
                     'lon' && key != 'lng' && key != 'version') {
-                var label = document.createElement("DIV");
-                label.innerText = capitalizeFirstLetter(key) + ":";
-                label.className="title";
-                var value = document.createElement("DIV");
-                value.className="content";
-                if (!(entry[key])) {
-                    value.innerText = '';
-                }
-                else if (key == 'homepage') {
-                    var link = document.createElement("A");
-                    link.href = entry[key].indexOf('http') < 0 ? ('http://' +
-                    entry[key]) : entry[key];
-                    link.target = '_blank';
-                    link.className = 'blank';
-                    link.innerText = entry[key];
-                    value.appendChild(link);
-                }
-                else if (key == 'email') {
-                    var link = document.createElement("A");
-                    link.href = 'mailto:' + entry[key];
-                    link.innerText = entry[key];
-                    value.appendChild(link);
-                }
-                else if (key == 'telephone') {
-                    var link = document.createElement("A");
-                    link.href = 'tel:' + entry[key];
-                    link.innerText = entry[key];
-                    value.appendChild(link);
-                }
-                else if (key == 'tags') {
-                    for (var v in entry[key]) {
-                        var tag = document.createElement("SPAN");
-                        tag.style.display = 'block';
-                        tag.innerText = capitalizeFirstLetter(v) + ': ' + entry[key][v];
-                        value.appendChild(tag);
-                    }
-                }
-                else if (key == 'categories') {
-                    var first = true;
-                    for (var v in entry[key]) {
-                        var cat = categories ? categories[entry[key][v]] : null;
-                        if (cat) {
-                            if (first) {
-                                first = false;
-                            } else {
-                                value.innerText += ', ';
-                            }
-                            value.innerText += cat.name;
-                        }
-                    }
-                } else {
-                    value.innerText = entry[key];
-                }
-                ctnr.appendChild(label);
-                ctnr.appendChild(value);
+            	
+            	var lbl = findChildWithId(detailsCtnr, 'details_' + key);
+            	if (lbl) {
+            		lbl.innerText = entry[key];
+            	} else {
+	                var label = document.createElement("DIV");
+	                label.innerText = capitalizeFirstLetter(key) + ":";
+	                label.className="title";
+	                var value = document.createElement("DIV");
+	                value.className="content";
+	                if (!(entry[key])) {
+	                    value.innerText = '';
+	                }
+	                else if (key == 'homepage') {
+	                    var link = document.createElement("A");
+	                    link.href = entry[key].indexOf('http') < 0 ? ('http://' +
+	                    entry[key]) : entry[key];
+	                    link.target = '_blank';
+	                    link.className = 'blank';
+	                    link.innerText = entry[key];
+	                    value.appendChild(link);
+	                }
+	                else if (key == 'email') {
+	                    var link = document.createElement("A");
+	                    link.href = 'mailto:' + entry[key];
+	                    link.innerText = entry[key];
+	                    value.appendChild(link);
+	                }
+	                else if (key == 'telephone') {
+	                    var link = document.createElement("A");
+	                    link.href = 'tel:' + entry[key];
+	                    link.innerText = entry[key];
+	                    value.appendChild(link);
+	                }
+	                else if (key == 'tags') {
+	                    for (var v in entry[key]) {
+	                        var tag = document.createElement("SPAN");
+	                        tag.style.display = 'block';
+	                        tag.innerText = capitalizeFirstLetter(v) + ': ' + entry[key][v];
+	                        value.appendChild(tag);
+	                    }
+	                }
+	                else if (key == 'categories') {
+	                    var first = true;
+	                    for (var v in entry[key]) {
+	                        var cat = categories ? categories[entry[key][v]] : null;
+	                        if (cat) {
+	                            if (first) {
+	                                first = false;
+	                            } else {
+	                                value.innerText += ', ';
+	                            }
+	                            value.innerText += cat.name;
+	                        }
+	                    }
+	                } else {
+	                    value.innerText = entry[key];
+	                }
+	                ctnr.appendChild(label);
+	                ctnr.appendChild(value);
+            	}
             }
         }
 
@@ -1756,7 +1762,7 @@ textarea {
         edit.innerText = 'Eintrag bearbeiten...';
         ctnr.appendChild(edit);
 
-        document.getElementById('overMapScroll').scrollTo(0,1);
+        document.getElementById('overMapScroll').style.display='none';//.scrollTo(0,1);
         if (mapMarkers && mapMarkers[entry.id]) {
             mapMarkers[entry.id].openPopup();
         }
