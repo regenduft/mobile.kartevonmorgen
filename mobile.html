@@ -1068,14 +1068,14 @@ textarea {
                                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="map-marker-alt" class="svg-inline--fa fa-map-marker-alt fa-w-12 pure-u-2-24 BusinessCard__FontAwesomeIconElement-sc-1voivxq-0 cGRUjF" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
                                         <path fill="currentColor" d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"></path>
                                     </svg>
-                                    <div class="pure-u-22-24 BusinessCard__AddressWrapper-sc-1voivxq-1 izdaQz">
-                                        <div class="pure-u-22-24 AddressLine-krxwf9-0 cDrNWk"><span id="details_street">Emil-Maier-Straße 16</span><span class="delimiter">, </span><span id="details_zip">69115</span><span class="delimiter"> </span><span id="details_city">Heidelberg</span><br/><span id="details_country">DE</span></div>
+                                    <div class="pure-u-21-24 BusinessCard__AddressWrapper-sc-1voivxq-1 izdaQz">
+                                        <div class="pure-u-22-24 AddressLine-krxwf9-0"><span id="details_street">Emil-Maier-Straße 16</span><span class="delimiter">, </span><span id="details_zip">69115</span><span class="delimiter"> </span><span id="details_city">Heidelberg</span><br/><span id="details_country">DE</span></div>
                                     </div>
                                 </div>
                                 <div>
                                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="route" class="svg-inline--fa fa-route fa-w-16 BusinessCard__FontAwesomeIconElement-sc-1voivxq-0 cGRUjF" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                         <path fill="currentColor" d="M416 320h-96c-17.6 0-32-14.4-32-32s14.4-32 32-32h96s96-107 96-160-43-96-96-96-96 43-96 96c0 25.5 22.2 63.4 45.3 96H320c-52.9 0-96 43.1-96 96s43.1 96 96 96h96c17.6 0 32 14.4 32 32s-14.4 32-32 32H185.5c-16 24.8-33.8 47.7-47.3 64H416c52.9 0 96-43.1 96-96s-43.1-96-96-96zm0-256c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zM96 256c-53 0-96 43-96 96s96 160 96 160 96-107 96-160-43-96-96-96zm0 128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"></path>
-                                    </svg><a id="details_route" title="Hinfinden mit Graphhopper Maps" href="https://graphhopper.com/maps/?point=&amp;point=Emil-Maier-Straße 16+69115+Heidelberg&amp;locale=de-DE&amp;vehicle=bike&amp;weighting=fastest&amp;elevation=false&amp;use_miles=false&amp;layer=Omniscale" target="_blank" class="BusinessCard__EntryLink-sc-1voivxq-4 dfFoLf">Routenplaner</a></div>
+                                    </svg><a id="details_route" title="Hinfinden mit Graphhopper Maps" href="https://graphhopper.com/maps/?point=&amp;point=Emil-Maier-Straße 16+69115+Heidelberg&amp;locale=de-DE&amp;vehicle=bike&amp;weighting=fastest&amp;elevation=false&amp;use_miles=false&amp;layer=Omniscale" target="_blank" class="BusinessCard__EntryLink-sc-1voivxq-4 dfFoLf pure-u">Routenplaner</a></div>
                             </div>
                             <div class="BusinessCard__TagsWrapper-sc-1voivxq-9 bPTTLN">
                                 <ul class="BusinessCard__TagList-sc-1voivxq-10 eHjMJU" id="details_tags">
@@ -1357,7 +1357,8 @@ textarea {
     var cache = {};
 
     var displayDetailsOnload = false;
-    
+    var ratingTypes = {diversity:"rgb(151,  191,  13 )",fairness:"rgb(255,  221,  0 )",humanity:"rgb(229,  98,   146)",renewable:"rgb(170,  56,   108)",solidarity:"rgb(100,  122,  133)",transparency:"rgb(0,    153,  173)"};
+
     window.onload = function() {initMap();};
 
     function find() {
@@ -1459,7 +1460,7 @@ textarea {
         setInnerTextOfChildWithIdAndRemoveId(ctnr0, 'result_title', entry.title);
         setInnerTextOfChildWithIdAndRemoveId(ctnr0, 'result_description', entry.description);
         
-		updateRatingFlower(entry, ctnr0, 'result_rating_');
+		updateRatingFlower(entry, ctnr0, 'result_rating_', true);
         
         var tagCtnr = findChildWithId(ctnr0, 'result_tags');
         if (tagCtnr) {
@@ -1480,23 +1481,40 @@ textarea {
         }
         		
         ctnr0.onclick = createShowFunc(ctnr0, entry.id);
+        
+        ctnr0.onmouseenter = createHoverFunc(entry.id, true);
+        ctnr0.onmouseleave = createHoverFunc(entry.id, false);
 
         resultsCtnr.appendChild(ctnr0);
 
         addMapMarker(entry);
     }
     
-    function updateRatingFlower(entry, ctnr0, prefix) {
-        var ratingTypes = ['diversity','fairness','humanity','renewable','solidarity','transparency'];
-        for (var t in ratingTypes) {
-        	var type = ratingTypes[t];
+    function createHoverFunc(entryId, open) {
+    	return function() {
+            if (mapMarkers && mapMarkers[entryId]) {
+            	if (open) {
+                	mapMarkers[entryId].openPopup();
+            	} else {
+            		mapMarkers[entryId].closePopup();
+            	}
+            }
+        }    	
+    }
+    
+    function updateRatingFlower(entry, ctnr0, prefix, removeId) {
+        for (var type in ratingTypes) {
         	var rating = entry.ratings[type];
        		var flower = findChildWithId(ctnr0, prefix + type);
             if (flower) {
-            	flower.removeAttribute('id');
             	flower.setAttribute('transform', flower.getAttribute('transform').replace(/scale\([0-9.]+\)/, 'scale(' + ((rating || 1) * 0.49) + ')') );
+            	if (removeId) {
+            		flower.removeAttribute('id');
+            	}
             	if (! rating) {
             		flower.setAttribute('fill', 'rgb(221,  221,  221)');
+            	} else if (!removeId) {
+            		flower.setAttribute('fill', ratingTypes[type]);
             	}
             }
         }
@@ -1809,8 +1827,8 @@ textarea {
         
         var sre = findEntryInCache(entry.id);
         if (sre) {
-  			updateRatingFlower(sre, detailsCtnr, 'details_flower_');
-  			updateRatingFlower(sre, detailsCtnr, 'details_rating_');
+  			updateRatingFlower(sre, detailsCtnr, 'details_flower_', false);
+  			updateRatingFlower(sre, detailsCtnr, 'details_rating_', false);
         }
         
         var lbl = document.getElementById('details_route');
@@ -1887,34 +1905,60 @@ textarea {
     }
     
     function displayDetailsRatings(ratings) {
-    	var temp = document.getElementById('template_rating');
-    	hide(temp);
-    	for (r in ratings) {
-    		doDisplayDetailsRating(ratings[r], temp.cloneNode(true));
+    	var ratingTemplate = document.getElementById('template_rating');
+    	hide(ratingTemplate);
+    	var commentTemplate = document.getElementById('template_rating_text');
+    	hide(commentTemplate);
+    	for (rt in ratingTypes) {
+        	var ctnr = document.getElementById('details_ratings_' + rt);
+        	if (ctnr) {
+        		ctnr.innerHTML = '';
+        	}
+    	}
+       	for (r in ratings) {
+        	var ctnr = document.getElementById('details_ratings_' + ratings[r].context);
+        	if (ctnr) {
+	        	var tempRating = ratingTemplate.cloneNode(true);
+	        	renderDetailsRating(ratings[r], tempRating, commentTemplate)
+	   			ctnr.appendChild(tempRating);
+        	}
     	}
     }
     
-    function doDisplayDetailsRating(rating, temp) {
-    	var ctnr = document.getElementById('details_ratings_' + rating.context);
-    	unhide(temp);
-    	setInnerTextOfChildWithIdAndRemoveId(temp, 'rating_title', rating.title);
-    	setInnerTextOfChildWithIdAndRemoveId(temp, 'rating_value', rating.value < 0 ? 'von gestern' : rating.value == 0 ? 'von heute' : rating.value == 2 ? 'visionär' : 'von morgen');
-    	var comments = findChildWithId(temp, 'details_rating_comments');
+    function renderDetailsRating(rating, tempRating, commentTemplate) {
+    	tempRating.removeAttribute('id');
+    	unhide(tempRating);
+    	setInnerTextOfChildWithIdAndRemoveId(tempRating, 'rating_title', rating.title);
+    	setInnerTextOfChildWithIdAndRemoveId(tempRating, 'rating_value', rating.value < 0 ? 'von gestern' : rating.value == 0 ? 'von heute' : rating.value == 2 ? 'visionär' : 'von morgen');
+    	var src = findChildWithId(tempRating, 'rating_source');
+    	if (src) {
+    		src.removeAttribute('id');
+    		if (rating.source) {
+    			if (rating.source.trim().toLowerCase().match(/^[a-z][^ <>"']+$/)) {
+    				src.href = (rating.source.trim().toLowerCase().match(/^https?:/) ? '' : 'http://') + encodeURI(rating.source.trim());
+    			} else {
+    				src.href = '#';
+    				src.innertText = rating.source;
+    			}
+    		} else {
+    			src.href = '';
+    			src.innerText = '';
+    			hide(src);
+    		}
+    	}
+    	var comments = findChildWithId(tempRating, 'details_rating_comments');
     	if (comments && rating.comments) {
     		comments.removeAttribute('id');
-	    	var tempComment = document.getElementById('template_rating_text');
-	    	hide(tempComment);
-	    	if (tempComment) {
+	    	if (commentTemplate) {
 		    	for (c in rating.comments) {
-		    		var commentText = tempComment.cloneNode(true);
-		    		unhide(commentText);
-		    		commentText.removeAttribute('id');
-		    		commentText.innerText = rating.comments[c].text;
-		    		comments.appendChild(commentText);
+		    		var tempComment = commentTemplate.cloneNode(true);
+		    		unhide(tempComment);
+		    		tempComment.removeAttribute('id');
+		    		tempComment.innerText = rating.comments[c].text;
+		    		comments.appendChild(tempComment);
 		    	}
 	    	}
     	}
-    	ctnr.appendChild(temp);
     }
     
     function hide (lbl) {

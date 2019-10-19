@@ -1,5 +1,4 @@
 
-
         /* search fields */
         body {
             max-width:1024px;
@@ -249,6 +248,7 @@
             color: #888888;
             font-size: 40px;
             line-height: 40px;
+            -webkit-text-stroke: 1px #fff;
         }
         body.highres .mapMarker {
             color: transparent !important;
