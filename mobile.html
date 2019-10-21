@@ -916,7 +916,7 @@ textarea {
 </div>
 
 <div class="LeftPanelAndHideSidebarButton">
-    <div class="left opened SwipeableLeftPanel">
+    <div id="overMap" class="left opened SwipeableLeftPanel" style="display:block;">
         <div class="SidebarComponent">
             <div class="search open">
                 <div class="SearchBar pure-g SearchBar">
@@ -1041,7 +1041,7 @@ textarea {
             <div id="details" class="Sidebar__ScrollableEntryDetailsWrapper-bwfae2-0 dwHqrZ ScrollableDiv__StyledScrollableDiv-sc-168a1f7-0 dJIxVX" >
                 <div class="EntryDetails__Entry-fg0d9y-2 kOGlKj">
                     <nav class="menu-top EntryDetails__Navbar-fg0d9y-1 WuzFA">
-                        <div class="NavButtonWhite__NavigationButtonWrapper-e4q989-0 fdqOYY"><a onclick="document.getElementById('details').style.display = 'none';scrollBack();event.preventDefault();location.hash=location.hash?location.hash.replace(/^[^;]*;/,';'):'';return false;" class="NavButtonWhite__NavigationButton-e4q989-2 iJYAJX"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" class="svg-inline--fa fa-chevron-left fa-w-10 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"></path></svg> zurück</a></div>
+                        <div class="NavButtonWhite__NavigationButtonWrapper-e4q989-0 fdqOYY"><a onclick="hideDetails();event.preventDefault();return false;" class="NavButtonWhite__NavigationButton-e4q989-2 iJYAJX"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" class="svg-inline--fa fa-chevron-left fa-w-10 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"></path></svg> zurück</a></div>
                         <div class="NavButtonWhite__NavigationButtonWrapperRight-e4q989-1 hTDXur"><span class="NavButtonWhite__NavigationButton-e4q989-2 iJYAJX"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="pencil-alt" class="svg-inline--fa fa-pencil-alt fa-w-16 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg> </span></div>
                     </nav>
                     <div class="BusinessCard__EntryDetailPage-sc-1voivxq-2 hOTvAL">
@@ -1229,16 +1229,16 @@ textarea {
         </div>
     </div>
     <div class="HideSidebar">
-        <button>
+        <button onclick="toggleMap();">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-left" class="svg-inline--fa fa-caret-left fa-w-6 App__ToggleLeftSidebarIcon-sc-1x77ogt-1 bVtZdE" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512">
-                <path fill="currentColor" d="M192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142L29.196 270.142c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z"></path>
+                <path id="hideSideBarBtnIcon" fill="currentColor" d="M192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142L29.196 270.142c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z"></path>
             </svg>
         </button>
     </div>
 </div>
 </div>
 
-<div id="overMap" style="display:hidden;">
+<div id="_overMap" style="display:hidden;">
     <div style="text-align:center;">
         <button id="_btnInitiative" class="active" onclick="toggleCat('Initiative')">Initiativen</button>
         <button id="_btnEvent" class="active" onclick="toggleCat('Event')">Events</button>
@@ -1267,15 +1267,15 @@ textarea {
     </form>
 
 
-    <div id="_overMapScroll" class="scroll_ctnr">
+    <div id="_overMapScroll" class="scroll_ctnr" style="display:none;">
     <div id="_details" style="display:none;">
 
         <div class="back">
             <a href="#"
-               onclick="document.getElementById('details').style.display = 'none';scrollBack();event.preventDefault();location.hash=location.hash?location.hash.replace(/^[^;]*;/,';'):'';return false;">[ &lt;&lt;&lt; ] ZURÜCK</a>
+               onclick="hideDetails();event.preventDefault();return false;">[ &lt;&lt;&lt; ] ZURÜCK</a>
         </div>
         <div class="back">
-            <a href="#" onclick="document.getElementById('details').style.display = 'none';scrollBack();event.preventDefault();location.hash=location.hash?location.hash.replace(/^[^;]*;/,';'):'';return false;">[ &lt;&lt;&lt; ] ZURÜCK</a>
+            <a href="#" onclick="hideDetails();event.preventDefault();return false;">[ &lt;&lt;&lt; ] ZURÜCK</a>
         </div>
     </div>
     <div id="_result" class="result_ctnr">
@@ -1297,7 +1297,7 @@ textarea {
       </span>
     </div>
 
-<div id="overMapBottom" class="bottomCtnr">
+<div id="overMapBottom" class="bottomCtnr" style="display:none;">
     <div class="footerBtnCtnr">
         <button onclick="location.href='edit.html';">Neuen Eintrag hinzufügen...</button>
     </div>
@@ -1353,13 +1353,13 @@ textarea {
 
     var searchResultOrig = [];
     var searchResult = [];
+    
+    var displayedEntry;
 
     var cache = {};
 
     var displayDetailsOnload = false;
     var ratingTypes = {diversity:"rgb(151,  191,  13 )",renewable:"rgb(255,  221,  0 )",fairness:"rgb(229,  98,   146)",humanity:"rgb(170,  56,   108)",transparency:"rgb(100,  122,  133)",solidarity:"rgb(0,    153,  173)"};
-
-    window.onload = function() {initMap();};
 
     function find() {
         if (showWait()) {
@@ -1422,6 +1422,7 @@ textarea {
     }
 
     function displaySearchResult() {
+    	hideDetails();
         var resultCtnr = document.getElementById('results_visible');
         resultCtnr.innerHTML = '';
 
@@ -1452,7 +1453,9 @@ textarea {
 	"tags":["assoziativ","ie-stationsidee","ingenieurbüro","initiativ-kolloquium2","kartevonmorgen","linux","new-work","open-source","potentialentfaltung","regelungstechnik","regpis","selbstgeführt","smart-lowtec","socent","software","sozialezukunft","soziokratie","teal-organization","transforming-capitalism-lab","urbane-landwirtschaft"],
 	"ratings":{"total":1.25,"diversity":2,"fairness":0,"humanity":2,"renewable":1.5,"solidarity":0,"transparency":2}}}
 */
+		hide(document.getElementById('template_result'));
         var ctnr0 = document.getElementById('template_result').cloneNode(true);
+        unhide(ctnr0);
         ctnr0.removeAttribute('id');
         ctnr0.setAttribute('class', categories[entry.categories[0]].name.toLowerCase().replace('unternehmen', 'company') + ' ResultListElement');
         
@@ -1494,9 +1497,9 @@ textarea {
     	return function() {
             if (mapMarkers && mapMarkers[entryId]) {
             	if (open) {
-                	mapMarkers[entryId].openPopup();
+                	mapMarkers[entryId].openTooltip();
             	} else {
-            		mapMarkers[entryId].closePopup();
+            		mapMarkers[entryId].closeTooltip();
             	}
             }
         }    	
@@ -1557,8 +1560,12 @@ textarea {
         };
     }
 
-    function scrollBack() {
+    function hideDetails() {
+    	document.getElementById('details').style.display = 'none';
     	document.getElementById('overMapScroll').style.display='block';
+    	if (displayedEntry && displayedEntry.id && mapMarkers[displayedEntry.id]) {
+    		mapMarkers[displayedEntry.id].closePopup();
+    	}
         /*if ((backScrollY && backScrollY >= 0) || backScrollY === 0) {
             window.setTimeout(function () {
                 document.getElementById('overMapScroll').style.display='block';//.scrollTo(0, backScrollY);
@@ -1567,7 +1574,8 @@ textarea {
         } else if (backScrollY === null) {
             toggleMap();
         }*/
-    }
+    	location.hash=location.hash?location.hash.replace(/^[^;]*;/,';'):'';
+   	}
 
 
     function getResults(ids, callback) {
@@ -1763,6 +1771,7 @@ textarea {
         
         
         location.hash = entry.id + ';' + (resultMapObj ? (lat + ',' + lon) : city);
+        displayedEntry = entry;
 
         var detailsCtnr = document.getElementById("details");
       /*  while (detailsCtnr.childElementCount > 2) {
@@ -2372,7 +2381,6 @@ textarea {
                         lon = parseFloat(ll[1]);
                         bbox = [lat - 0.1, lon - 0.12, lat + 0.1, lon + 0.12];
                         displayDetailsOnload = parts[0];
-                        initMap();
                 } else {
                     var txt = decodeURIComponent(parts[1]);
                     if (txt.match(/^[0-9a-zA-Z\u00C0-\u017F,.;() :+\?/_-]+$/)) {
@@ -2388,6 +2396,7 @@ textarea {
 
         }
 
+        initMap();
     }
 
 </script>
@@ -2417,16 +2426,20 @@ textarea {
         } else {
             var ele = document.getElementById('overMap');
             if (ele) {
-                if ((!ele.style.left) || ele.style.left !== '0') {
-                    ele.style.left = '0';
+                if (ele.style.display/*(!ele.style.left) || (ele.style.left !== '0' && ele.style.left !== '0px')*/) {
+                    unhide(ele);
+                	//ele.style.left = '0px';
                     ele.style.overflow = "";
                     document.getElementById('resultMapCtnr').style.left='380px';
                     document.getElementById('mapBtn').innerText = "Karte";
+                    document.getElementById('hideSideBarBtnIcon').setAttribute('transform', 'rotate(0)');
                 } else {
-                    ele.style.left = "-300px";
+                	hide(ele);
+                    //ele.style.left = "-380px";
                     ele.style.overflow = "hidden";
-                    document.getElementById('resultMapCtnr').style.left='20px';
+                    document.getElementById('resultMapCtnr').style.left='0px';
                     document.getElementById('mapBtn').innerText = "Liste";
+                    document.getElementById('hideSideBarBtnIcon').setAttribute('transform', 'rotate(180) translate(-193 -512)');
                     if ((!searchResult) || ((!searchResult.visible) && (!searchResult.invisible))) {
                         find();
                     }
@@ -2491,8 +2504,12 @@ textarea {
             center: [lat, lon],
             tapTolerance: 30,
             tap: true,
-            zoom: 12
+            zoom: 12,
+            zoomControl: false
         });
+        L.control.zoom({
+            position:'bottomright'
+       }).addTo(resultMapObj);
 
         setMapProvider(mapStyle, mapOverlay);
 
