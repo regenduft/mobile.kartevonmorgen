@@ -248,7 +248,17 @@
             color: #888888;
             font-size: 40px;
             line-height: 40px;
+            overflow:hidden;
             -webkit-text-stroke: 1px #fff;
+        }
+        .mapMarker > i.map-icon {
+        	margin: -6px;
+        }
+        .mapMarkerCircle {
+        	font-size: 16px;
+        	line-height: 16px;
+            -webkit-text-stroke: 1px #fff;
+            color: #888888;
         }
         body.highres .mapMarker {
             color: transparent !important;
@@ -258,7 +268,7 @@
             */
         }
 
-        .mapMarker.event, .mapMarker.Event {
+        .mapMarker.event, .mapMarker.Event, .mapMarkerCircle.Event .mapMarkerCircle.event {
             /*color: #ea84aa !important;*/
             color: rgb(229,  98,   146) !important;
             /*color: #c11f5a !important;*/
@@ -267,7 +277,7 @@
             background:url('data:image/svg+xml;utf8,<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28" height="40" viewBox="17 17 58 82" id="svg4168" version="1.1"><defs id="defs4170"><linearGradient id="linearGradient4865"><stop id="stop4867" offset="0" style="stop-color:#ea84aa;stop-opacity:1"/><stop id="stop4869" offset="1" style="stop-color:#c11f5a;stop-opacity:1"/></linearGradient><radialGradient xlink:href="#linearGradient4865" id="radialGradient4857" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-2.0733135,-0.00485178,0.00562694,-2.4045773,857.57643,495.26569)" cx="392.2" cy="189.1" fx="392.2" fy="189.1" r="28"/></defs><path id="path4855" d="m45.7 97.7c0 0-28-37.2-28-52 0-14.8 13.2-28 28-28 14.8 0 28 13.2 28 28 0 14.8-28 52-28 52z" fill="url(#radialGradient4857)"/></svg>') !important;
         }
 
-        .mapMarker.initiative, .mapMarker.Initiative {
+        .mapMarker.initiative, .mapMarker.Initiative, .mapMarkerCircle.initiative, .mapMarkerCircle.Initiative {
             /*color: #bef019 !important;*/
             /*color: #658208 !important;*/
             color: rgb(151,  191,  13 ) !important;
@@ -279,7 +289,7 @@
             */
         }
 
-        .mapMarker.business, .mapMarker.Business, .mapMarker.unternehmen, .mapMarker.Unternehmen {
+        .mapMarker.business, .mapMarker.Business, .mapMarker.unternehmen, .mapMarker.Unternehmen, .mapMarkerCircle.business, .mapMarkerCircle.Business, .mapMarkerCircle.unternehmen, .mapMarkerCircle.Unternehmen {
             /*color: #00ccbd !important;*/
             /*color: #006e5f !important;*/
             color: rgb(0,    152,  137) !important;

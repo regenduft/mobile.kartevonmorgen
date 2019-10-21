@@ -1357,7 +1357,7 @@ textarea {
     var cache = {};
 
     var displayDetailsOnload = false;
-    var ratingTypes = {diversity:"rgb(151,  191,  13 )",fairness:"rgb(255,  221,  0 )",humanity:"rgb(229,  98,   146)",renewable:"rgb(170,  56,   108)",solidarity:"rgb(100,  122,  133)",transparency:"rgb(0,    153,  173)"};
+    var ratingTypes = {diversity:"rgb(151,  191,  13 )",renewable:"rgb(255,  221,  0 )",fairness:"rgb(229,  98,   146)",humanity:"rgb(170,  56,   108)",transparency:"rgb(100,  122,  133)",solidarity:"rgb(0,    153,  173)"};
 
     window.onload = function() {initMap();};
 
@@ -1769,11 +1769,16 @@ textarea {
             detailsCtnr.removeChild(detailsCtnr.firstElementChild.nextElementSibling);
         }*/
         detailsCtnr.style.display = "block";
+        
+        if (!entry.ratings || entry.ratings.length == 0) {
+        	displayDetailsRatings([]);
+        }
 
         for (var key in entry) {
     		if (key == 'ratings') {
-    			
-    			getRatings(entry[key], displayDetailsRatings);         			
+    			if (entry[key].length > 0) {
+    				getRatings(entry[key], displayDetailsRatings);
+    			}
     			
     		} else if (key != 'id' && key != 'created' && key != 'lat' && key !=
                     'lon' && key != 'lng' && key != 'version') {
@@ -2393,7 +2398,7 @@ textarea {
 
     /* MAP FUNCTIONS */
 
-    var mapStyle = 'OpenStreetMap.DE';
+    var mapStyle = 'Wikimedia';
     var mapOverlay = null;
     var resultMapLayer = null;
     var resultMapOverlay = null;
@@ -2525,7 +2530,7 @@ textarea {
 
         var lfcss = document.createElement("LINK");
         lfcss.rel = "stylesheet";
-        lfcss.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet.css";
+        lfcss.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css";
         document.head.appendChild(lfcss);
 
         var facss = document.createElement("LINK");
@@ -2536,11 +2541,11 @@ textarea {
 
         var lfjs = document.createElement("SCRIPT");
         lfjs.type = "text/javascript";
-        lfjs.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet.js";
+        lfjs.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js";
         lfjs.onload = function() {
             var lfjs2 = document.createElement("SCRIPT");
             lfjs2.type = "text/javascript";
-            lfjs2.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet-providers/1.1.10/leaflet-providers.min.js";
+            lfjs2.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet-providers/1.3.1/leaflet-providers.min.js";
             lfjs2.onload = doInitMap;
             document.body.appendChild(lfjs2);
         };
@@ -2575,13 +2580,19 @@ textarea {
         if (resultMapObj && (!mapMarkers[entry.id]) && entry && entry.lat && entry.lng) {
             var cat = categories && entry.categories && entry.categories.length
             && entry.categories[0] ? categories[entry.categories[0]] : null;
-            mapMarkers[entry.id] = L.marker({lat:entry.lat, lng:entry.lng}, {icon:
-                    L.divIcon({iconSize: [40,41],
-                        iconAnchor:[20,41], className:'mapMarker '+(cat ?
-                                cat.name :'unknown'), html:'<i class="map-icon map-icon-map-pin"></i>'})});
+            mapMarkers[entry.id] = L.marker({lat:entry.lat, lng:entry.lng}, {icon: entry.ratings && entry.ratings.total && entry.ratings.total >= 0
+            			? L.divIcon({iconSize: [27,41], iconAnchor: [13,41], className:'mapMarker '     + (cat ? cat.name :'unknown'), html:'<i class="map-icon map-icon-map-pin"></i>'})
+		                : L.divIcon({iconSize: [16,17], iconAnchor: [8,8], className:'mapMarkerCircle ' + (cat ? cat.name :'unknown'), html:'<i class="map-icon map-icon-circle"></i>'})
+            });
             mapMarkers[entry.id].addTo(resultMapObj);
-            mapMarkers[entry.id].bindPopup('<a href="#" onclick="displayDetails('+"'"+entry.id+"'"+');if(isMapInFront()){toggleMap();backScrollY=null;}else{backScrollY=-1;}event.preventDefault();return false;">'+entry.title+'</a>');
+            mapMarkers[entry.id].bindPopup('<a href="#" onclick="displayDetails('+"'"+entry.id+"'"+');if(isMapInFront()){toggleMap();backScrollY=null;}else{backScrollY=-1;}event.preventDefault();return false;">'+entry.title+'</a>', {offset: entry.ratings && entry.ratings.total && entry.ratings.total >= 0 ? [0,10] : [0,30]});
+            mapMarkers[entry.id].bindTooltip(entry.title, {direction: 'bottom'});
+            mapMarkers[entry.id].on('click', createOnMarkerClickFunc(entry.id) );
         }
+    }
+    
+    function createOnMarkerClickFunc(entryId) {
+    	return function(){ displayDetails(entryId);if(isMapInFront()){toggleMap();backScrollY=null;}else{backScrollY=-1;}};
     }
 
     function mapCenter2City() {
