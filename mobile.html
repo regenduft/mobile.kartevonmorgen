@@ -929,7 +929,7 @@ textarea {
                                 <path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path>
                             </svg>
                         </div>
-                        <input id="text" onchange="find();" class="pure-u-1 SearchInput" placeholder="Wonach suchst du? (# für Tags)" value="">
+                        <input id="text" onchange="hideDetails();find();" class="pure-u-1 SearchInput" placeholder="Wonach suchst du? (# für Tags)" value="">
                     </div>
                 </div>
             </div>
@@ -1353,7 +1353,7 @@ textarea {
 
     var searchResultOrig = [];
     var searchResult = [];
-    
+
     var displayedEntry;
 
     var cache = {};
@@ -1422,12 +1422,11 @@ textarea {
     }
 
     function displaySearchResult() {
-    	hideDetails();
         var resultCtnr = document.getElementById('results_visible');
         resultCtnr.innerHTML = '';
 
         displayResultList(resultCtnr, searchResultOrig['visible']);
-        
+
         resultCtnr = document.getElementById('results_invisible');
         resultCtnr.innerHTML = '';
         displayResultList(resultCtnr, searchResultOrig['invisible']);
@@ -1458,13 +1457,13 @@ textarea {
         unhide(ctnr0);
         ctnr0.removeAttribute('id');
         ctnr0.setAttribute('class', categories[entry.categories[0]].name.toLowerCase().replace('unternehmen', 'company') + ' ResultListElement');
-        
+
         setInnerTextOfChildWithIdAndRemoveId(ctnr0, 'result_category', categories[entry.categories[0]].name);
         setInnerTextOfChildWithIdAndRemoveId(ctnr0, 'result_title', entry.title);
         setInnerTextOfChildWithIdAndRemoveId(ctnr0, 'result_description', entry.description);
-        
+
 		updateRatingFlower(entry, ctnr0, 'result_rating_', true);
-        
+
         var tagCtnr = findChildWithId(ctnr0, 'result_tags');
         if (tagCtnr) {
         	tagCtnr.removeAttribute('id');
@@ -1482,9 +1481,9 @@ textarea {
         		tagCtnr.appendChild(div);
         	}
         }
-        		
+
         ctnr0.onclick = createShowFunc(ctnr0, entry.id);
-        
+
         ctnr0.onmouseenter = createHoverFunc(entry.id, true);
         ctnr0.onmouseleave = createHoverFunc(entry.id, false);
 
@@ -1492,7 +1491,7 @@ textarea {
 
         addMapMarker(entry);
     }
-    
+
     function createHoverFunc(entryId, open) {
     	return function() {
             if (mapMarkers && mapMarkers[entryId]) {
@@ -1502,9 +1501,9 @@ textarea {
             		mapMarkers[entryId].closeTooltip();
             	}
             }
-        }    	
+        }
     }
-    
+
     function updateRatingFlower(entry, ctnr0, prefix, removeId) {
         for (var type in ratingTypes) {
         	var rating = entry.ratings[type];
@@ -1522,7 +1521,7 @@ textarea {
             }
         }
     }
-    
+
     function setInnerTextOfChildWithIdAndRemoveId(ctnr1, id, innerTxt) {
         var elem = findChildWithId(ctnr1, id);
         if (elem) {
@@ -1533,7 +1532,7 @@ textarea {
         	console.log(ctnr1);
         }
     }
-    
+
     function findChildWithId(ctnr2, id) {
     	for (var i = 0; i < ctnr2.children.length; i++) {
     		if (ctnr2.children[i].id == id) {
@@ -1633,7 +1632,7 @@ textarea {
         xhttp.open("GET", srv + "categories/" , true);
         xhttp.send();
     }
-    
+
     function getRatings(ratingIds, callback) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
@@ -1767,9 +1766,9 @@ textarea {
     title: "slowtec GmbH"
     version: 38
     zip: "70567" */
-        
-        
-        
+
+
+
         location.hash = entry.id + ';' + (resultMapObj ? (lat + ',' + lon) : city);
         displayedEntry = entry;
 
@@ -1778,7 +1777,7 @@ textarea {
             detailsCtnr.removeChild(detailsCtnr.firstElementChild.nextElementSibling);
         }*/
         detailsCtnr.style.display = "block";
-        
+
         if (!entry.ratings || entry.ratings.length == 0) {
         	displayDetailsRatings([]);
         }
@@ -1788,17 +1787,17 @@ textarea {
     			if (entry[key].length > 0) {
     				getRatings(entry[key], displayDetailsRatings);
     			}
-    			
+
     		} else if (key != 'id' && key != 'created' && key != 'lat' && key !=
                     'lon' && key != 'lng' && key != 'version') {
-            	
+
             	var lbl = findChildWithId(detailsCtnr, 'details_' + key);
             	var ctnr = findChildWithId(detailsCtnr, 'details_' + key + '_ctnr');
             	hide(lbl);
             	hide(ctnr);
 				if (lbl && entry[key]) {
             		var value = entry[key];
-            		
+
             		if (key == 'categories') {
             			if (entry[key].length > 0) {
             				value = categories[entry[key][0]].name
@@ -1821,9 +1820,9 @@ textarea {
 	                } else {
 
         				lbl.innerText = value;
-        				
+
 	                }
-        			
+
             		if (key == 'homepage') {
             			lbl.href = entry[key].match(/^https?:\/\//) ? entry[key] : ('https://' + encodeURI(entry[key]));
             		}
@@ -1838,13 +1837,13 @@ textarea {
             	}
             }
         }
-        
+
         var sre = findEntryInCache(entry.id);
         if (sre) {
   			updateRatingFlower(sre, detailsCtnr, 'details_flower_', false);
   			updateRatingFlower(sre, detailsCtnr, 'details_rating_', false);
         }
-        
+
         var lbl = document.getElementById('details_route');
         if (lbl) {
         	lbl.href='https://graphhopper.com/maps/?point='
@@ -1904,7 +1903,7 @@ textarea {
             mapMarkers[entry.id].openPopup();
         }
     }
-    
+
     function findEntryInCache(id){
         for (var e in searchResultOrig['visible']) {
         	if (searchResultOrig['visible'][e].id == id) {
@@ -1917,7 +1916,7 @@ textarea {
         	}
         }
     }
-    
+
     function displayDetailsRatings(ratings) {
     	var ratingTemplate = document.getElementById('template_rating');
     	hide(ratingTemplate);
@@ -1938,7 +1937,7 @@ textarea {
         	}
     	}
     }
-    
+
     function renderDetailsRating(rating, tempRating, commentTemplate) {
     	tempRating.removeAttribute('id');
     	unhide(tempRating);
@@ -1974,13 +1973,13 @@ textarea {
 	    	}
     	}
     }
-    
+
     function hide (lbl) {
     	if (lbl) {
     		lbl.style.display = 'none';
     	}
     }
-    
+
     function unhide(lbl) {
     	if (lbl) {
 			if (lbl.style.removeProperty) { lbl.style.removeProperty('display') } else if (lbl.style.removeAttribute){ lbl.style.removeAttribute('display') } else { lbl.style.display = '' }
@@ -2607,7 +2606,7 @@ textarea {
             mapMarkers[entry.id].on('click', createOnMarkerClickFunc(entry.id) );
         }
     }
-    
+
     function createOnMarkerClickFunc(entryId) {
     	return function(){ displayDetails(entryId);if(isMapInFront()){toggleMap();backScrollY=null;}else{backScrollY=-1;}};
     }
