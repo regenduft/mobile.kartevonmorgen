@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"></link>
 	<script defer src="search.js"></script>
 	<script defer src="list.js"></script>
-	<script defer src="entry.js"></script>
+	<script defer src="entryDetails.js"></script>
 	<script defer src="map.js"></script>
 	<script defer src="osm.js"></script>
 	<script defer src="poi.js"></script>
@@ -40,10 +40,10 @@
 <div class="LeftPanelAndHideSidebarButton">
     <div id="overMap" class="left opened SwipeableLeftPanel" style="display:block;">
         <div class="SidebarComponent">
-			<div id="search.html"></div>
- 
-            <div id="list.html"></div>
+			<div id="search"></div>
+            
             <div id="overMapScroll" class="result ResultWrapper StyledScrollableDiv">
+            </div>
 
            <div id="details" class="Sidebar__ScrollableEntryDetailsWrapper-bwfae2-0 dwHqrZ ScrollableDiv__StyledScrollableDiv-sc-168a1f7-0 dJIxVX" >
            </div>
@@ -84,9 +84,9 @@
 	<script src="index.js"></script>
     <script>
     	var remainingModules = 3;
-    	loadModule('search.html');
-    	loadModule('list.html');
-    	loadModule('entry.html');
+    	loadModule('search.html', 'search');
+    	loadModule('list.html', 'overMapScroll');
+    	loadModule('entryDetails.html', 'details');
     </script>
 </body>
 </html>

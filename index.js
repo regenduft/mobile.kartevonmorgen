@@ -1,11 +1,11 @@
-function loadModule(name) {
+function loadModule(name, id) {
     var xhttp = new XMLHttpRequest();
     showWait(null, xhttp);
     xhttp.responseType="text";
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4) {
             if (xhttp.status == 200) {
-                document.getElementById(name).innerHTML = xhttp.responseText;
+                document.getElementById(id || name).innerHTML = xhttp.responseText;
                 hideWait();
             } else {
                 hideWait('Internet Verbindung.');
