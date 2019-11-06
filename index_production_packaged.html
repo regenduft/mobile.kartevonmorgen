@@ -8,16 +8,17 @@
     <link rel="stylesheet" href="default.css"></link>
     <link rel="stylesheet" href="dev.css"></link>
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"></link>
-	<script defer src="search.js"></script>
-	<script defer src="list.js"></script>
-	<script defer src="entry.js"></script>
-	<script defer src="map.js"></script>
-	<script defer src="osm.js"></script>
-	<script defer src="poi.js"></script>
-	<script defer src="geolocate.js"></script>
-	<script defer src="cookie.js"></script>
 </head>
-<body onload="" class="lowres" style="max-width:100% !important;height:100vH;margin:0;padding:0;overflow:hidden;">
+<body onload="loadModule('search.html');loadModule('list.html');loadModule('entry.html');" class="lowres" style="max-width:100% !important;height:100vH;margin:0;padding:0;overflow:hidden;">
+	<script src="index.js"></script>
+	<script src="search.js"></script>
+	<script src="list.js"></script>
+	<script src="entry.js"></script>
+	<script src="map.js"></script>
+	<script src="osm.js"></script>
+	<script src="poi.js"></script>
+	<script src="geolocate.js"></script>
+	<script src="cookie.js"></script>
 	
     <div id="ovl_wheel">lade...</div>
 
@@ -43,10 +44,8 @@
 			<div id="search.html"></div>
  
             <div id="list.html"></div>
-            <div id="overMapScroll" class="result ResultWrapper StyledScrollableDiv">
 
-           <div id="details" class="Sidebar__ScrollableEntryDetailsWrapper-bwfae2-0 dwHqrZ ScrollableDiv__StyledScrollableDiv-sc-168a1f7-0 dJIxVX" >
-           </div>
+            <div id="entry.html"></div>
 
             <nav class="AddEntryButton">
                 <li class="pure-u-1 NavButton">
@@ -66,6 +65,10 @@
 </div>
 </div>
 
+<div id="osm.html"></div>
+
+<div id="poi.html"></div>
+
 <!-- below html: backward compability, remove after refactoring -->
     <form class="searchForm">
         <span>WO:</span>
@@ -80,13 +83,5 @@
     </div>
     <button id="mapBtn" onclick="toggleMap();event.preventDefault; return false;" class="right" style="display:none">Karte</button>
     
-    
-	<script src="index.js"></script>
-    <script>
-    	var remainingModules = 3;
-    	loadModule('search.html');
-    	loadModule('list.html');
-    	loadModule('entry.html');
-    </script>
 </body>
 </html>

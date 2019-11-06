@@ -35,7 +35,9 @@
         }
 
         form.searchForm  .right {
-            float: right;
+            position: absolute;
+            right: 0;
+            width: 75px;
         }
 
         #findBtn, #mapBtn {

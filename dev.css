@@ -1,3 +1,901 @@
+.fZGVr div.map {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    margin: 0px;
+    z-index: 0;
+    padding: 0px;
+    top: 0px;
+    left: 0px;
+}
+
+.fZGVr .osm.attr,
+.fZGVr .leaflet-control-attribution.leaflet-control a {
+    color: rgb(102, 102, 102);
+}
+
+.gYOxnk {
+    bottom: 95px;
+    position: absolute;
+    z-index: 0;
+}
+
+.fMdKZX {
+    box-shadow: none !important;
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    background-clip: padding-box;
+}
+
+.evrwXb {
+    cursor: pointer;
+    font-size: 14px;
+    color: rgb(51, 51, 51);
+    width: 30px !important;
+    height: 30px !important;
+    line-height: 30px !important;
+}
+
+.kWYPha {
+    width: 12px;
+    height: 12px;
+}
+
+.hegYIf {
+    max-width: 130px;
+    color: rgb(51, 51, 51) !important;
+    background: rgb(242, 242, 242) none repeat scroll 0% 0% !important;
+    margin-top: 2px !important;
+    opacity: 1 !important;
+    border-radius: 0.5rem !important;
+    padding: 6px 17px !important;
+    hyphens: auto;
+}
+
+.hegYIf::after {
+    border-bottom-color: rgb(242, 242, 242) !important;
+}
+
+.hegYIf > h3 {
+    margin: 0.5rem 0px -0.5rem;
+    padding: 0px;
+    font-size: 0.9rem;
+}
+
+.NavButton {
+    cursor: pointer;
+    box-sizing: border-box;
+    font-weight: normal;
+    padding: 0.3em;
+    font-size: 1.2em;
+    border-color: transparent currentcolor;
+    border-style: solid none;
+    border-width: 4px medium;
+    border-image: none 100% / 1 / 0 stretch;
+    color: rgb(221, 221, 221);
+    background: transparent none repeat scroll 0% 0%;
+}
+
+.NavButton:hover {
+    color: rgb(255, 255, 255);
+    border-bottom: 4px solid rgb(255, 255, 255);
+}
+
+.NavButton i {
+    margin-right: 0.5em;
+}
+
+.gleiBQ {
+    margin-right: 10px !important;
+}
+
+.ResultListOuter {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.ResultListEntry {
+    -moz-box-flex: 1;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    overflow-y: hidden;
+}
+
+.TitleCategoryAndDescription {
+    -moz-box-flex: 1;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.ResultListEntryTitle {
+    font-size: 1.1em;
+    margin: 0.2rem 0.3em 0.2rem 0px;
+    font-weight: 500;
+    position: relative;
+    z-index: 3;
+}
+
+.ResultListElement {
+    position: relative;
+    height: 115px;
+    overflow-y: hidden;
+    cursor: pointer;
+    margin: 0px;
+    padding: 0.7em 0.5em 0.4em 0.7em;
+    border-bottom: 1px solid rgb(221, 221, 221);
+    border-left: 5px solid transparent;
+}
+
+.ResultListElement div.category {
+    height: 1.2em;
+}
+
+.ResultListElement.current-entry {
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+}
+
+.ResultListElement:hover {
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+}
+
+.ResultListElement.event.current-entry {
+    border-left: 5px solid rgb(229, 98, 146);
+}
+
+.ResultListElement.event:hover {
+    border-left: 5px solid rgb(229, 98, 146);
+}
+
+.ResultListElement.event span.category, .iRaMrp.event{
+    color: rgb(229, 98, 146);
+}
+
+.ResultListElement.company.current-entry {
+    border-left: 5px solid rgb(0, 152, 137);
+}
+
+.ResultListElement.company:hover {
+    border-left: 5px solid rgb(0, 152, 137);
+}
+
+.ResultListElement.company span.category, .iRaMrp.company {
+    color: rgb(0, 152, 137);
+}
+
+.ResultListElement.initiative.current-entry {
+    border-left: 5px solid rgb(151, 191, 13);
+}
+
+.ResultListElement.initiative:hover {
+    border-left: 5px solid rgb(151, 191, 13);
+}
+
+.ResultListElement.initiative span.category, .iRaMrp.initiative {
+    color: rgb(151, 191, 13);
+}
+
+.ResultListElement span.category {
+    font-size: 0.8em;
+    color: rgb(170, 170, 170);
+    text-transform: uppercase;
+}
+
+.ResultListElement span.title {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-right: 0.3em;
+}
+
+.ResultListElement span.subtitle {
+    font-size: 0.8em;
+    color: rgb(85, 85, 85);
+}
+
+.ResultListElement .highlight-entry div.chevron {}
+
+.ResultListElement .highlight-entry.initiative div.chevron {}
+
+.ResultListElement .highlight-entry.company div.chevron {}
+
+.ResultListElement .highlight-entry.event div.chevron {}
+
+.ResultListDescription {
+    margin-top: 2px;
+    max-height: 42px;
+    overflow: hidden;
+    hyphens: auto;
+    position: relative;
+    z-index: 3;
+    font-size: 0.8em;
+    color: rgb(85, 85, 85);
+}
+
+.TagsWrapper {
+    height: 21px;
+    overflow-y: hidden;
+    margin-top: 5px;
+    float: left;
+}
+
+.TagsWrapper ul {
+    list-style: outside none none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.Tag {
+    line-height: 14px;
+    font-size: 0.75em;
+    display: inline-block;
+    background: rgb(234, 234, 234) none repeat scroll 0% 0%;
+    color: rgb(51, 51, 51);
+    border-radius: 0.3em;
+    padding: 0.2em 0.4em;
+    margin-right: 0.4em;
+    margin-bottom: 0.2em;
+    border: 0px none;
+    letter-spacing: 0.06em;
+    height: 12px;
+    overflow: hidden;
+}
+
+.FlowerWrapper {
+    margin: 22px 10px 0px;
+}
+
+.ResultListWrapper {
+    box-sizing: border-box;
+}
+
+.ResultListWrapper .result-list p.no-results {
+    margin: 0px;
+    padding: 1em;
+    font-size: 0.9em;
+}
+
+.ResultListWrapper .result-list p.no-results span {
+    margin-left: 0.5em;
+}
+
+.ResultListWrapper .result-list p.loading {
+    margin: 20px 0px 0px;
+    padding: 1em;
+    font-size: 0.9em;
+}
+
+.ResultListWrapper .result-list p.loading span {
+    margin-left: 0.5em;
+}
+
+.ResultListWrapper .result-list ul {
+    list-style: outside none none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.StyledScrollableDiv {
+    -moz-box-flex: 1;
+    flex-grow: 1;
+    overflow-y: scroll;
+    box-sizing: border-box;
+}
+
+.StyledScrollableDiv::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.StyledScrollableDiv::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%;
+}
+
+.StyledScrollableDiv::-webkit-scrollbar-thumb {
+    background: rgb(153, 153, 153) none repeat scroll 0% 0%;
+}
+
+.eVwvVu {
+    display: flex;
+    border-radius: 50%;
+    border-color: rgb(102, 102, 102) white white;
+    border-style: solid;
+    border-width: 3px;
+    border-image: none 100% / 1 / 0 stretch;
+    height: 17px;
+    width: 17px;
+    animation: 1s linear 0s infinite normal none running iECmZH;
+}
+
+.gnVtmb {
+    margin: 0.1em 0px 0px 0.1em;
+    animation-duration: 150ms;
+    animation-name: turn;
+}
+
+@keyframes turn {
+    0% {
+        transform: rotate(330deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes turn {
+    0% {
+        transform: rotate(330deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.MainCategories {
+    font-size: 0.8em;
+    color: rgb(102, 102, 102);
+}
+
+.MainCategories button {
+    padding: 0.5em;
+    text-transform: uppercase;
+    background-color: rgb(247, 247, 247);
+}
+
+.MainCategories button > i.toggle {
+    text-align: left;
+    display: block;
+    width: 1.8em;
+    height: 0.9em;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 0.5em;
+    float: right;
+}
+
+.MainCategories button > i.toggle > i {
+    display: inline-block;
+    height: 0.9em;
+    width: 0.9em;
+    border-radius: 0.5em;
+    background-color: rgb(255, 255, 255);
+    vertical-align: top;
+    border: 1px solid rgb(255, 255, 255);
+    margin: -1px;
+}
+
+.MainCategories button.active > i.toggle {
+    text-align: right !important;
+}
+
+.MainCategories .active {
+    color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.4) 0.2px 0.2px 2px 1px inset;
+}
+
+.MainCategories .initiative.active {
+    background: rgb(151, 191, 13) none repeat scroll 0% 0%;
+}
+
+.MainCategories .event.active {
+    background: rgb(229, 98, 146) none repeat scroll 0% 0%;
+}
+
+.MainCategories .company.active {
+    background: rgb(0, 152, 137) none repeat scroll 0% 0%;
+}
+
+.SearchInput {
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 0px !important;
+    font-size: 1.1em !important;
+    line-height: 1.7em !important;
+    font-weight: 300;
+    padding-left: 3.1em !important;
+}
+
+.SearchInput::-webkit-input-placeholder {
+    color: rgb(170, 170, 170);
+}
+
+.SearchInput::placeholder {
+    color: rgb(170, 170, 170);
+}
+
+.SearchInput::placeholder {
+    color: rgb(170, 170, 170);
+}
+
+.SearchBar {
+    border-bottom: 1px solid rgb(221, 221, 221);
+    width: 100%;
+    box-sizing: border-box;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+}
+
+.SearchBar input,
+.SearchBar button {
+    box-sizing: border-box;
+    border: medium none;
+    outline: currentcolor none medium;
+}
+
+.SearchBar input,
+.SearchBar span.search-icon {
+    font-size: 1.2em;
+}
+
+.SearchBar input {
+    padding: 0.4em 0.4em 0.4em 2em;
+}
+
+.SearchBar .search-icon {
+    position: absolute;
+    margin: 0.5em 0px 0px 0.9em;
+    display: inline-block;
+    color: rgb(102, 102, 102);
+    z-index: 5;
+    font-size: 1.2rem;
+}
+
+.SidebarComponent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.GroupHeader {
+    border-top: 3px solid rgb(221, 221, 221);
+    padding: 0.5em 1em;
+    margin: 0px;
+    background: rgb(234, 234, 234) none repeat scroll 0% 0%;
+    color: rgb(102, 102, 102);
+}
+
+.AddEntryButton {
+    z-index: 10;
+    padding: 0px;
+    margin: 0px;
+    background: rgb(26, 26, 26) none repeat scroll 0% 0%;
+    text-align: center;
+    bottom: 0px;
+}
+
+.AddEntryButton li {
+    cursor: pointer;
+    box-sizing: border-box;
+    font-weight: normal;
+    padding: 0.3em;
+    font-size: 1.2em;
+    border-color: transparent currentcolor;
+    border-style: solid none;
+    border-width: 4px medium;
+    border-image: none 100% / 1 / 0 stretch;
+    color: rgb(221, 221, 221);
+    background: transparent none repeat scroll 0% 0%;
+}
+
+.AddEntryButton li:hover {
+    color: rgb(255, 255, 255);
+    border-bottom: 4px solid rgb(255, 255, 255);
+}
+
+.AddEntryButton li i {
+    margin-right: 0.5em;
+}
+
+.ResultWrapper {
+    background: rgb(247, 247, 247) none repeat scroll 0% 0%;
+}
+
+.ResultWrapper .city-list ul {
+    background: rgb(247, 247, 247) none repeat scroll 0% 0%;
+}
+
+.ResultWrapper .city-list ul li {
+    padding: 0.2em 0.7em;
+    line-height: 0.9;
+    border-left: 5px solid transparent;
+}
+
+.ResultWrapper .city-list ul li:hover {
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+    border-left: 5px solid rgb(102, 102, 102);
+}
+
+.ResultWrapper .city-list ul li:hover div.chevron {
+    color: rgb(102, 102, 102);
+}
+
+.ResultWrapper .city-list ul li span.state {
+    color: rgb(85, 85, 85);
+}
+
+.ResultWrapper .city-list ul li span.country {
+    color: rgb(136, 136, 136);
+}
+
+.ResultWrapper .city-list ul li span.prefix {
+    color: rgb(136, 136, 136);
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+        font-size: 80%;
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h7 {
+    font-family: "Rubik", sans-serif;
+}
+
+html,
+button,
+input,
+select,
+textarea {
+    font-family: "Rubik", sans-serif;
+}
+
+.leTWXz {
+    padding-right: 0.45rem;
+}
+
+.bVtZdE {
+    margin-right: 0.3em;
+    width: 0.7em;
+}
+
+.SwipeableLeftPanel {
+    position: relative;
+    height: 100%;
+    z-index: 2;
+    order: -1;
+    overflow-y: hidden;
+    float: left;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.5) 1px 1px 5px;
+}
+
+.SwipeableLeftPanel .content {
+    width: 100%;
+    box-sizing: border-box;
+    padding-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.SwipeableLeftPanel.closed {
+    width: 0px;
+}
+
+.SwipeableLeftPanel.opened {
+    max-width: 380px;
+    width: 90%;
+}
+
+.SwipeableLeftPanel.opened .menu {
+    width: 100%;
+}
+
+.SwipeableLeftPanel .search.closed {
+    display: none;
+}
+
+.SwipeableLeftPanel .search .main-categories {
+    height: 2.1em;
+}
+
+.iMCOcx {
+    position: absolute;
+    top: 15px;
+    right: 0px;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+    color: rgb(26, 26, 26);
+}
+
+.iMCOcx .menu-toggle button {
+    outline: currentcolor none medium;
+    position: relative;
+    z-index: 1;
+    top: 0px;
+    right: 0px;
+    font-size: 15pt;
+    text-transform: uppercase;
+    text-align: right;
+    color: rgb(102, 102, 102);
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+    border-radius: 0.2em 0px 0px 0.2em;
+    border: medium none;
+    padding: 0.2em;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px 0.2px;
+}
+
+.iMCOcx .menu-toggle button:hover {
+    color: rgb(26, 26, 26);
+    box-shadow: rgb(0, 0, 0) 0px 1px 3px 0.2px;
+}
+
+.iMCOcx .menu-toggle button .pincloud {
+    display: inline-block;
+    width: 3.5em;
+    height: 1.2em;
+    background-position: left center;
+    background-image: url("data:image/png;base64,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");
+    background-repeat: no-repeat;
+    background-size: 50% auto;
+}
+
+.iMCOcx .menu-toggle button i {
+    margin-right: 0.3em;
+}
+
+.LeftPanelAndHideSidebarButton {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.HideSidebar {
+    position: relative;
+    z-index: 2;
+    height: 0px;
+}
+
+.HideSidebar > button {
+    position: relative;
+    padding: 10px 3px 10px 7px;
+    top: 72px;
+    font-size: 13pt;
+    color: rgb(102, 102, 102);
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+    border-color: currentcolor currentcolor currentcolor rgb(221, 221, 221);
+    border-style: none none none solid;
+    border-width: medium medium medium 1px;
+    border-image: none 100% / 1 / 0 stretch;
+    border-radius: 0px 0.2em 0.2em 0px;
+    box-shadow: rgba(0, 0, 0, 0.4) 2px 1px 4px 0px;
+}
+
+.HideSidebar > button:hover {
+    color: rgb(26, 26, 26);
+}
+
+.HideSidebar > button i {
+    margin-right: 0.3em;
+}
+
+.StyledApp {
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+.StyledApp .tutorial {
+    margin-bottom: 3em;
+}
+
+.StyledApp .tutorial img {
+    width: 100%;
+}
+
+@media not all {
+    .StyledApp body {
+        font-size: 80%;
+    }
+}
+
+.StyledApp input,
+.StyledApp select,
+.StyledApp textarea,
+.StyledApp button {
+    font-family: "Rubik", sans-serif;
+}
+
+.StyledApp h1,
+.StyledApp h2,
+.StyledApp h3,
+.StyledApp h4,
+.StyledApp h5,
+.StyledApp h6,
+.StyledApp h7 {
+    font-family: "Rubik", sans-serif;
+    font-weight: 500;
+    margin-block-end: 2px;
+}
+
+.StyledApp button {
+    font-family: "Rubik", sans-serif;
+}
+
+.StyledApp button.pure-button i {
+    margin-right: 0.5em;
+}
+
+.StyledApp .fa {
+    font-family: "FontAwesome" !important;
+}
+
+.StyledApp .pure-g [class*="pure-u"] {
+    font-family: "Rubik", sans-serif;
+}
+
+.StyledApp::-webkit-scrollbar {
+    background-color: rgb(238, 238, 238);
+}
+
+.StyledApp::-webkit-scrollbar-thumb {
+    border-radius: 0px;
+    background-color: rgb(204, 204, 204);
+}
+
+.StyledApp .pure-menu-list {
+    margin: 0px 50px;
+}
+
+.StyledApp .pure-menu-link:hover {
+    color: rgb(0, 0, 0);
+}
+
+.StyledApp label span.desc {
+    color: rgb(102, 102, 102);
+    font-size: 0.8em;
+    margin-left: 0.5em;
+}
+
+.StyledApp legend span.desc {
+    color: rgb(102, 102, 102);
+    font-size: 0.8em;
+    margin-left: 0.5em;
+}
+
+.StyledApp form div.err {
+    color: rgb(255, 68, 68);
+    font-size: 0.9em;
+}
+
+.StyledApp form input[type="text"].err {
+    border-color: rgb(255, 68, 68);
+}
+
+.StyledApp form textarea.err {
+    border-color: rgb(255, 68, 68);
+}
+
+.StyledApp form select.err {
+    border-color: rgb(255, 68, 68);
+}
+
+.StyledApp .banner {
+    position: relative;
+    z-index: 10;
+    color: rgb(238, 238, 238);
+    text-align: center;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.StyledApp .banner .banner-link {
+    color: rgb(0, 0, 0);
+}
+
+.StyledApp div.chevron {
+    position: relative;
+    color: rgb(221, 221, 221);
+}
+
+.StyledApp div.chevron i {
+    position: absolute;
+    display: inline-table;
+    top: 0px;
+    bottom: 0px;
+    margin: auto;
+}
+
+.StyledApp .close-button {
+    text-align: center;
+    margin: 0px;
+    padding: 1em;
+}
+
+.StyledApp .close-button button {
+    margin: 0px 5px;
+}
+
+.StyledApp .message {
+    white-space: pre-wrap;
+    margin: 0px;
+    padding: 1em;
+}
+
+.StyledApp .new-rating-form {
+    margin: 2em 1.8em 1.8em;
+}
+
+.StyledApp .new-rating-form .radio-button {
+    margin: 0.2em 0.3em 0.2em 0px;
+}
+
+.StyledApp .new-rating-form .form-heading {
+    font-weight: bold;
+    margin-top: 0.5em;
+    margin-bottom: 0px;
+}
+
+.StyledApp .new-rating-form .rating-context-explanation {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    font-style: italic;
+}
+
+.StyledApp .new-rating-form .title {
+    margin-bottom: 0.5em;
+}
+
+.StyledApp .optional::-webkit-input-placeholder {
+    color: rgb(119, 119, 119);
+}
+
+.StyledApp .optional::placeholder {
+    color: rgb(119, 119, 119);
+}
+
+.StyledApp .optional::placeholder {
+    color: rgb(119, 119, 119);
+}
+
+.StyledApp input,
+.StyledApp textarea,
+.StyledApp select {
+    box-shadow: none !important;
+    border-radius: 3px !important;
+}
+
+.StyledApp .info .landing-img {
+    width: 70%;
+}
+
+.StyledApp .info h3 {
+    margin-top: 50px;
+}
+
+.StyledApp .license input {
+    margin-top: 0.7em;
+}
+
+@keyframes iECmZH {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes iECmZH {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+
+
+
 
 /* sc-component-id: Message__FontAwesomeIconElement-sc-1m5gzjg-0 */
 
