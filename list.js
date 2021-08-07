@@ -361,7 +361,7 @@
                 } else {
                     categories[c].disabled = true;
                 }
-                toggleClass('btn'+categoryName, 'active', !categories[c].disabled);
+                toggleClass('btn'+categoryName.replace('#', '').replace('non-profit','Initiative').replace('commercial','Unternehmen').replace('event','Event'), 'active', !categories[c].disabled);
                 find();
             }
         }
