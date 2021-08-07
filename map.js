@@ -191,8 +191,8 @@
             var cat = categories && entry.categories && entry.categories.length
             && entry.categories[0] ? categories[entry.categories[0]] : null;
             mapMarkers[entry.id] = L.marker({lat:entry.lat, lng:entry.lng}, {icon: entry.ratings && entry.ratings.total && entry.ratings.total >= 0
-                        ? L.divIcon({iconSize: [27,41], iconAnchor: [13,41], className:'mapMarker '     + (cat ? cat.name :'unknown'), html:'<i class="map-icon map-icon-map-pin"></i>'})
-                        : L.divIcon({iconSize: [16,17], iconAnchor: [8,8], className:'mapMarkerCircle ' + (cat ? cat.name :'unknown'), html:'<i class="map-icon map-icon-circle"></i>'})
+                                ? L.divIcon({iconSize: [27,41], iconAnchor: [13,41], className:'mapMarker '     + (cat ? cat.name.replace('#', '') :'unknown'), html:'<i class="map-icon map-icon-map-pin"></i>'})
+                                : L.divIcon({iconSize: [16,17], iconAnchor: [8,8], className:'mapMarkerCircle ' + (cat ? cat.name.replace('#', '') :'unknown'), html:'<i class="map-icon map-icon-circle"></i>'})
             });
             mapMarkers[entry.id].addTo(resultMapObj);
             mapMarkers[entry.id].bindPopup('<a href="#" onclick="displayDetails('+"'"+entry.id+"'"+');if(isMapInFront()){toggleMap();backScrollY=null;}else{backScrollY=-1;}event.preventDefault();return false;">'+entry.title+'</a>', {offset: entry.ratings && entry.ratings.total && entry.ratings.total >= 0 ? [0,10] : [0,30]});
